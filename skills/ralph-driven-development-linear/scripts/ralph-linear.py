@@ -1,0 +1,458 @@
+#!/usr/bin/env python
+from __future__ import annotations
+
+import argparse
+import io
+import json
+import os
+import re
+import shlex
+import subprocess
+import sys
+import threading
+import time
+import traceback
+from pathlib import Path
+
+
+def find_repo_root(start: Path) -> Path:
+    for candidate in [start, *start.parents]:
+        if (candidate / "AGENTS.MD").exists() or (candidate / ".git").exists():
+            return candidate
+    return start
+
+
+def resolve_repo_path(path: str, repo_root: Path) -> Path:
+    candidate = Path(path)
+    return candidate if candidate.is_absolute() else (repo_root / candidate)
+
+
+def extract_project_from_agents(agents_path: Path) -> str | None:
+    if not agents_path.exists():
+        return None
+    text = agents_path.read_text(encoding="utf-8")
+    in_section = False
+    marker = "Linear Project:"
+    for line in text.splitlines():
+        if re.match(r"^##\s*PROJECT\b", line):
+            in_section = True
+            continue
+        if in_section and re.match(r"^##\s+\S", line):
+            break
+        if not in_section:
+            continue
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("//"):
+            continue
+        if stripped.lower().startswith("todo"):
+            continue
+        stripped = re.sub(r"^[*-]\s*", "", stripped)
+        if marker in stripped:
+            _, value = stripped.split(marker, 1)
+            value = value.strip()
+            if value:
+                return value
+    return None
+
+
+def build_prompt(project: str) -> str:
+    return (
+        "Use Linear MCP to execute exactly one issue for this project:\n"
+        f"{project}\n\n"
+        "Order of operations:\n"
+        "1) Use Linear MCP to list issues in the project by name or ID.\n"
+        "2) Consider only issues in Backlog/Todo/Unstarted/In Progress.\n"
+        "3) Sort by priority (Urgent > High > Normal > Low > None), then by createdAt ascending.\n"
+        "4) Select the first issue from that ordering.\n"
+        "5) Move the issue to In Progress if it is not already.\n"
+        "6) Implement the work in this repo and commit.\n"
+        "7) Move the issue to Done.\n"
+    )
+
+
+def build_count_prompt(project: str) -> str:
+    return (
+        "Use Linear MCP to list issues in this project by name or ID:\n"
+        f"{project}\n\n"
+        "Consider only issues in Backlog/Todo/Unstarted/In Progress.\n"
+        "Count them and print only JSON: {\"total\": <number>}\n"
+        "Do not modify any issues.\n"
+    )
+
+
+def append_log(log_path: Path, text: str) -> None:
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a", encoding="utf-8") as handle:
+        handle.write(text)
+
+
+def supports_color() -> bool:
+    if os.environ.get("FORCE_COLOR"):
+        return True
+    if os.environ.get("NO_COLOR"):
+        return False
+    if os.environ.get("TERM") == "dumb":
+        return False
+    return sys.stdout.isatty()
+
+
+USE_COLOR = supports_color()
+COLOR_CODES = {
+    "red": "31",
+    "green": "32",
+    "yellow": "33",
+    "blue": "34",
+    "magenta": "35",
+    "cyan": "36",
+    "gray": "90",
+}
+STATUS_COLORS = {
+    "count": "cyan",
+    "start": "blue",
+    "done": "green",
+    "error": "red",
+    "wait": "yellow",
+    "info": "magenta",
+    "progress": "cyan",
+    "retry": "yellow",
+    "dry-run": "magenta",
+}
+
+
+def style(text: str, *, color: str | None = None, bold: bool = False, dim: bool = False) -> str:
+    if not USE_COLOR:
+        return text
+    codes: list[str] = []
+    if bold:
+        codes.append("1")
+    if dim:
+        codes.append("2")
+    if color:
+        code = COLOR_CODES.get(color)
+        if code:
+            codes.append(code)
+    if not codes:
+        return text
+    return f"\x1b[{';'.join(codes)}m{text}\x1b[0m"
+
+
+def tag(kind: str) -> str:
+    return style(f"[{kind}]", color=STATUS_COLORS.get(kind), bold=True)
+
+
+def emphasize(value: object, color: str = "cyan") -> str:
+    return style(str(value), color=color, bold=True)
+
+
+def print_status(kind: str, message: str) -> None:
+    print(f"{tag(kind)} {message}")
+
+
+def print_title(title: str) -> None:
+    print(style(f"=== {title} ===", color="magenta", bold=True))
+
+
+def print_summary(completed: int, failed: int) -> None:
+    print_title("Summary")
+    print(f"{style('Completed:', bold=True)} {style(str(completed), color='green')}")
+    failed_color = "red" if failed else "green"
+    print(f"{style('Failed:', bold=True)} {style(str(failed), color=failed_color)}")
+
+
+def run_codex(
+    codex_exe: str,
+    codex_args: list[str],
+    prompt: str,
+    timeout_seconds: float | None,
+) -> tuple[int, str]:
+    output_chunks: list[str] = []
+
+    def mirror_output(stream: io.TextIOBase) -> None:
+        # Mirror Codex output to the terminal while capturing for logs/parsing.
+        for line in stream:
+            output_chunks.append(line)
+            sys.stdout.write(line)
+            sys.stdout.flush()
+
+    process = subprocess.Popen(
+        [codex_exe, *codex_args, "-"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        cwd=os.getcwd(),
+        bufsize=1,
+    )
+
+    if process.stdin is None or process.stdout is None:
+        raise RuntimeError("Failed to open stdin/stdout for Codex process")
+
+    process.stdin.write(prompt)
+    process.stdin.close()
+
+    reader = threading.Thread(target=mirror_output, args=(process.stdout,), daemon=True)
+    reader.start()
+
+    try:
+        process.wait(timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+        reader.join()
+        output = "".join(output_chunks)
+        raise subprocess.TimeoutExpired(process.args, timeout_seconds, output=output)
+
+    reader.join()
+    output = "".join(output_chunks)
+    return process.returncode, output
+
+
+def parse_reset_seconds(text: str) -> int | None:
+    match = re.search(r'resets_in_seconds"\s*:\s*(\d+)', text)
+    if match:
+        return int(match.group(1))
+    match = re.search(r'resets_at"\s*:\s*(\d+)', text)
+    if match:
+        reset_epoch = int(match.group(1))
+        return max(0, reset_epoch - int(time.time()))
+    for line in text.splitlines():
+        line = line.strip()
+        if not (line.startswith("{") and line.endswith("}")):
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            reset_seconds = payload.get("resets_in_seconds")
+            if isinstance(reset_seconds, int):
+                return reset_seconds
+            reset_epoch = payload.get("resets_at")
+            if isinstance(reset_epoch, int):
+                return max(0, reset_epoch - int(time.time()))
+    return None
+
+
+def parse_task_count(text: str) -> int | None:
+    for line in text.splitlines():
+        line = line.strip()
+        if not (line.startswith("{") and line.endswith("}")):
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            total = payload.get("total")
+            if isinstance(total, int):
+                return total
+    match = re.search(r'"total"\s*:\s*(\d+)', text)
+    if match:
+        return int(match.group(1))
+    return None
+
+
+def shutil_which(executable: str) -> str | None:
+    for path in os.environ.get("PATH", "").split(os.pathsep):
+        candidate = Path(path) / executable
+        if candidate.exists():
+            return str(candidate)
+        if os.name == "nt":
+            for ext in (".exe", ".cmd", ".bat"):
+                if candidate.with_suffix(ext).exists():
+                    return str(candidate.with_suffix(ext))
+    return None
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Run Linear issues sequentially with Codex.")
+    parser.add_argument("--project", help="Linear project name or ID")
+    parser.add_argument("--agents-path", default="AGENTS.MD")
+    parser.add_argument("--codex-exe", default="codex")
+    parser.add_argument(
+        "--codex-args",
+        default="exec --dangerously-bypass-approvals-and-sandbox",
+        help="Space-separated codex args, e.g. 'exec --full-auto -m gpt-5.2-codex'",
+    )
+    parser.add_argument(
+        "--codex-timeout",
+        type=float,
+        default=0,
+        help="Seconds before killing a Codex run (0 = unlimited).",
+    )
+    parser.add_argument(
+        "--max-tasks",
+        type=int,
+        default=0,
+        help="Maximum number of issues to run (0 = unlimited).",
+    )
+    parser.add_argument("--max-attempts-per-task", type=int, default=5)
+    parser.add_argument("--log-path", default="docs/logs/linear.log")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+
+    repo_root = find_repo_root(Path(__file__).resolve())
+    os.chdir(repo_root)
+
+    agents_path = resolve_repo_path(args.agents_path, repo_root)
+    project = args.project or extract_project_from_agents(agents_path)
+    if not project:
+        raise ValueError("Provide --project or set 'Linear Project:' under ## PROJECT in AGENTS.MD")
+
+    log_path = resolve_repo_path(args.log_path, repo_root)
+
+    codex_args = shlex.split(args.codex_args)
+    if not shutil_which(args.codex_exe):
+        raise FileNotFoundError(f"Codex executable not found on PATH: {args.codex_exe}")
+
+    max_tasks = None if args.max_tasks <= 0 else args.max_tasks
+    timeout_seconds = None if args.codex_timeout <= 0 else args.codex_timeout
+    completed_count = 0
+    failed_count = 0
+
+    if args.dry_run:
+        print_status("dry-run", project)
+        return 0
+
+    total_tasks = None
+    count_attempt = 1
+    while total_tasks is None:
+        if count_attempt > args.max_attempts_per_task:
+            print_status("error", "max attempts exceeded while counting tasks")
+            raise RuntimeError("Max attempts exceeded while counting tasks")
+
+        prompt = build_count_prompt(project)
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        append_log(log_path, f"=== {timestamp} | count attempt {count_attempt} ===\n")
+
+        print_status("count", f"attempt {count_attempt} | project: {project}")
+
+        try:
+            exit_code, output_text = run_codex(
+                args.codex_exe,
+                codex_args,
+                prompt,
+                timeout_seconds,
+            )
+        except Exception:
+            output_text = "[exception] codex invocation failed\n" + traceback.format_exc()
+            append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
+            print_status("error", "exception during codex count run")
+            count_attempt += 1
+            continue
+
+        append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
+
+        usage_limit = (
+            "usage_limit_reached" in output_text
+            or "Too Many Requests" in output_text
+            or "You've hit your usage limit" in output_text
+        )
+
+        if usage_limit:
+            reset_seconds = parse_reset_seconds(output_text)
+            wait_seconds = (reset_seconds + 30) if reset_seconds is not None else 60 * 60
+            print_status("wait", f"usage limit reached; sleeping {wait_seconds} seconds before retry")
+            time.sleep(wait_seconds)
+            count_attempt += 1
+            continue
+
+        if exit_code != 0:
+            print_status("error", f"codex exit code {exit_code} during count")
+            count_attempt += 1
+            continue
+
+        total_tasks = parse_task_count(output_text)
+        if total_tasks is None:
+            print_status("retry", "task count not found")
+            count_attempt += 1
+            continue
+
+    run_total = total_tasks if max_tasks is None else min(total_tasks, max_tasks)
+    print_status(
+        "info",
+        f"tasks found: {emphasize(total_tasks, 'green')} | tasks this run: {emphasize(run_total, 'green')}",
+    )
+    print_status(
+        "info",
+        f"max tasks cap: {emphasize(max_tasks if max_tasks is not None else 'unlimited', 'cyan')}",
+    )
+
+    if total_tasks == 0:
+        print_status("done", "no tasks remaining")
+        print_summary(completed_count, failed_count)
+        return 0
+
+    while completed_count < run_total:
+        remaining = max(run_total - completed_count, 0)
+        print_status(
+            "progress",
+            f"completed {emphasize(completed_count)}/{emphasize(run_total)} | remaining {emphasize(remaining, 'yellow')}",
+        )
+        attempt = 1
+        done = False
+
+        while not done:
+            if attempt > args.max_attempts_per_task:
+                failed_count += 1
+                print_status("error", "max attempts exceeded for current task")
+                raise RuntimeError("Max attempts exceeded for current task")
+
+            prompt = build_prompt(project)
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            append_log(log_path, f"=== {timestamp} | task {completed_count + 1} | attempt {attempt} ===\n")
+
+            print_status(
+                "start",
+                f"Task {emphasize(completed_count + 1)} | attempt {emphasize(attempt)} | project: {project}",
+            )
+
+            try:
+                exit_code, output_text = run_codex(
+                    args.codex_exe,
+                    codex_args,
+                    prompt,
+                    timeout_seconds,
+                )
+            except Exception:
+                output_text = "[exception] codex invocation failed\n" + traceback.format_exc()
+                append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
+                print_status("error", "exception during codex run")
+                attempt += 1
+                continue
+
+            append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
+
+            usage_limit = (
+                "usage_limit_reached" in output_text
+                or "Too Many Requests" in output_text
+                or "You've hit your usage limit" in output_text
+            )
+
+            if usage_limit:
+                reset_seconds = parse_reset_seconds(output_text)
+                wait_seconds = (reset_seconds + 30) if reset_seconds is not None else 60 * 60
+                print_status("wait", f"usage limit reached; sleeping {wait_seconds} seconds before retry")
+                time.sleep(wait_seconds)
+                attempt += 1
+                continue
+
+            if exit_code != 0:
+                print_status("error", f"codex exit code {exit_code} | attempt {attempt}")
+                attempt += 1
+                continue
+            done = True
+            completed_count += 1
+            print_status("done", "task completed")
+            print_status("progress", f"completed {emphasize(completed_count)}/{emphasize(run_total)}")
+
+    if max_tasks is not None and completed_count >= max_tasks:
+        print_status("done", "max tasks reached for this run")
+    print_summary(completed_count, failed_count)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
