@@ -1,45 +1,37 @@
 ---
 name: shadergraph-editor
-description: Create and edit shadeers and materials in .usda files 
-license: MIT
-metadata:
-  author: Tom Krikorian
-  version: "1.0"
+description: Create and edit ShaderGraph and RealityKit material networks in .usda files. Use when manually editing USD ASCII files to build, modify, or troubleshoot materials, shader nodes, and connections for RealityKit.
 ---
 
-# ShaderGraph Editing Guide for .usda Files
+# ShaderGraph Editor (.usda)
 
-This guide explains how to manually edit `.usda` (USD ASCII) files to create and modify RealityKit materials and ShaderGraph networks.
+## Overview
 
-## Step-by-step instructions
+Use this skill to manually edit USD ASCII (.usda) files to create and modify RealityKit materials and ShaderGraph networks.
 
-1.  **Open the `.usda` file** in a text editor (e.g., VS Code, Sublime Text).
-2.  **Locate or Create a Material Prim**:
-    *   Find a `def Material "MaterialName"` block.
-    *   If creating new, ensure it is within the correct scope (usually under a model or root).
-3.  **Define the Surface Shader**:
-    *   Inside the Material, define a `def Shader "Surface"` prim.
-    *   Set the `info:id` to the desired shader type (e.g., `UsdPreviewSurface` for standard PBR, or specific RealityKit identifiers if known).
-    *   Connect the shader's output to the material's surface output: `token outputs:surface.connect = <./Surface.outputs:surface>`.
-4.  **Add Shader Nodes**:
-    *   Create additional `def Shader` prims for each node in your graph (e.g., textures, math operations).
-    *   Give each node a unique name (e.g., `def Shader "DiffuseTexture"`).
-    *   Set the `info:id` corresponding to the node function (e.g., `UsdUVTexture`, `UsdTransform2d`).
-5.  **Connect Inputs and Outputs**:
-    *   Use the `.connect` syntax to link node outputs to inputs.
-    *   Example: `color3f inputs:diffuseColor.connect = <../DiffuseTexture.outputs:rgb>`.
-6.  **Set Constant Values**:
-    *   For inputs not connected to other nodes, set their values directly (e.g., `float inputs:roughness = 0.5`).
-7.  **Bind Material to Geometry**:
-    *   On your mesh prim (e.g., `def Mesh "Sphere"`), add the relationship: `rel material:binding = </Path/To/Material>`.
+## Quick start workflow
 
-## Examples of inputs and outputs
+1. Open the `.usda` file in a text editor.
+2. Find or create a `def Material "MaterialName"` block in the correct scope.
+3. Define a `def Shader "Surface"` prim and connect `outputs:surface` to the material output.
+4. Add shader node prims (`def Shader`) for textures and math operations.
+5. Connect node outputs to shader inputs with the `.connect` syntax.
+6. Set constant values on inputs that are not connected.
+7. Bind the material to geometry with `rel material:binding`.
 
-### Example 1: Basic Red PBR Material (UsdPreviewSurface)
+## Core concepts
 
-**Input (Concept):** A material that is red and slightly shiny.
+- **Material prim**: The root of a material definition in USD.
+- **Surface shader**: A `Shader` prim that drives `outputs:surface`.
+- **Shader nodes**: Additional `Shader` prims for textures, transforms, and math.
+- **Connections**: `.connect` links between node outputs and shader inputs.
+- **Material binding**: `rel material:binding` on a mesh prim.
+- **info:id**: The shader node identifier used by USD and RealityKit.
 
-**Output (.usda):**
+## Implementation patterns
+
+### Example 1: Basic red PBR material (UsdPreviewSurface)
+
 ```usda
 def Material "RedMaterial"
 {
@@ -56,11 +48,8 @@ def Material "RedMaterial"
 }
 ```
 
-### Example 2: Texture Mapped Material
+### Example 2: Texture-mapped material
 
-**Input (Concept):** A material using a texture file for color.
-
-**Output (.usda):**
 ```usda
 def Material "TexturedMaterial"
 {
@@ -90,8 +79,7 @@ def Material "TexturedMaterial"
 }
 ```
 
-### Example 3: RealityKit Specific Nodes (Conceptual)
-*Note: RealityKit-specific nodes often use internal identifiers. It is recommended to prototype in Reality Composer Pro and export to USD to find exact `info:id` strings for nodes like "Unlit Surface (RealityKit)".*
+### Example 3: RealityKit-specific nodes (conceptual)
 
 ```usda
 def Material "UnlitMaterial"
@@ -101,14 +89,21 @@ def Material "UnlitMaterial"
     def Shader "UnlitSurface"
     {
         # Identifier may vary based on RealityKit version/export
-        uniform token info:id = "ND_realitykit_unlit_surfaceshader" 
+        uniform token info:id = "ND_realitykit_unlit_surfaceshader"
         color3f inputs:color = (0, 1, 0)
         token outputs:surface
     }
 }
 ```
 
-## Documentation
+## Pitfalls and checks
 
-To see all available nodes available in shadergraph, check the [the reference guide](references/REFERENCE.md) for details.
+- Ensure `outputs:surface.connect` is present on the material.
+- Verify `info:id` values match the expected node identifiers.
+- Confirm all `.connect` paths point to valid outputs.
+- Provide a `PrimvarReader` when using UV textures.
+- Bind materials to geometry with `rel material:binding`.
 
+## References
+
+- [references/REFERENCE.md](references/REFERENCE.md) - ShaderGraph node and material reference guide.

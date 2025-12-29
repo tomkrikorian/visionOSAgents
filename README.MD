@@ -6,6 +6,15 @@ It is intended for developers building applications for **Apple Vision Pro**, le
 
 ---
 
+## Skills
+
+- `arkit-visionos-developer` - ARKit session setup, authorization, and data providers on visionOS.
+- `shareplay-dev` - GroupActivities and SharePlay session lifecycle and sync patterns.
+- `spatial-swiftui-designer` - SwiftUI + RealityKit spatial UI patterns for visionOS.
+- `shadergraph-editor` - Manual .usda ShaderGraph and material editing for RealityKit.
+
+---
+
 ## Credits
 
 The original **AGENTS.MD** structure was inspired by the work of  
@@ -22,4 +31,3 @@ https://agents.md/
 
 ### SKILLS.MD
 https://agentskills.io/
-
