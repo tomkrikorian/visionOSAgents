@@ -1,10 +1,19 @@
 # RealityView Patterns
 
-## Notes
-- Use RealityView for full RealityKit scene control and per-frame updates.
-- Load entities asynchronously and mutate them in the make/update closures.
+## Context
 
-## RealityView basics
+RealityView is a RealityKit view that hosts 3D content in SwiftUI using make and update closures. RealityViewAttachments provides access to attachment entities created by the attachment builder, and ViewAttachmentComponent stores metadata for a SwiftUI view attachment entity.
+
+## Best Practices
+
+- Load RealityKit entities asynchronously in the make closure to avoid UI hangs.
+- Keep state-driven mutations inside the update closure instead of SwiftUI body.
+- Use `attachments.entity(for:)` to resolve SwiftUI attachments and position them in 3D.
+- Use `ViewAttachmentComponent` when you need explicit attachment entities or bounds.
+
+## Code Examples
+
+### RealityView basics
 
 ```swift
 import RealityKit
@@ -26,7 +35,7 @@ struct RealityViewExample: View {
 }
 ```
 
-## RealityView with SwiftUI attachments
+### RealityView with SwiftUI attachments
 
 ```swift
 import RealityKit
@@ -55,11 +64,9 @@ struct AttachmentExample: View {
 }
 ```
 
-## WWDC 2025: Better together: SwiftUI and RealityKit (RealityView)
 
-Session link: https://developer.apple.com/videos/play/wwdc2025/274/
 
-### 6-51 Switch to RealityView
+#### Switch to RealityView
 
 ```swift
 struct RobotView: View {
@@ -78,7 +85,7 @@ struct RobotView: View {
 }
 ```
 
-### 7-25 RealityView fixed size layout
+#### RealityView fixed size layout
 
 ```swift
 struct RobotView: View {
@@ -98,7 +105,7 @@ struct RobotView: View {
 }
 ```
 
-### 8-48 RealityView animation
+#### RealityView animation
 
 ```swift
 struct RobotView: View {
@@ -119,7 +126,7 @@ struct RobotView: View {
 }
 ```
 
-### 10-34 Particle emitters
+#### Particle emitters
 
 ```swift
 func setupSparks(robotHead: Entity) {
@@ -144,7 +151,7 @@ func setupSparks(robotHead: Entity) {
 func sparksComponent() -> ParticleEmitterComponent { ... }
 ```
 
-### 16-19 Attachment builder
+#### Attachment builder
 
 ```swift
 struct RealityViewAttachments: View {
@@ -168,7 +175,7 @@ struct RealityViewAttachments: View {
 }
 ```
 
-### 16-37 ViewAttachmentComponent attachments
+#### ViewAttachmentComponent attachments
 
 ```swift
 struct AttachmentComponentAttachments: View {

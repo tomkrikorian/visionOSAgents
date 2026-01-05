@@ -1,6 +1,19 @@
 # Interaction and Gestures
 
-## SpatialTapGesture
+## Context
+
+SpatialTapGesture is a SwiftUI gesture that recognizes taps and reports their location. ManipulationComponent adds immersive interaction behaviors to RealityKit entities, while GestureComponent lets you attach custom gesture recognition to entities.
+
+## Best Practices
+
+- Use SpatialTapGesture when you need tap locations in a specific coordinate space.
+- Configure ManipulationComponent on entities that should be directly manipulated, and rely on its lifecycle events for feedback.
+- Add GestureComponent when you need targeted entity gestures with custom logic.
+- Keep gesture handling on the main actor and update RealityKit entities in RealityView closures.
+
+## Code Examples
+
+### SpatialTapGesture
 
 ```swift
 import SwiftUI
@@ -22,11 +35,9 @@ struct SpatialTapExample: View {
 }
 ```
 
-## WWDC 2025: Better together: SwiftUI and RealityKit (Interaction)
 
-Session link: https://developer.apple.com/videos/play/wwdc2025/274/
 
-### 13-18 ManipulationComponent configure
+#### ManipulationComponent configure
 
 ```swift
 RealityView { content in
@@ -36,7 +47,7 @@ RealityView { content in
 }
 ```
 
-### 13-52 ManipulationComponent configure with options
+#### ManipulationComponent configure with options
 
 ```swift
 RealityView { content in
@@ -51,7 +62,7 @@ RealityView { content in
 }
 ```
 
-### 14-08 ManipulationEvents
+#### ManipulationEvents
 
 ```swift
 public enum ManipulationEvents {
@@ -73,7 +84,7 @@ public enum ManipulationEvents {
 }
 ```
 
-### 14-32 Custom manipulation audio
+#### Custom manipulation audio
 
 ```swift
 RealityView { content in
@@ -90,7 +101,7 @@ RealityView { content in
 }
 ```
 
-### 17-04 Targeted-to-entity gesture
+#### Targeted-to-entity gesture
 
 ```swift
 struct AttachmentComponentAttachments: View {
@@ -111,7 +122,7 @@ struct AttachmentComponentAttachments: View {
 }
 ```
 
-### 17-10 GestureComponent
+#### GestureComponent
 
 ```swift
 struct AttachmentComponentAttachments: View {

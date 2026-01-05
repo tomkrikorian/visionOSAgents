@@ -43,5 +43,18 @@ Use this skill to implement ARKit-powered features on visionOS with ARKitSession
 
 ## References
 
-- [references/DOCUMENTATION.DM](references/DOCUMENTATION.DM) - sosumi documentation paths for ARKit on visionOS.
 - [references/REFERENCE.md](references/REFERENCE.md) - ARKit session and provider code patterns.
+- [references/accessory-tracking-provider.md](references/accessory-tracking-provider.md) - Accessory tracking provider patterns.
+- [references/barcode-detection-provider.md](references/barcode-detection-provider.md) - Barcode detection provider patterns.
+- [references/camera-frame-provider.md](references/camera-frame-provider.md) - Camera frame provider patterns.
+- [references/camera-region-provider.md](references/camera-region-provider.md) - Camera region provider patterns.
+- [references/environment-light-estimation-provider.md](references/environment-light-estimation-provider.md) - Environment light estimation provider patterns.
+- [references/hand-tracking-provider.md](references/hand-tracking-provider.md) - Hand tracking provider patterns.
+- [references/image-tracking-provider.md](references/image-tracking-provider.md) - Image tracking provider patterns.
+- [references/object-tracking-provider.md](references/object-tracking-provider.md) - Object tracking provider patterns.
+- [references/plane-detection-provider.md](references/plane-detection-provider.md) - Plane detection provider patterns.
+- [references/room-tracking-provider.md](references/room-tracking-provider.md) - Room tracking provider patterns.
+- [references/scene-reconstruction-provider.md](references/scene-reconstruction-provider.md) - Scene reconstruction provider patterns.
+- [references/shared-coordinate-space-provider.md](references/shared-coordinate-space-provider.md) - Shared coordinate space provider patterns.
+- [references/stereo-properties-provider.md](references/stereo-properties-provider.md) - Stereo properties provider patterns.
+- [references/world-tracking-provider.md](references/world-tracking-provider.md) - World tracking provider patterns.

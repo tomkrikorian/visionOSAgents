@@ -1,10 +1,22 @@
 # Swift Charts 3D Patterns
 
-## WWDC 2025: Bring Swift Charts to the third dimension
+## Context
 
-Session link: https://developer.apple.com/videos/play/wwdc2025/313/
+`Chart3D` is a SwiftUI view that displays interactive three-dimensional charts and visualizations. It supports 3D mark initializers for `PointMark`, `RuleMark`, and `RectangleMark`, plus the 3D-only `SurfacePlot` for functions of the form `y = f(x, z)`. `Chart3DPose` describes the viewing pose (azimuth and inclination) and is bound via `.chart3DPose` to set an initial orientation and enable interactive rotation. `SurfacePlot` can be styled with chart surface styles like `.heightBased` and `.normalBased` to improve depth cues.
 
-### 2-03 Scatterplot flipper length vs weight
+## Best Practices
+
+- Use `Chart3D` when the third dimension adds meaning; otherwise prefer a 2D `Chart` for clarity.
+- Use 3D mark initializers or `SurfacePlot` and keep x, y, z semantics consistent and clearly labeled.
+- Set `chartXScale`, `chartYScale`, and `chartZScale` domains (and ranges when needed) to control the plot volume and readability.
+- Bind a `Chart3DPose` to `.chart3DPose` to define an initial pose and allow interactive rotation; use `chart3DCameraProjection(.perspective)` when depth cues matter.
+- Apply surface styles like `.heightBased` or `.normalBased` to make surface shapes easier to interpret.
+
+## Code Examples
+
+
+
+#### Scatterplot flipper length vs weight
 
 ```swift
 import SwiftUI
@@ -41,7 +53,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 2-39 Scatterplot beak length vs weight
+#### Scatterplot beak length vs weight
 
 ```swift
 import SwiftUI
@@ -78,7 +90,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 2-51 Scatterplot beak length vs flipper length
+#### Scatterplot beak length vs flipper length
 
 ```swift
 import SwiftUI
@@ -115,7 +127,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 3-28 Chart3D scatterplot
+#### Chart3D scatterplot
 
 ```swift
 import SwiftUI
@@ -162,7 +174,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 5-19 Surface plot x times z
+#### Surface plot x times z
 
 ```swift
 import SwiftUI
@@ -179,7 +191,7 @@ struct SurfacePlotChart: View {
 }
 ```
 
-### 5-43 Surface plot sine blend
+#### Surface plot sine blend
 
 ```swift
 import SwiftUI
@@ -196,7 +208,7 @@ struct SurfacePlotChart: View {
 }
 ```
 
-### 5-46 Surface plot negative z
+#### Surface plot negative z
 
 ```swift
 import SwiftUI
@@ -213,7 +225,7 @@ struct SurfacePlotChart: View {
 }
 ```
 
-### 6-19 Linear regression surface
+#### Linear regression surface
 
 ```swift
 import SwiftUI
@@ -305,7 +317,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 7-50 Chart3D pose default
+#### Chart3D pose default
 
 ```swift
 import SwiftUI
@@ -355,7 +367,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 8-02 Chart3D pose front
+#### Chart3D pose front
 
 ```swift
 import SwiftUI
@@ -405,7 +417,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 8-09 Chart3D pose custom
+#### Chart3D pose custom
 
 ```swift
 import SwiftUI
@@ -458,7 +470,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 9-15 Chart3D pose with projection
+#### Chart3D pose with projection
 
 ```swift
 import SwiftUI
@@ -512,7 +524,7 @@ struct PenguinChart: View {
 }
 ```
 
-### 9-24 Surface plot sinc
+#### Surface plot sinc
 
 ```swift
 import SwiftUI
@@ -533,7 +545,7 @@ struct SurfacePlotChart: View {
 }
 ```
 
-### 9-29 Surface plot sinc EllipticalGradient
+#### Surface plot sinc EllipticalGradient
 
 ```swift
 import SwiftUI
@@ -563,7 +575,7 @@ struct SurfacePlotChart: View {
 }
 ```
 
-### 9-38 Surface plot sinc heightBased
+#### Surface plot sinc heightBased
 
 ```swift
 import SwiftUI
@@ -585,7 +597,7 @@ struct SurfacePlotChart: View {
 }
 ```
 
-### 9-47 Surface plot sinc normalBased
+#### Surface plot sinc normalBased
 
 ```swift
 import SwiftUI

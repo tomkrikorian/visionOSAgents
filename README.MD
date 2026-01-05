@@ -9,17 +9,29 @@ It is intended for developers building applications for **Apple Vision Pro**, le
 ## Skills
 
 - `arkit-visionos-developer` - ARKit session setup, authorization, and data providers on visionOS.
-- `shareplay-dev` - GroupActivities and SharePlay session lifecycle and sync patterns.
-- `spatial-swiftui-designer` - SwiftUI + RealityKit spatial UI patterns for visionOS.
+- `coding-standards-enforcer` - Swift 6 concurrency and language standards enforcement.
+- `realitykit-visionos-developer` - RealityKit components, systems, and ECS patterns for visionOS.
+- `shareplay-developer` - GroupActivities and SharePlay session lifecycle and sync patterns.
+- `spatial-swiftui-developer` - SwiftUI + RealityKit spatial UI patterns for visionOS.
 - `shadergraph-editor` - Manual .usda ShaderGraph and material editing for RealityKit.
+
+## Install Skills to User Folder
+
+Use the script below to copy all repo skills into your user skills directory (`$CODEX_HOME/skills`, defaults to `~/.codex/skills`):
+
+```bash
+./scripts/install-user-skills.sh
+```
 
 ---
 
 ## Credits
 
-The original **AGENTS.MD** structure was inspired by the work of  
+This AGENTS.MD and SKILLS were inspired by the work of:
 - [Ivan Campos](https://github.com/ivancampos)  
 - [Paul Hudson](https://github.com/twostraws)
+- [Pedro Piñera Buendía](https://github.com/pepicrft)
+- [Thomas Ricouard](https://github.com/Dimillian/)
 
 ---
 

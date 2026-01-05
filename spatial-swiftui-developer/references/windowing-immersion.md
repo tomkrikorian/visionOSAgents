@@ -1,10 +1,20 @@
 # Windowing and Immersive Spaces
 
-## Notes
-- Use WindowGroup with explicit IDs and window styles for spatial presentation.
-- Treat ImmersiveSpace as a separate scene with its own lifecycle.
+## Context
 
-## ImmersiveSpace open and dismiss
+WindowGroup is a scene that presents a group of identically structured windows. ImmersiveSpace presents content in an unbounded space on visionOS, and RemoteImmersiveSpace presents an unbounded space on a remote device.
+
+## Best Practices
+
+- Use explicit `id` values for WindowGroup and ImmersiveSpace so you can open them programmatically.
+- Keep windows and volumes in WindowGroup scenes and immersive content in ImmersiveSpace scenes.
+- Set `windowStyle(.volumetric)` and `defaultSize` for volumes to ensure consistent physical scale.
+- Open and dismiss immersive spaces using the environment actions; only one immersive space can be open at a time.
+- Use RemoteImmersiveSpace for macOS apps that present compositor content on visionOS hardware.
+
+## Code Examples
+
+### ImmersiveSpace open and dismiss
 
 ```swift
 import SwiftUI
@@ -26,7 +36,7 @@ struct ImmersiveControls: View {
 }
 ```
 
-## Volumetric WindowGroup
+### Volumetric WindowGroup
 
 ```swift
 import SwiftUI
@@ -43,11 +53,9 @@ struct VolumeApp: App {
 }
 ```
 
-## WWDC 2025: Set the scene with SwiftUI in visionOS
 
-Session link: https://developer.apple.com/videos/play/wwdc2025/290/
 
-### 4-10 Disabling restoration
+#### Disabling restoration
 
 ```swift
 WindowGroup("Tools", id: "tools") {
@@ -56,7 +64,7 @@ WindowGroup("Tools", id: "tools") {
 .restorationBehavior(.disabled)
 ```
 
-### 4-36 Disabling restoration in UIKit
+#### Disabling restoration in UIKit
 
 ```swift
 windowScene.destructionConditions = [
@@ -64,7 +72,7 @@ windowScene.destructionConditions = [
 ]
 ```
 
-### 5-02 Specifying launch window
+#### Specifying launch window
 
 ```swift
 @AppStorage("isFirstLaunch") private var isFirstLaunch = true
@@ -84,7 +92,7 @@ var body: some Scene {
 }
 ```
 
-### 6-39 Suppressed launch behavior
+#### Suppressed launch behavior
 
 ```swift
 WindowGroup("Tools", id: "tools") {
@@ -94,7 +102,7 @@ WindowGroup("Tools", id: "tools") {
 .defaultLaunchBehavior(.suppressed)
 ```
 
-### 7-44 Unique window
+#### Unique window
 
 ```swift
 @AppStorage("isFirstLaunch") private var isFirstLaunch = true
@@ -114,7 +122,7 @@ var body: some Scene {
 }
 ```
 
-### 10-24 Surface snapping
+#### Surface snapping
 
 ```swift
 @Environment(\.surfaceSnappingInfo) private var snappingInfo
@@ -137,7 +145,7 @@ var body: some View {
 }
 ```
 
-### 14-41 Clipping margins
+#### Clipping margins
 
 ```swift
 @Environment(\.windowClippingMargins) private var windowMargins
@@ -158,7 +166,7 @@ var body: some View {
 }
 ```
 
-### 16-44 World recenter
+#### World recenter
 
 ```swift
 var body: some View {
@@ -171,7 +179,7 @@ var body: some View {
 }
 ```
 
-### 17-58 Progressive immersion style
+#### Progressive immersion style
 
 ```swift
 @State private var selectedStyle: ImmersionStyle = .progressive
@@ -186,7 +194,7 @@ var body: some Scene {
 }
 ```
 
-### 18-37 Mixed immersion style
+#### Mixed immersion style
 
 ```swift
 @State private var selectedStyle: ImmersionStyle = .progressive
@@ -200,7 +208,7 @@ var body: some Scene {
 }
 ```
 
-### 20-14 Remote immersive space
+#### Remote immersive space
 
 ```swift
 RemoteImmersiveSpace(id: "preview-space") {
@@ -212,7 +220,7 @@ WindowGroup("Main Stage", id: "main") {
 }
 ```
 
-### 20-48 CompositorLayer is CompositorContent
+#### CompositorLayer is CompositorContent
 
 ```swift
 struct ImmersiveContent: CompositorContent {
@@ -229,7 +237,7 @@ struct ImmersiveContent: CompositorContent {
 }
 ```
 
-### 23-00 Scene bridging
+#### Scene bridging
 
 ```swift
 import UIKit

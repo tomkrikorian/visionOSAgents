@@ -1,10 +1,19 @@
 # Model3D Patterns
 
-## Notes
-- Use Model3D for SwiftUI-driven model presentation and layout.
-- Load assets asynchronously and handle loading phases explicitly.
+## Context
 
-## Model3D with phases
+Model3D is a RealityKit view that asynchronously loads and displays a 3D model in SwiftUI. Model3DPhase represents the current loading state, and Model3DAsset is a container for the loaded asset when you need animation metadata or playback control.
+
+## Best Practices
+
+- Use the `content` closure to apply `ResolvedModel3D` modifiers like `resizable()` and `aspectRatio`, not on `Model3D` directly.
+- Prefer phase-based initializers when you need explicit placeholder and error handling.
+- Use `Model3DAsset` when you need animation selection or playback controls.
+- Keep loading asynchronous and supply a lightweight placeholder during fetch.
+
+## Code Examples
+
+### Model3D with phases
 
 ```swift
 import RealityKit
@@ -30,11 +39,9 @@ struct Model3DExample: View {
 }
 ```
 
-## WWDC 2025: Better together: SwiftUI and RealityKit (Model3D)
 
-Session link: https://developer.apple.com/videos/play/wwdc2025/274/
 
-### 1-42 Model3D
+#### Model3D
 
 ```swift
 struct ContentView: View {
@@ -44,7 +51,7 @@ struct ContentView: View {
 }
 ```
 
-### 1-52 Model3D with name sign
+#### Model3D with name sign
 
 ```swift
 struct ContentView: View {
@@ -57,7 +64,7 @@ struct ContentView: View {
 }
 ```
 
-### 3-18 Model3DAsset load
+#### Model3DAsset load
 
 ```swift
 struct RobotView: View {
@@ -70,7 +77,7 @@ struct RobotView: View {
 }
 ```
 
-### 3-34 Model3DAsset with animation picker
+#### Model3DAsset with animation picker
 
 ```swift
 struct RobotView: View {
@@ -88,7 +95,7 @@ struct RobotView: View {
 }
 ```
 
-### 4-03 Model3DAsset with animation controls
+#### Model3DAsset with animation controls
 
 ```swift
 struct RobotView: View {
@@ -109,7 +116,7 @@ struct RobotView: View {
 }
 ```
 
-### 4-32 Animation playback controls
+#### Animation playback controls
 
 ```swift
 struct RobotAnimationControls: View {
@@ -131,7 +138,7 @@ struct RobotAnimationControls: View {
 }
 ```
 
-### 5-41 ConfigurationCatalog Model3D
+#### ConfigurationCatalog Model3D
 
 ```swift
 struct ConfigCatalogExample: View {
@@ -157,7 +164,7 @@ struct ConfigCatalogExample: View {
 }
 ```
 
-### 12-30 manipulable
+#### manipulable
 
 ```swift
 struct RobotView: View {
@@ -172,7 +179,7 @@ struct RobotView: View {
 }
 ```
 
-### 12-33 manipulable operations
+#### manipulable operations
 
 ```swift
 struct RobotView: View {
@@ -191,7 +198,7 @@ struct RobotView: View {
 }
 ```
 
-### 12-41 manipulable inertia
+#### manipulable inertia
 
 ```swift
 struct RobotView: View {

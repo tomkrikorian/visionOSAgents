@@ -1,24 +1,36 @@
 # SwiftUI Spatial Layout
 
-## WWDC 2025: Meet SwiftUI spatial layout
+## Context
 
-Session link: https://developer.apple.com/videos/play/wwdc2025/273/
+SwiftUI spatial layout APIs let you measure, align, and compose views in three dimensions for visionOS. `GeometryReader3D` reads a view's available size and coordinate space including depth, and returns a flexible preferred size and depth to its parent. `SpatialContainer` is a layout container that aligns overlapping content in 3D space and sizes itself to the maximum dimension of its children. `spatialOverlay(alignment:content:)` adds secondary views within a view's 3D bounds, stacking multiple overlays depthwise using a `SpatialContainer`. `rotation3DLayout` rotates a view while updating its layout frame to account for the rotation, which can change the view's layout size.
 
-### 3-02 Robot image frame
+## Best Practices
+
+- Use `GeometryReader3D` only when you need depth measurements; it participates in depth layout and can affect ZStack sizing.
+- Prefer `SpatialContainer` and `Alignment3D` or `DepthAlignment` guides over hard-coded offsets for composable 3D layout.
+- Use `spatialOverlay` for adornments like labels or selection rings that should live within the same 3D bounds; keep overlays lightweight to avoid occlusion.
+- Use `rotation3DLayout` when rotation should affect layout size; use `rotation3DEffect` for purely visual rotation.
+- Keep debug helpers like `debugBorder3D` for development only.
+
+## Code Examples
+
+
+
+#### Robot image frame
 
 ```swift
 Image("RobotHead")
   .border(.red)
 ```
 
-### 3-05 Color frame
+#### Color frame
 
 ```swift
 Color.blue
   .border(.red)
 ```
 
-### 3-15 Layout composed frame
+#### Layout composed frame
 
 ```swift
 VStack {
@@ -30,14 +42,14 @@ VStack {
 .border(.yellow)
 ```
 
-### 4-00 Model3D frame
+#### Model3D frame
 
 ```swift
 Model3D(named: "Robot")
   .debugBorder3D(.red)
 ```
 
-### 4-25 Zero depth views
+#### Zero depth views
 
 ```swift
 HStack {
@@ -51,7 +63,7 @@ HStack {
 }
 ```
 
-### 4-41 RealityView depth
+#### RealityView depth
 
 ```swift
 RealityView { content in
@@ -60,7 +72,7 @@ RealityView { content in
 .debugBorder3D(.red)
 ```
 
-### 4-56 GeometryReader3D depth
+#### GeometryReader3D depth
 
 ```swift
 GeometryReader3D { proxy in
@@ -69,7 +81,7 @@ GeometryReader3D { proxy in
 .debugBorder3D(.red)
 ```
 
-### 5-01 Model3D scaledToFit3D
+#### Model3D scaledToFit3D
 
 ```swift
 Model3D(url: robotURL) { resolved in
@@ -81,7 +93,7 @@ Model3D(url: robotURL) { resolved in
 .debugBorder3D(.red)
 ```
 
-### 6-15 ZStack depth
+#### ZStack depth
 
 ```swift
 ZStack {
@@ -93,7 +105,7 @@ ZStack {
 .debugBorder3D(.yellow)
 ```
 
-### 6-33 ZStack with RealityView
+#### ZStack with RealityView
 
 ```swift
 ZStack {
@@ -105,7 +117,7 @@ ZStack {
 .debugBorder3D(.yellow)
 ```
 
-### 6-57 Layouts are 3D
+#### Layouts are 3D
 
 ```swift
 HStack {
@@ -117,7 +129,7 @@ HStack {
 .debugBorder3D(.yellow)
 ```
 
-### 7-50 ResizableRobotView
+#### ResizableRobotView
 
 ```swift
 struct ResizableRobotView: View {
@@ -133,7 +145,7 @@ struct ResizableRobotView: View {
 }
 ```
 
-### 8-11 Robot profile layout
+#### Robot profile layout
 
 ```swift
 struct RobotProfile: View {
@@ -149,7 +161,7 @@ struct RobotProfile: View {
 }
 ```
 
-### 8-38 Vertical alignment
+#### Vertical alignment
 
 ```swift
 HStack(alignment: .bottom) {
@@ -162,7 +174,7 @@ HStack(alignment: .bottom) {
 .border(.yellow)
 ```
 
-### 8-52 Depth alignment
+#### Depth alignment
 
 ```swift
 struct RobotProfile: View {
@@ -178,7 +190,7 @@ struct RobotProfile: View {
 }
 ```
 
-### 9-45 Favorite robots row
+#### Favorite robots row
 
 ```swift
 struct FavoriteRobotsRow: View {
@@ -194,7 +206,7 @@ struct FavoriteRobotsRow: View {
 }
 ```
 
-### 10-27 Custom depth alignment ID
+#### Custom depth alignment ID
 
 ```swift
 struct DepthPodiumAlignment: DepthAlignmentID {
@@ -208,7 +220,7 @@ extension DepthAlignment {
 }
 ```
 
-### 10-51 Customizing depth alignment guides
+#### Customizing depth alignment guides
 
 ```swift
 struct FavoritesRow: View {
@@ -230,14 +242,14 @@ struct FavoritesRow: View {
 }
 ```
 
-### 12-00 Rotation3DEffect
+#### Rotation3DEffect
 
 ```swift
 Model3D(named: "ToyRocket")
   .rotation3DEffect(.degrees(45), axis: .z)
 ```
 
-### 12-10 Rotation3DLayout
+#### Rotation3DLayout
 
 ```swift
 HStackLayout().depthAlignment(.front) {
@@ -247,7 +259,7 @@ HStackLayout().depthAlignment(.front) {
 }
 ```
 
-### 14-42 Pet radial layout
+#### Pet radial layout
 
 ```swift
 struct PetRadialLayout: View {
@@ -263,7 +275,7 @@ struct PetRadialLayout: View {
 }
 ```
 
-### 14-56 Rotated robot carousel
+#### Rotated robot carousel
 
 ```swift
 struct RobotCarousel: View {
@@ -284,7 +296,7 @@ struct RobotCarousel: View {
 }
 ```
 
-### 17-00 Spatial container
+#### Spatial container
 
 ```swift
 SpatialContainer(alignment: .topTrailingBack) {
@@ -294,7 +306,7 @@ SpatialContainer(alignment: .topTrailingBack) {
 }
 ```
 
-### 17-35 Spatial overlay
+#### Spatial overlay
 
 ```swift
 LargeBox()
@@ -303,7 +315,7 @@ LargeBox()
   }
 ```
 
-### 17-47 Selection ring spatial overlay
+#### Selection ring spatial overlay
 
 ```swift
 struct RobotCarouselItem: View {
@@ -321,7 +333,7 @@ struct RobotCarouselItem: View {
 }
 ```
 
-### 18-32 DebugBorder3D
+#### DebugBorder3D
 
 ```swift
 extension View {

@@ -1,5 +1,5 @@
 ---
-name: spatial-swiftui-designer
+name: spatial-swiftui-developer
 description: Design and implement visionOS SwiftUI scenes that integrate RealityKit content. Use when building spatial UI with RealityView, Model3D, attachments, volumetric windows, ImmersiveSpace, or spatial gestures, or when choosing SwiftUI vs RealityKit APIs for 3D presentation.
 ---
 
@@ -58,7 +58,6 @@ Use this skill to design SwiftUI-based spatial interfaces that embed RealityKit 
 
 ## References
 
-- [references/DOCUMENTATION.DM](references/DOCUMENTATION.DM) - sosumi documentation paths for SwiftUI + RealityKit.
 - [references/REFERENCE.md](references/REFERENCE.md) - index of feature-focused code patterns.
 - [references/model3d.md](references/model3d.md) - Model3D loading, assets, animation, and manipulable.
 - [references/realityview.md](references/realityview.md) - RealityView setup, attachments, and RealityKit patterns.
@@ -66,4 +65,3 @@ Use this skill to design SwiftUI-based spatial interfaces that embed RealityKit 
 - [references/windowing-immersion.md](references/windowing-immersion.md) - Window management and immersive space patterns.
 - [references/spatial-layout.md](references/spatial-layout.md) - SwiftUI spatial layout APIs and debug tools.
 - [references/charts-3d.md](references/charts-3d.md) - Chart3D and surface plot patterns.
-- [references/WWDC.DM](references/WWDC.DM) - WWDC session links and transcript placeholders.
