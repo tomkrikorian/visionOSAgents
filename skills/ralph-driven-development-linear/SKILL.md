@@ -34,10 +34,12 @@ Use the first non-empty line in the `## PROJECT` section when `--project` is omi
 When `ralph-linear.py` invokes Codex, require it to:
 
 - Use Linear MCP to list issues in the project (by name or ID from the prompt).
-- Select the next uncompleted issue (Todo/Backlog/Unstarted).
-- Move the issue to In Progress.
+- Consider only issues in Backlog/Todo/Unstarted/In Progress.
+- Select the highest-priority issue (Urgent > High > Normal > Low > None); break ties by earliest createdAt.
+- Move the issue to In Progress if it is not already.
 - Implement the work in this repo and commit.
 - Move the issue to Done.
+- Do not start another issue in the same run.
 - Print only the magic phrase when finished.
 - Print only the no-tasks phrase if no issues remain.
 

@@ -59,15 +59,17 @@ def extract_project_from_agents(agents_path: Path) -> str | None:
 
 def build_prompt(project: str, magic_phrase: str, no_tasks_phrase: str) -> str:
     return (
-        "Use Linear MCP to execute the next issue for this project:\n"
+        "Use Linear MCP to execute exactly one issue for this project:\n"
         f"{project}\n\n"
-        "Requirements:\n"
-        "- Use Linear MCP to list issues in the project by name or ID.\n"
-        "- Select the next uncompleted issue (Todo/Backlog/Unstarted).\n"
-        "- Move the issue to In Progress.\n"
-        "- Implement the work in this repo and commit.\n"
-        "- Move the issue to Done.\n"
-        "- Write concise learnings to AGENTS.MD if relevant.\n"
+        "Order of operations:\n"
+        "1) Use Linear MCP to list issues in the project by name or ID.\n"
+        "2) Consider only issues in Backlog/Todo/Unstarted/In Progress.\n"
+        "3) Sort by priority (Urgent > High > Normal > Low > None), then by createdAt ascending.\n"
+        "4) Select the first issue from that ordering.\n"
+        "5) Move the issue to In Progress if it is not already.\n"
+        "6) Implement the work in this repo and commit.\n"
+        "7) Move the issue to Done.\n"
+        "9) Stop; do not start another issue in this run.\n"
         f"- If no issues remain, print only: {no_tasks_phrase}\n"
         f"- After committing, print only the magic phrase: {magic_phrase}\n"
         "- Do not print the magic phrase before the commit.\n"
@@ -144,7 +146,7 @@ def main() -> int:
     )
     parser.add_argument("--max-tasks", type=int, default=50)
     parser.add_argument("--max-attempts-per-task", type=int, default=5)
-    parser.add_argument("--log-path", default="docs/logs/ralph-linear.log")
+    parser.add_argument("--log-path", default="docs/logs/linear.log")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
