@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import os
 import re
 import shlex
 import subprocess
+import sys
+import threading
 import time
 import traceback
 from pathlib import Path
@@ -85,21 +88,124 @@ def append_log(log_path: Path, text: str) -> None:
         handle.write(text)
 
 
+def supports_color() -> bool:
+    if os.environ.get("FORCE_COLOR"):
+        return True
+    if os.environ.get("NO_COLOR"):
+        return False
+    if os.environ.get("TERM") == "dumb":
+        return False
+    return sys.stdout.isatty()
+
+
+USE_COLOR = supports_color()
+COLOR_CODES = {
+    "red": "31",
+    "green": "32",
+    "yellow": "33",
+    "blue": "34",
+    "magenta": "35",
+    "cyan": "36",
+    "gray": "90",
+}
+STATUS_COLORS = {
+    "count": "cyan",
+    "start": "blue",
+    "done": "green",
+    "error": "red",
+    "wait": "yellow",
+    "info": "magenta",
+    "progress": "cyan",
+    "retry": "yellow",
+    "dry-run": "magenta",
+}
+
+
+def style(text: str, *, color: str | None = None, bold: bool = False, dim: bool = False) -> str:
+    if not USE_COLOR:
+        return text
+    codes: list[str] = []
+    if bold:
+        codes.append("1")
+    if dim:
+        codes.append("2")
+    if color:
+        code = COLOR_CODES.get(color)
+        if code:
+            codes.append(code)
+    if not codes:
+        return text
+    return f"\x1b[{';'.join(codes)}m{text}\x1b[0m"
+
+
+def tag(kind: str) -> str:
+    return style(f"[{kind}]", color=STATUS_COLORS.get(kind), bold=True)
+
+
+def emphasize(value: object, color: str = "cyan") -> str:
+    return style(str(value), color=color, bold=True)
+
+
+def print_status(kind: str, message: str) -> None:
+    print(f"{tag(kind)} {message}")
+
+
+def print_title(title: str) -> None:
+    print(style(f"=== {title} ===", color="magenta", bold=True))
+
+
+def print_summary(completed: int, failed: int) -> None:
+    print_title("Summary")
+    print(f"{style('Completed:', bold=True)} {style(str(completed), color='green')}")
+    failed_color = "red" if failed else "green"
+    print(f"{style('Failed:', bold=True)} {style(str(failed), color=failed_color)}")
+
+
 def run_codex(
     codex_exe: str,
     codex_args: list[str],
     prompt: str,
     timeout_seconds: float | None,
 ) -> tuple[int, str]:
-    process = subprocess.run(
+    output_chunks: list[str] = []
+
+    def mirror_output(stream: io.TextIOBase) -> None:
+        # Mirror Codex output to the terminal while capturing for logs/parsing.
+        for line in stream:
+            output_chunks.append(line)
+            sys.stdout.write(line)
+            sys.stdout.flush()
+
+    process = subprocess.Popen(
         [codex_exe, *codex_args, "-"],
-        input=prompt,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
         text=True,
-        capture_output=True,
         cwd=os.getcwd(),
-        timeout=timeout_seconds,
+        bufsize=1,
     )
-    output = (process.stdout or "") + (process.stderr or "")
+
+    if process.stdin is None or process.stdout is None:
+        raise RuntimeError("Failed to open stdin/stdout for Codex process")
+
+    process.stdin.write(prompt)
+    process.stdin.close()
+
+    reader = threading.Thread(target=mirror_output, args=(process.stdout,), daemon=True)
+    reader.start()
+
+    try:
+        process.wait(timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+        reader.join()
+        output = "".join(output_chunks)
+        raise subprocess.TimeoutExpired(process.args, timeout_seconds, output=output)
+
+    reader.join()
+    output = "".join(output_chunks)
     return process.returncode, output
 
 
@@ -207,21 +313,21 @@ def main() -> int:
     failed_count = 0
 
     if args.dry_run:
-        print(f"[dry-run] {project}")
+        print_status("dry-run", project)
         return 0
 
     total_tasks = None
     count_attempt = 1
     while total_tasks is None:
         if count_attempt > args.max_attempts_per_task:
-            print("[error] max attempts exceeded while counting tasks")
+            print_status("error", "max attempts exceeded while counting tasks")
             raise RuntimeError("Max attempts exceeded while counting tasks")
 
         prompt = build_count_prompt(project)
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         append_log(log_path, f"=== {timestamp} | count attempt {count_attempt} ===\n")
 
-        print(f"[count] attempt {count_attempt} | project: {project}")
+        print_status("count", f"attempt {count_attempt} | project: {project}")
 
         try:
             exit_code, output_text = run_codex(
@@ -233,7 +339,7 @@ def main() -> int:
         except Exception:
             output_text = "[exception] codex invocation failed\n" + traceback.format_exc()
             append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
-            print("[error] exception during codex count run")
+            print_status("error", "exception during codex count run")
             count_attempt += 1
             continue
 
@@ -248,50 +354,60 @@ def main() -> int:
         if usage_limit:
             reset_seconds = parse_reset_seconds(output_text)
             wait_seconds = (reset_seconds + 30) if reset_seconds is not None else 60 * 60
-            print(f"[wait] usage limit reached; sleeping {wait_seconds} seconds before retry")
+            print_status("wait", f"usage limit reached; sleeping {wait_seconds} seconds before retry")
             time.sleep(wait_seconds)
             count_attempt += 1
             continue
 
         if exit_code != 0:
-            print(f"[error] codex exit code {exit_code} during count")
+            print_status("error", f"codex exit code {exit_code} during count")
             count_attempt += 1
             continue
 
         total_tasks = parse_task_count(output_text)
         if total_tasks is None:
-            print("[retry] task count not found")
+            print_status("retry", "task count not found")
             count_attempt += 1
             continue
 
     run_total = total_tasks if max_tasks is None else min(total_tasks, max_tasks)
-    print(f"[info] tasks found: {total_tasks} | tasks this run: {run_total}")
-    print(f"[info] max tasks cap: {max_tasks if max_tasks is not None else 'unlimited'}")
+    print_status(
+        "info",
+        f"tasks found: {emphasize(total_tasks, 'green')} | tasks this run: {emphasize(run_total, 'green')}",
+    )
+    print_status(
+        "info",
+        f"max tasks cap: {emphasize(max_tasks if max_tasks is not None else 'unlimited', 'cyan')}",
+    )
 
     if total_tasks == 0:
-        print("[done] no tasks remaining")
-        print("=== Summary ===")
-        print(f"Completed: {completed_count}")
-        print(f"Failed:    {failed_count}")
+        print_status("done", "no tasks remaining")
+        print_summary(completed_count, failed_count)
         return 0
 
     while completed_count < run_total:
         remaining = max(run_total - completed_count, 0)
-        print(f"[progress] completed {completed_count}/{run_total} | remaining {remaining}")
+        print_status(
+            "progress",
+            f"completed {emphasize(completed_count)}/{emphasize(run_total)} | remaining {emphasize(remaining, 'yellow')}",
+        )
         attempt = 1
         done = False
 
         while not done:
             if attempt > args.max_attempts_per_task:
                 failed_count += 1
-                print("[error] max attempts exceeded for current task")
+                print_status("error", "max attempts exceeded for current task")
                 raise RuntimeError("Max attempts exceeded for current task")
 
             prompt = build_prompt(project)
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             append_log(log_path, f"=== {timestamp} | task {completed_count + 1} | attempt {attempt} ===\n")
 
-            print(f"[start] Task {completed_count + 1} | attempt {attempt} | project: {project}")
+            print_status(
+                "start",
+                f"Task {emphasize(completed_count + 1)} | attempt {emphasize(attempt)} | project: {project}",
+            )
 
             try:
                 exit_code, output_text = run_codex(
@@ -303,7 +419,7 @@ def main() -> int:
             except Exception:
                 output_text = "[exception] codex invocation failed\n" + traceback.format_exc()
                 append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
-                print("[error] exception during codex run")
+                print_status("error", "exception during codex run")
                 attempt += 1
                 continue
 
@@ -318,25 +434,23 @@ def main() -> int:
             if usage_limit:
                 reset_seconds = parse_reset_seconds(output_text)
                 wait_seconds = (reset_seconds + 30) if reset_seconds is not None else 60 * 60
-                print(f"[wait] usage limit reached; sleeping {wait_seconds} seconds before retry")
+                print_status("wait", f"usage limit reached; sleeping {wait_seconds} seconds before retry")
                 time.sleep(wait_seconds)
                 attempt += 1
                 continue
 
             if exit_code != 0:
-                print(f"[error] codex exit code {exit_code} | attempt {attempt}")
+                print_status("error", f"codex exit code {exit_code} | attempt {attempt}")
                 attempt += 1
                 continue
             done = True
             completed_count += 1
-            print("[done] task completed")
-            print(f"[progress] completed {completed_count}/{run_total}")
+            print_status("done", "task completed")
+            print_status("progress", f"completed {emphasize(completed_count)}/{emphasize(run_total)}")
 
     if max_tasks is not None and completed_count >= max_tasks:
-        print("[done] max tasks reached for this run")
-    print("=== Summary ===")
-    print(f"Completed: {completed_count}")
-    print(f"Failed:    {failed_count}")
+        print_status("done", "max tasks reached for this run")
+    print_summary(completed_count, failed_count)
     return 0
 
 

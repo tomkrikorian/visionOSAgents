@@ -31,18 +31,23 @@ Use the script below to copy all repo skills into your user skills directory (`$
 ## Credits
 
 This AGENTS.MD and SKILLS were inspired by the work of:
+
 - [Ivan Campos](https://github.com/ivancampos)  
 - [Paul Hudson](https://github.com/twostraws)
 - [Pedro Piñera Buendía](https://github.com/pepicrft)
 - [Thomas Ricouard](https://github.com/Dimillian/)
+- [Sharno](https://github.com/sharno)
 
 ---
 
 ## Documentation
+
 If you want to know more about AGENTS & SKILLS, look at the official documentation.
 
 ### AGENTS.MD
-https://agents.md/
+
+[https://agents.md/](https://agents.md/)
 
 ### SKILLS.MD
-https://agentskills.io/
+
+[https://agentskills.io/](https://agentskills.io/)
