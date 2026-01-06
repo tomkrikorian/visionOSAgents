@@ -11,9 +11,6 @@ import time
 import traceback
 from pathlib import Path
 
-DEFAULT_MAGIC_PHRASE = "TASK_COMPLETE"
-DEFAULT_NO_TASKS_PHRASE = "NO_TASKS_AVAILABLE"
-
 
 def find_repo_root(start: Path) -> Path:
     for candidate in [start, *start.parents]:
@@ -57,7 +54,7 @@ def extract_project_from_agents(agents_path: Path) -> str | None:
     return None
 
 
-def build_prompt(project: str, magic_phrase: str, no_tasks_phrase: str) -> str:
+def build_prompt(project: str) -> str:
     return (
         "Use Linear MCP to execute exactly one issue for this project:\n"
         f"{project}\n\n"
@@ -69,9 +66,16 @@ def build_prompt(project: str, magic_phrase: str, no_tasks_phrase: str) -> str:
         "5) Move the issue to In Progress if it is not already.\n"
         "6) Implement the work in this repo and commit.\n"
         "7) Move the issue to Done.\n"
-        f"- If no issues remain, print only: {no_tasks_phrase}\n"
-        f"- After committing, print only the magic phrase: {magic_phrase}\n"
-        "- Do not print the magic phrase before the commit.\n"
+    )
+
+
+def build_count_prompt(project: str) -> str:
+    return (
+        "Use Linear MCP to list issues in this project by name or ID:\n"
+        f"{project}\n\n"
+        "Consider only issues in Backlog/Todo/Unstarted/In Progress.\n"
+        "Count them and print only JSON: {\"total\": <number>}\n"
+        "Do not modify any issues.\n"
     )
 
 
@@ -125,6 +129,25 @@ def parse_reset_seconds(text: str) -> int | None:
     return None
 
 
+def parse_task_count(text: str) -> int | None:
+    for line in text.splitlines():
+        line = line.strip()
+        if not (line.startswith("{") and line.endswith("}")):
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            total = payload.get("total")
+            if isinstance(total, int):
+                return total
+    match = re.search(r'"total"\s*:\s*(\d+)', text)
+    if match:
+        return int(match.group(1))
+    return None
+
+
 def shutil_which(executable: str) -> str | None:
     for path in os.environ.get("PATH", "").split(os.pathsep):
         candidate = Path(path) / executable
@@ -141,8 +164,6 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run Linear issues sequentially with Codex.")
     parser.add_argument("--project", help="Linear project name or ID")
     parser.add_argument("--agents-path", default="AGENTS.MD")
-    parser.add_argument("--magic-phrase", default=DEFAULT_MAGIC_PHRASE)
-    parser.add_argument("--no-tasks-phrase", default=DEFAULT_NO_TASKS_PHRASE)
     parser.add_argument("--codex-exe", default="codex")
     parser.add_argument(
         "--codex-args",
@@ -185,22 +206,90 @@ def main() -> int:
     completed_count = 0
     failed_count = 0
 
-    while max_tasks is None or completed_count < max_tasks:
+    if args.dry_run:
+        print(f"[dry-run] {project}")
+        return 0
+
+    total_tasks = None
+    count_attempt = 1
+    while total_tasks is None:
+        if count_attempt > args.max_attempts_per_task:
+            print("[error] max attempts exceeded while counting tasks")
+            raise RuntimeError("Max attempts exceeded while counting tasks")
+
+        prompt = build_count_prompt(project)
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        append_log(log_path, f"=== {timestamp} | count attempt {count_attempt} ===\n")
+
+        print(f"[count] attempt {count_attempt} | project: {project}")
+
+        try:
+            exit_code, output_text = run_codex(
+                args.codex_exe,
+                codex_args,
+                prompt,
+                timeout_seconds,
+            )
+        except Exception:
+            output_text = "[exception] codex invocation failed\n" + traceback.format_exc()
+            append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
+            print("[error] exception during codex count run")
+            count_attempt += 1
+            continue
+
+        append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
+
+        usage_limit = (
+            "usage_limit_reached" in output_text
+            or "Too Many Requests" in output_text
+            or "You've hit your usage limit" in output_text
+        )
+
+        if usage_limit:
+            reset_seconds = parse_reset_seconds(output_text)
+            wait_seconds = (reset_seconds + 30) if reset_seconds is not None else 60 * 60
+            print(f"[wait] usage limit reached; sleeping {wait_seconds} seconds before retry")
+            time.sleep(wait_seconds)
+            count_attempt += 1
+            continue
+
+        if exit_code != 0:
+            print(f"[error] codex exit code {exit_code} during count")
+            count_attempt += 1
+            continue
+
+        total_tasks = parse_task_count(output_text)
+        if total_tasks is None:
+            print("[retry] task count not found")
+            count_attempt += 1
+            continue
+
+    run_total = total_tasks if max_tasks is None else min(total_tasks, max_tasks)
+    print(f"[info] tasks found: {total_tasks} | tasks this run: {run_total}")
+    print(f"[info] max tasks cap: {max_tasks if max_tasks is not None else 'unlimited'}")
+
+    if total_tasks == 0:
+        print("[done] no tasks remaining")
+        print("=== Summary ===")
+        print(f"Completed: {completed_count}")
+        print(f"Failed:    {failed_count}")
+        return 0
+
+    while completed_count < run_total:
+        remaining = max(run_total - completed_count, 0)
+        print(f"[progress] completed {completed_count}/{run_total} | remaining {remaining}")
         attempt = 1
         done = False
 
         while not done:
             if attempt > args.max_attempts_per_task:
                 failed_count += 1
+                print("[error] max attempts exceeded for current task")
                 raise RuntimeError("Max attempts exceeded for current task")
 
-            prompt = build_prompt(project, args.magic_phrase, args.no_tasks_phrase)
+            prompt = build_prompt(project)
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             append_log(log_path, f"=== {timestamp} | task {completed_count + 1} | attempt {attempt} ===\n")
-
-            if args.dry_run:
-                print(f"[dry-run] {project} (attempt {attempt})")
-                return 0
 
             print(f"[start] Task {completed_count + 1} | attempt {attempt} | project: {project}")
 
@@ -235,26 +324,16 @@ def main() -> int:
                 continue
 
             if exit_code != 0:
-                print(f"[error] codex exit code {exit_code}")
+                print(f"[error] codex exit code {exit_code} | attempt {attempt}")
                 attempt += 1
                 continue
+            done = True
+            completed_count += 1
+            print("[done] task completed")
+            print(f"[progress] completed {completed_count}/{run_total}")
 
-            if args.no_tasks_phrase in output_text:
-                print("[done] no tasks remaining")
-                print("=== Summary ===")
-                print(f"Completed: {completed_count}")
-                print(f"Failed:    {failed_count}")
-                return 0
-
-            if args.magic_phrase in output_text:
-                done = True
-                completed_count += 1
-                print("[done] task completed")
-                continue
-
-            print("[retry] magic phrase not found")
-            attempt += 1
-
+    if max_tasks is not None and completed_count >= max_tasks:
+        print("[done] max tasks reached for this run")
     print("=== Summary ===")
     print(f"Completed: {completed_count}")
     print(f"Failed:    {failed_count}")
