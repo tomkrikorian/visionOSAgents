@@ -156,7 +156,12 @@ def main() -> int:
         default=0,
         help="Seconds before killing a Codex run (0 = unlimited).",
     )
-    parser.add_argument("--max-tasks", type=int, default=50)
+    parser.add_argument(
+        "--max-tasks",
+        type=int,
+        default=0,
+        help="Maximum number of issues to run (0 = unlimited).",
+    )
     parser.add_argument("--max-attempts-per-task", type=int, default=5)
     parser.add_argument("--log-path", default="docs/logs/linear.log")
     parser.add_argument("--dry-run", action="store_true")
