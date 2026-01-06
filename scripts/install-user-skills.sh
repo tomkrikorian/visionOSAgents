@@ -3,6 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+skills_root="$repo_root/skills"
 user_skills_dir="${CODEX_HOME:-$HOME/.codex}/skills"
 
 mkdir -p "$user_skills_dir"
@@ -26,10 +27,15 @@ normalize_skill_filename() {
   fi
 }
 
+if [[ ! -d "$skills_root" ]]; then
+  echo "Skills folder not found at $skills_root."
+  exit 1
+fi
+
 skill_files=()
 while IFS= read -r skill_file; do
   skill_files+=("$skill_file")
-done < <(find "$repo_root" -maxdepth 2 -type f \( -name "SKILL.md" -o -name "SKILL.MD" \))
+done < <(find "$skills_root" -maxdepth 2 -type f \( -name "SKILL.md" -o -name "SKILL.MD" \))
 
 if [[ ${#skill_files[@]} -eq 0 ]]; then
   echo "No skills found in $repo_root."

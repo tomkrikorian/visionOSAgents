@@ -8,9 +8,12 @@ It is intended for developers building applications for **Apple Vision Pro**, le
 
 ## Skills
 
+All skill definitions live under `skills/`.
+
 - `arkit-visionos-developer` - ARKit session setup, authorization, and data providers on visionOS.
 - `coding-standards-enforcer` - Swift 6 concurrency and language standards enforcement.
 - `realitykit-visionos-developer` - RealityKit components, systems, and ECS patterns for visionOS.
+- `ralph-driven-development` - Ralph Driven Development (RDD) spec runner workflow and tooling.
 - `shareplay-developer` - GroupActivities and SharePlay session lifecycle and sync patterns.
 - `spatial-swiftui-developer` - SwiftUI + RealityKit spatial UI patterns for visionOS.
 - `shadergraph-editor` - Manual .usda ShaderGraph and material editing for RealityKit.
