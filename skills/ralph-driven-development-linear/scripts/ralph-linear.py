@@ -82,13 +82,19 @@ def append_log(log_path: Path, text: str) -> None:
         handle.write(text)
 
 
-def run_codex(codex_exe: str, codex_args: list[str], prompt: str) -> tuple[int, str]:
+def run_codex(
+    codex_exe: str,
+    codex_args: list[str],
+    prompt: str,
+    timeout_seconds: float | None,
+) -> tuple[int, str]:
     process = subprocess.run(
         [codex_exe, *codex_args, "-"],
         input=prompt,
         text=True,
         capture_output=True,
         cwd=os.getcwd(),
+        timeout=timeout_seconds,
     )
     output = (process.stdout or "") + (process.stderr or "")
     return process.returncode, output
@@ -144,6 +150,12 @@ def main() -> int:
         default="exec --dangerously-bypass-approvals-and-sandbox",
         help="Space-separated codex args, e.g. 'exec --full-auto -m gpt-5.2-codex'",
     )
+    parser.add_argument(
+        "--codex-timeout",
+        type=float,
+        default=0,
+        help="Seconds before killing a Codex run (0 = unlimited).",
+    )
     parser.add_argument("--max-tasks", type=int, default=50)
     parser.add_argument("--max-attempts-per-task", type=int, default=5)
     parser.add_argument("--log-path", default="docs/logs/linear.log")
@@ -165,6 +177,7 @@ def main() -> int:
         raise FileNotFoundError(f"Codex executable not found on PATH: {args.codex_exe}")
 
     max_tasks = None if args.max_tasks <= 0 else args.max_tasks
+    timeout_seconds = None if args.codex_timeout <= 0 else args.codex_timeout
     completed_count = 0
     failed_count = 0
 
@@ -188,7 +201,12 @@ def main() -> int:
             print(f"[start] Task {completed_count + 1} | attempt {attempt} | project: {project}")
 
             try:
-                exit_code, output_text = run_codex(args.codex_exe, codex_args, prompt)
+                exit_code, output_text = run_codex(
+                    args.codex_exe,
+                    codex_args,
+                    prompt,
+                    timeout_seconds,
+                )
             except Exception:
                 output_text = "[exception] codex invocation failed\n" + traceback.format_exc()
                 append_log(log_path, output_text + ("\n" if not output_text.endswith("\n") else ""))
