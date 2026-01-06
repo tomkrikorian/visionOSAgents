@@ -69,7 +69,6 @@ def build_prompt(project: str, magic_phrase: str, no_tasks_phrase: str) -> str:
         "5) Move the issue to In Progress if it is not already.\n"
         "6) Implement the work in this repo and commit.\n"
         "7) Move the issue to Done.\n"
-        "9) Stop; do not start another issue in this run.\n"
         f"- If no issues remain, print only: {no_tasks_phrase}\n"
         f"- After committing, print only the magic phrase: {magic_phrase}\n"
         "- Do not print the magic phrase before the commit.\n"
