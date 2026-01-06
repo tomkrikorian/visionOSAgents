@@ -12,8 +12,9 @@ Run a Ralph-style loop that pulls Linear issues via MCP and processes them seque
 ## Quick start
 
 1. Ensure `codex` is on PATH.
-2. Provide a Linear project name or ID via `--project` or `AGENTS.MD`.
-3. Run the runner:
+2. Provide a Linear project name or ID in the prompt or look for it in `AGENTS.MD`.
+3. If Auth fails, ask the user to run this line: codex mcp login linear
+4. Run the script:
 
 ```bash
 uv run python scripts/ralph-linear.py --project "project name"
@@ -21,11 +22,10 @@ uv run python scripts/ralph-linear.py --project "project name"
 
 ## AGENTS.MD project format
 
-Under `## PROJECT`, add one of the following lines:
+Under `## PROJECT`, add a line with the name or ID of the project:
 
 - `Linear Project: Example Project`
-- `Linear Project ID: 00000000-0000-0000-0000-000000000000`
-- `Example Project`
+- `Linear Project: 00000000-0000-0000-0000-000000000000`
 
 Use the first non-empty line in the `## PROJECT` section when `--project` is omitted.
 

@@ -32,6 +32,7 @@ def extract_project_from_agents(agents_path: Path) -> str | None:
         return None
     text = agents_path.read_text(encoding="utf-8")
     in_section = False
+    marker = "Linear Project:"
     for line in text.splitlines():
         if re.match(r"^##\s*PROJECT\b", line):
             in_section = True
@@ -48,11 +49,11 @@ def extract_project_from_agents(agents_path: Path) -> str | None:
         if stripped.lower().startswith("todo"):
             continue
         stripped = re.sub(r"^[*-]\s*", "", stripped)
-        if ":" in stripped:
-            _, value = stripped.split(":", 1)
-            stripped = value.strip()
-        if stripped:
-            return stripped
+        if marker in stripped:
+            _, value = stripped.split(marker, 1)
+            value = value.strip()
+            if value:
+                return value
     return None
 
 
@@ -153,7 +154,7 @@ def main() -> int:
     agents_path = resolve_repo_path(args.agents_path, repo_root)
     project = args.project or extract_project_from_agents(agents_path)
     if not project:
-        raise ValueError("Provide --project or set a project under ## PROJECT in AGENTS.MD")
+        raise ValueError("Provide --project or set 'Linear Project:' under ## PROJECT in AGENTS.MD")
 
     log_path = resolve_repo_path(args.log_path, repo_root)
 
