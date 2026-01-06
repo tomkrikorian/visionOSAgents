@@ -18,7 +18,7 @@ Run `ralph-linear.py` to execute Linear issues sequentially with Codex.
 ## Run
 
 ```bash
-python skills/ralph-driven-development-linear/scripts/ralph-linear.py --project "Project Name"
+python scripts/ralph-linear.py --project "Project Name"
 ```
 
 ## Flags
@@ -36,11 +36,11 @@ python skills/ralph-driven-development-linear/scripts/ralph-linear.py --project 
 ## Examples
 
 ```bash
-python skills/ralph-driven-development-linear/scripts/ralph-linear.py --project "VisionOS Agents" --max-tasks 3
+python scripts/ralph-linear.py --project "VisionOS Agents" --max-tasks 3
 ```
 
 ```bash
-python skills/ralph-driven-development-linear/scripts/ralph-linear.py \
+python scripts/ralph-linear.py \
   --project "VisionOS Agents" \
   --codex-args 'exec --full-auto -m gpt-5.2-codex'
 ```
