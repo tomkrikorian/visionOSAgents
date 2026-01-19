@@ -24,9 +24,11 @@ Use this table to decide what skill to use when starting a task:
 | **coding-standards-enforcer**     | When reviewing or implementing Swift code changes. Use to ensure compliance with Swift 6.2 concurrency rules and repository-wide language standards.                                                   |
 | **realitykit-visionos-developer** | When building RealityKit scenes, working with entities/components, implementing rendering, physics, audio, input handling, attachments, or custom ECS systems on visionOS.                             |
 | **ralph-driven-development**      | When setting up or operating a Ralph Driven Development (RDD) workflow with spec runners, plan.md, specs/, done.md, and agent-run.log files.                                                           |
+| **ralph-driven-development-linear** | When automating task execution from a Linear project and when you need a runner that advances issues and asks for the next task automatically. |
 | **shareplay-developer**           | When implementing SharePlay features, GroupActivities, GroupSession lifecycle management, messaging/journals, ShareLink UI, or spatial coordination on visionOS.                                       |
 | **spatial-swiftui-developer**     | When building spatial UI with SwiftUI, integrating RealityKit content via RealityView, using Model3D, creating attachments, implementing volumetric windows, ImmersiveSpace, or spatial gestures.      |
 | **shadergraph-editor**            | When creating, editing, or troubleshooting ShaderGraph materials, RealityKit material networks, or .usda files for custom shaders and material properties.                                             |
+| **tkr-skill-writer**              | When creating new skills or updating existing skill documentation. Use to ensure consistent formatting, clear documentation, and proper reference organization.                                        |
 
 
 ### PROJECT

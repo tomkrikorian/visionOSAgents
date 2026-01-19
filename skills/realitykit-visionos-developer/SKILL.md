@@ -45,7 +45,7 @@ Load the appropriate component or system reference file from the tables below fo
 
 - Use `RealityView` to bridge SwiftUI and RealityKit.
 - Load assets with `Entity(named:)` or `Entity(contentsOf:)` asynchronously and handle errors.
-- Prefer `ViewAttachmentComponent` for SwiftUI overlays in 3D and avoid the `RealityView` attachments closure.
+- Always use `ViewAttachmentComponent` for SwiftUI overlays in 3D and avoid the `RealityView` attachments closure.
 
 #### Systems and Queries
 
@@ -236,5 +236,5 @@ SpinSystem.registerSystem()
 - Always load assets asynchronously; avoid blocking the main actor.
 - Avoid `ARView` on visionOS; use `RealityView`.
 - Add `CollisionComponent` + `InputTargetComponent` for draggable or tappable entities.
-- Use a custom `System` for continuous behavior instead of the `RealityView` update closure.
+- Never use the `RealityView` update closure; use a custom `System` for continuous behavior instead.
 - Mesh generation is limited to `box`, `sphere`, `plane`, `cylinder`, and `cone`.

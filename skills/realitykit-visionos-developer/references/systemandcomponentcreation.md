@@ -305,13 +305,6 @@ FollowComponent.registerComponent()
 FollowSystem.registerSystem()
 ```
 
-**Key Points:**
-- Systems can own and manage `ARKitSession` instances
-- Use `WorldTrackingProvider` to track device position
-- `queryDeviceAnchor(atTimestamp:)` provides device transform (not head transform)
-- Only works in immersive spaces, but no authorization required
-- Use `entity.move(to:relativeTo:duration:timingFunction:)` for smooth movement
-
 ## Key Concepts
 
 ### Entity Queries
@@ -358,9 +351,6 @@ static var dependencies: [SystemDependency] {
 - Each system instance runs once per simulation step
 - Systems without dependencies are updated in registration order
 - Conflicting dependencies are ignored with a warning
-- Systems can own and manage `ARKitSession` instances for device tracking
-- Use `queryDeviceAnchor(atTimestamp:)` for device transform (not head transform)
-- `AnchorEntity(.head)` provides head position but transform is always identity
 
 ## Best Practices
 
@@ -409,9 +399,3 @@ This is typically done in your app's initialization code or scene setup. Systems
 - `EntityQuery` - Query entities from the scene
 - `SceneUpdateContext` - Context for system updates
 - `QueryPredicate` - Define query criteria
-
-### ARKit Integration in Systems
-- `ARKitSession` - Session for running ARKit providers
-- `WorldTrackingProvider` - Provider for device tracking
-- `WorldTrackingProvider.queryDeviceAnchor(atTimestamp:)` - Get device transform
-- `WorldTrackingProvider.state` - Check if provider is running
