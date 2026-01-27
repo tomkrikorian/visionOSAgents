@@ -49,6 +49,10 @@ for skill_file in "${skill_files[@]}"; do
 
   echo "Installing $skill_name -> $dest_dir"
 
+  if [[ -d "$dest_dir" ]]; then
+    rm -rf "$dest_dir"
+  fi
+
   if command -v rsync >/dev/null 2>&1; then
     rsync -a "$skill_dir/" "$dest_dir/"
   else
