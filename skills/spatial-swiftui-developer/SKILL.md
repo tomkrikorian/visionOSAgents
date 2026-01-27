@@ -89,3 +89,4 @@ Load the appropriate reference file from the tables below for detailed usage, co
 - Do not update RealityKit entities inside SwiftUI body computation.
 - Do not use volumetric window style with `Window` instead of `WindowGroup`.
 - Do not omit `defaultSize` for volumes; physical scale will be inconsistent.
+- Prefer `.glassBackgroundEffect()` for backgrounds instead of custom blur/material backgrounds.
