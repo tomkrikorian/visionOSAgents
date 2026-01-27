@@ -88,17 +88,17 @@ USD scene editing, composition, prims, and command-line tools.
 npx skills add https://github.com/tomkrikorian/visionOSAgents --skill usd-editor
 ```
 
-## Install Skills to User Folder
+## Install skills without npx (when you have cloned this repo)
 
-Use the script below to copy all repo skills into your user skills directory (`$CODEX_HOME/skills`, defaults to `~/.codex/skills`):
+If you have cloned this repo and prefer not to use `npx skills add`, you can copy its skills into your user skills directory (`$CODEX_HOME/skills`, defaults to `~/.codex/skills`). From the repo root:
 
 ```bash
 ./scripts/install-user-skills.sh
 ```
 
-## Pull Updates Back Into the Repo
+## Pull updates back into the repo (when using a local clone)
 
-If you modify skills in your user folder and want to sync them back into this repo:
+If you cloned this repo, use the user-folder install above, and later modify skills in that folder, sync those changes back into your clone with:
 
 ```bash
 ./scripts/pull-update-skills.sh
