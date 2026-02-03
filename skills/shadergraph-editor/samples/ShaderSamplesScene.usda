@@ -1,0 +1,136 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["OutlineShader", "FresnelShader", "DissolveShader", "VertexDisplacementShader", "NormalCorrectionShader", "GradientShader", "MatCapShader", "MatCapMaterial", "LavaShader", "ToonShader", "PBRToonShader"]
+    rel material:binding = None (
+        bindMaterialAs = "weakerThanDescendants"
+    )
+
+    def "OutlineShader" (
+        active = true
+        references = @OutlineShader.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0.16888368)
+    }
+
+    def "VertexDisplacementShader" (
+        active = true
+        references = @VertexDisplacementShader.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -0.6084044)
+    }
+
+    def "NormalCorrectionShader" (
+        active = true
+        references = @NormalCorrectionShader.usda@
+    )
+    {
+        reorder nameChildren = ["NormalCorrectionEntity", "NormalCorrectionMaterial"]
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -0.85876787)
+    }
+
+    def "DissolveShader" (
+        active = true
+        references = @DissolveShader.usda@
+    )
+    {
+        reorder nameChildren = ["DissolveEntity", "DissolveMaterial"]
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -0.3616274)
+    }
+
+    def "ToonShader" (
+        active = true
+        references = @ToonShader.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -1.9605993)
+
+        over "ToonMaterial"
+        {
+            over "ToonDiffuse"
+            {
+                int ui:nodegraph:node:stackingOrder = 3777
+            }
+
+            over "ToonSpecular"
+            {
+                int ui:nodegraph:node:stackingOrder = 3778
+            }
+        }
+    }
+
+    def "PBRToonShader" (
+        active = true
+        references = @PBRToonShader.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -2.7227182)
+
+        over "Transform"
+        {
+            over "ToyBiplane"
+            {
+                over "geom"
+                {
+                    over "realistic"
+                    {
+                        over "materials"
+                        {
+                            over "usdpreviewsurface3sg"
+                            {
+                                over "PBRToon"
+                                {
+                                    float inputs:Bands = 8
+                                    int ui:nodegraph:node:stackingOrder = 1782
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def "FresnelShader" (
+        active = true
+        references = @FresnelShader.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -0.08697581)
+    }
+
+    def "LavaShader" (
+        active = true
+        references = @LavaShader.usda@
+    )
+    {
+        reorder nameChildren = ["ChromaKeyShader", "LavaEntity", "LavaMaterial"]
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -1.427294)
+    }
+
+    def "GradientShader" (
+        active = true
+        references = @GradientShader.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -1.1567154)
+    }
+}
+

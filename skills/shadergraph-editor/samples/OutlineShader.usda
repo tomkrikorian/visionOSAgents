@@ -1,0 +1,147 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.60.1.0.1)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Sphere "OutlineShaderEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        reorder nameChildren = ["SphereMaterial", "SphereOutline"]
+        rel material:binding = </Root/OutlineShaderEntity/SphereMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Sphere "SphereOutline" (
+            active = true
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            double radius = 0.1
+            quatf xformOp:orient = (1, 0, 0, 0)
+            float3 xformOp:scale = (1, 1, 1)
+            float3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+            def Material "OutlineShaderMaterial"
+            {
+                token cullMode = "front" (
+                    allowedTokens = ["unspecified", "none", "front", "back"]
+                )
+                color3f inputs:OutlineColor = (0.96715564, 0.94761693, 0.23783106) (
+                    colorSpace = "srgb_texture"
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (442.42532, -155.35262)
+                            int stackingOrderInSubgraph = 537
+                        }
+                    }
+                )
+                float inputs:OutlineWidth = 0.005 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (297.89746, 97.68271)
+                            int stackingOrderInSubgraph = 535
+                        }
+                    }
+                )
+                token outputs:mtlx:surface.connect = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial/UnlitSurface.outputs:out>
+                token outputs:realitykit:vertex.connect = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial/GeometryModifier.outputs:out>
+                float2 ui:nodegraph:node:pos = (1180.5723, 255.39648)
+                int ui:nodegraph:node:stackingOrder = 2
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:realitykit:vertex", "outputs:mtlx:surface"]
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (887.0309, 78.86413)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 469
+
+                def Shader "Normal"
+                {
+                    uniform token info:id = "ND_normal_vector3"
+                    string inputs:space
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (305.76465, 43.498016)
+                    int ui:nodegraph:node:stackingOrder = 535
+                }
+
+                def Shader "Multiply_1"
+                {
+                    uniform token info:id = "ND_multiply_vector3FA"
+                    float3 inputs:in1.connect = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial/Normal.outputs:out>
+                    float inputs:in2.connect = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial.inputs:OutlineWidth>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (435.48196, 68.3818)
+                    int ui:nodegraph:node:stackingOrder = 535
+                }
+
+                def Shader "UnlitSurface"
+                {
+                    uniform token info:id = "ND_realitykit_unlit_surfaceshader"
+                    color3f inputs:color = (0, 0, 1) (
+                        colorSpace = "srgb_displayp3"
+                    )
+                    color3f inputs:color.connect = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial.inputs:OutlineColor>
+                    bool inputs:hasPremultipliedAlpha
+                    float inputs:opacity
+                    float inputs:opacityThreshold
+                    token outputs:out
+                    float2 ui:nodegraph:node:pos = (639.7178, -132.80865)
+                    int ui:nodegraph:node:stackingOrder = 467
+                }
+
+                def Shader "GeometryModifier"
+                {
+                    uniform token info:id = "ND_realitykit_geometrymodifier_2_0_vertexshader"
+                    float3 inputs:bitangent
+                    color4f inputs:color
+                    float3 inputs:modelPositionOffset.connect = </Root/OutlineShaderEntity/SphereOutline/OutlineShaderMaterial/Multiply_1.outputs:out>
+                    float3 inputs:normal
+                    float2 inputs:uv0
+                    float2 inputs:uv1
+                    float4 inputs:uv2
+                    float4 inputs:uv7
+                    token outputs:out
+                    float2 ui:nodegraph:node:pos = (616.5, 154.5)
+                    int ui:nodegraph:node:stackingOrder = 438
+                }
+            }
+        }
+
+        def Material "SphereMaterial"
+        {
+            token outputs:mtlx:surface
+            token outputs:realitykit:vertex
+            token outputs:surface.connect = </Root/OutlineShaderEntity/SphereMaterial/DefaultSurfaceShader.outputs:surface>
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (0, 110.5)
+
+            def Shader "DefaultSurfaceShader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0, 0, 0) (
+                    colorSpace = "srgb_texture"
+                )
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+    }
+}
+

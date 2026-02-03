@@ -142,14 +142,18 @@ Cancel long-running tasks on teardown.
 - `async` and `await` for suspension points.
 - `Task { }` for structured async work.
 - `actor` for isolated mutable state.
-- `@MainActor` for UI-bound work.
 - `Sendable` for cross-actor data transfer.
 
 ### Swift Language Standards
 
 #### Observable Classes
 
-`@Observable` classes are `@MainActor` by default, so explicit `@MainActor` annotation is not needed.
+`@Observable` classes are `@MainActor` by default, so explicit `@MainActor` annotation is not needed and should always be removed.
+
+#### Observation vs Combine
+
+- Prefer `@Observable` + `@State` for reference-type models.
+- Avoid `ObservableObject`, `@StateObject`, and `@ObservedObject` unless interacting with legacy code that still requires Combine.
 
 #### Swift-Native APIs
 

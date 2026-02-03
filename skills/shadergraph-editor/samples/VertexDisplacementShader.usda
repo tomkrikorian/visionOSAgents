@@ -1,0 +1,224 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.16.0.3)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["VertexDisplacementEntity", "VertexDisplacementMaterial"]
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Sphere "VertexDisplacementEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/VertexDisplacementMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        float2 ui:nodegraph:node:pos = (79.26758, 104.5)
+        int ui:nodegraph:node:stackingOrder = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Material "VertexDisplacementMaterial"
+    {
+        reorder nameChildren = ["Displacement", "PreviewSurface", "GeometryModifier", "OffsetAndNormal"]
+        float inputs:Amplitude = 0.025 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-439.65625, 84.33203)
+                    int stackingOrderInSubgraph = 1292
+                }
+            }
+        )
+        float inputs:Rate = 1 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-424.01562, 191.13281)
+                    int stackingOrderInSubgraph = 1292
+                }
+            }
+        )
+        float inputs:Scale = 10 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-425.3164, 250.25781)
+                    int stackingOrderInSubgraph = 1305
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/VertexDisplacementMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex.connect = </Root/VertexDisplacementMaterial/GeometryModifier.outputs:out>
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (334.70312, 101.066345)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1033
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor = (0, 0.5898009, 1) (
+                colorSpace = "srgb_texture"
+            )
+            color3f inputs:diffuseColor.connect = None
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (98.42969, 38.19922)
+            int ui:nodegraph:node:stackingOrder = 1013
+        }
+
+        def Shader "GeometryModifier"
+        {
+            uniform token info:id = "ND_realitykit_geometrymodifier_2_0_vertexshader"
+            float3 inputs:bitangent
+            color4f inputs:color
+            float3 inputs:modelPositionOffset.connect = </Root/VertexDisplacementMaterial/Displacement.outputs:ModelPositionOffset>
+            float3 inputs:normal.connect = </Root/VertexDisplacementMaterial/OffsetAndNormal.outputs:Normal>
+            float2 inputs:uv0
+            float2 inputs:uv1
+            float4 inputs:uv2
+            float4 inputs:uv6
+            float4 inputs:uv7
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (61.742188, 301.17188)
+            int ui:nodegraph:node:stackingOrder = 1031
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-443.70898, 138.04297)
+            int ui:nodegraph:node:stackingOrder = 1292
+        }
+
+        def NodeGraph "Displacement"
+        {
+            float inputs:Amplitude = 0.025 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-612.4004, -57.867188)
+                        int stackingOrderInSubgraph = 712
+                    }
+                }
+            )
+            float inputs:Amplitude.connect = </Root/VertexDisplacementMaterial.inputs:Amplitude>
+            float3 inputs:Position = (0, 0, 0) (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-615.58887, 4.0390625)
+                        int stackingOrderInSubgraph = 665
+                    }
+                }
+            )
+            float3 inputs:Position.connect = </Root/VertexDisplacementMaterial/Position.outputs:out>
+            float inputs:Rate = 1 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-594.1035, 183.89453)
+                        int stackingOrderInSubgraph = 533
+                    }
+                }
+            )
+            float inputs:Rate.connect = </Root/VertexDisplacementMaterial.inputs:Rate>
+            float inputs:Scale = 10 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-596.94336, 62.308594)
+                        int stackingOrderInSubgraph = 665
+                    }
+                }
+            )
+            float inputs:Scale.connect = </Root/VertexDisplacementMaterial.inputs:Scale>
+            float3 outputs:ModelPositionOffset (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (165.17285, 192.86328)
+                        int stackingOrderInSubgraph = 2
+                    }
+                }
+            )
+            float3 outputs:ModelPositionOffset.connect = </Root/VertexDisplacementMaterial/Displacement/Noise3D.outputs:out>
+            float2 ui:nodegraph:node:pos = (-195.94043, 151.94922)
+            int ui:nodegraph:node:stackingOrder = 1293
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:Amplitude", "inputs:DisplacementAmplitude"]
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (21.996094, 84.546875)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 133
+
+            def Shader "Noise3D"
+            {
+                uniform token info:id = "ND_noise3d_vector3"
+                float3 inputs:amplitude.connect = </Root/VertexDisplacementMaterial/Displacement/Convert.outputs:out>
+                float inputs:pivot
+                float3 inputs:position.connect = </Root/VertexDisplacementMaterial/Displacement/Add.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-223.92969, 57.703125)
+                int ui:nodegraph:node:stackingOrder = 133
+            }
+
+            def Shader "Convert"
+            {
+                uniform token info:id = "ND_convert_float_vector3"
+                float inputs:in.connect = </Root/VertexDisplacementMaterial/Displacement.inputs:Amplitude>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-443.9297, -57.304688)
+                int ui:nodegraph:node:stackingOrder = 712
+            }
+
+            def Shader "Multiply"
+            {
+                uniform token info:id = "ND_multiply_vector3FA"
+                float3 inputs:in1.connect = </Root/VertexDisplacementMaterial/Displacement.inputs:Position>
+                float inputs:in2.connect = </Root/VertexDisplacementMaterial/Displacement.inputs:Scale>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-481.60156, 31.4375)
+                int ui:nodegraph:node:stackingOrder = 665
+            }
+
+            def Shader "Add"
+            {
+                uniform token info:id = "ND_add_vector3FA"
+                prepend float3 inputs:in1.connect = </Root/VertexDisplacementMaterial/Displacement/Multiply.outputs:out>
+                float inputs:in2.connect = </Root/VertexDisplacementMaterial/Displacement/Multiply_1.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-389.16406, 89.93359)
+                int ui:nodegraph:node:stackingOrder = 579
+            }
+
+            def Shader "Time"
+            {
+                uniform token info:id = "ND_time_float"
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-607.44336, 125.10156)
+                int ui:nodegraph:node:stackingOrder = 635
+            }
+
+            def Shader "Multiply_1"
+            {
+                uniform token info:id = "ND_multiply_float"
+                float inputs:in1.connect = </Root/VertexDisplacementMaterial/Displacement/Time.outputs:out>
+                float inputs:in2.connect = </Root/VertexDisplacementMaterial/Displacement.inputs:Rate>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-480.9414, 154.92969)
+                int ui:nodegraph:node:stackingOrder = 533
+            }
+        }
+    }
+}
+

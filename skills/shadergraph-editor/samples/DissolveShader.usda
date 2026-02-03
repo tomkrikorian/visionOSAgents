@@ -1,0 +1,282 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.16.0.3)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["DissolveEntity", "DissolveMaterial"]
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Sphere "DissolveEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        reorder nameChildren = ["DissolveMaterial", "Lava"]
+        rel material:binding = </Root/DissolveMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        float2 ui:nodegraph:node:pos = (-2.6582031, 202.86328)
+        int ui:nodegraph:node:stackingOrder = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Material "DissolveMaterial"
+    {
+        token cullMode = "none" (
+            allowedTokens = ["unspecified", "none", "front", "back"]
+        )
+        color3f inputs:DissolveColor = (0, 0.9914394, 1) (
+            colorSpace = "srgb_texture"
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-182.37369, 104.239746)
+                    int stackingOrderInSubgraph = 1617
+                }
+            }
+        )
+        float inputs:DissolveScale = 50 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-1112.9487, 42.27146)
+                    int stackingOrderInSubgraph = 1741
+                }
+            }
+        )
+        float inputs:DissolveWidth = 0.05 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-525.2403, 212.61043)
+                    int stackingOrderInSubgraph = 1734
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/DissolveMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (375.29675, 98.16557)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1662
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            float inputs:clearcoat
+            float inputs:clearcoatRoughness
+            color3f inputs:diffuseColor = (0, 0, 0) (
+                colorSpace = "srgb_texture"
+            )
+            color3f inputs:diffuseColor.connect = None
+            color3f inputs:emissiveColor.connect = </Root/DissolveMaterial/Multiply_1.outputs:out>
+            float inputs:ior
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:occlusion
+            float inputs:opacity.connect = </Root/DissolveMaterial/Dot_3.outputs:out>
+            float inputs:opacityThreshold = 0.5460195
+            float inputs:opacityThreshold.connect = </Root/DissolveMaterial/Dot.outputs:out>
+            float inputs:roughness = 0.5
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (142.57938, 77.63305)
+            int ui:nodegraph:node:stackingOrder = 1662
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["Advanced"]
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-1104.4506, -10.420374)
+            int ui:nodegraph:node:stackingOrder = 1730
+        }
+
+        def Shader "Multiply"
+        {
+            uniform token info:id = "ND_multiply_vector3FA"
+            float3 inputs:in1.connect = </Root/DissolveMaterial/Position.outputs:out>
+            float inputs:in2.connect = </Root/DissolveMaterial.inputs:DissolveScale>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-982.03674, 19.013784)
+            int ui:nodegraph:node:stackingOrder = 1728
+        }
+
+        def Shader "Sin"
+        {
+            uniform token info:id = "ND_sin_float"
+            float inputs:in.connect = </Root/DissolveMaterial/Time.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-1171.9353, 256.3687)
+            int ui:nodegraph:node:stackingOrder = 1537
+        }
+
+        def Shader "Time"
+        {
+            uniform token info:id = "ND_time_float"
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-1307.7478, 256.79254)
+            int ui:nodegraph:node:stackingOrder = 1537
+        }
+
+        def Shader "Subtract"
+        {
+            uniform token info:id = "ND_subtract_float"
+            float inputs:in1.connect = </Root/DissolveMaterial/PerlinNoise.outputs:out>
+            float inputs:in2.connect = </Root/DissolveMaterial/DissolveAmount.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-637.73035, 151.7469)
+            int ui:nodegraph:node:stackingOrder = 1617
+        }
+
+        def Shader "Sin01"
+        {
+            uniform token info:id = "ND_remap_float"
+            float inputs:in.connect = </Root/DissolveMaterial/Sin.outputs:out>
+            float inputs:inhigh
+            float inputs:inlow = -1
+            float inputs:outhigh
+            float inputs:outlow
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-1038.8837, 278.98218)
+            int ui:nodegraph:node:stackingOrder = 1537
+        }
+
+        def Shader "Distance"
+        {
+            uniform token info:id = "ND_absval_float"
+            float inputs:in.connect = </Root/DissolveMaterial/Subtract.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-518.41003, 151.56721)
+            int ui:nodegraph:node:stackingOrder = 1617
+        }
+
+        def Shader "Dot"
+        {
+            uniform token info:id = "ND_dot_float"
+            float inputs:in.connect = </Root/DissolveMaterial/Dot_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-24.072607, 307.79495)
+            int ui:nodegraph:node:stackingOrder = 1664
+        }
+
+        def Shader "Multiply_1"
+        {
+            uniform token info:id = "ND_multiply_color3FA"
+            color3f inputs:in1.connect = </Root/DissolveMaterial.inputs:DissolveColor>
+            float inputs:in2.connect = </Root/DissolveMaterial/Oneminus.outputs:out>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-30.74635, 134.35341)
+            int ui:nodegraph:node:stackingOrder = 1617
+        }
+
+        def Shader "PerlinNoise"
+        {
+            uniform token info:id = "ND_noise3d_float"
+            float inputs:amplitude = 0.5
+            float inputs:pivot = 0.5
+            float3 inputs:position.connect = </Root/DissolveMaterial/Multiply.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-838.7907, -13.197894)
+            int ui:nodegraph:node:stackingOrder = 1728
+        }
+
+        def Shader "DissolveAmount"
+        {
+            uniform token info:id = "ND_constant_float"
+            float inputs:value = 0
+            float inputs:value.connect = </Root/DissolveMaterial/Sin01.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-831.80927, 209.26358)
+            int ui:nodegraph:node:stackingOrder = 1733
+        }
+
+        def Shader "Dot_1"
+        {
+            uniform token info:id = "ND_dot_float"
+            float inputs:in.connect = </Root/DissolveMaterial/DissolveAmount.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-662.1387, 305.77606)
+            int ui:nodegraph:node:stackingOrder = 1623
+        }
+
+        def Shader "Range"
+        {
+            uniform token info:id = "ND_range_float"
+            bool inputs:doclamp = 1
+            float inputs:gamma = 1
+            float inputs:in.connect = </Root/DissolveMaterial/Distance.outputs:out>
+            float inputs:inhigh.connect = </Root/DissolveMaterial.inputs:DissolveWidth>
+            float inputs:inlow
+            float inputs:outhigh = 1
+            float inputs:outlow = 0
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-352.65054, 169.4882)
+            int ui:nodegraph:node:stackingOrder = 1739
+        }
+
+        def Shader "Oneminus"
+        {
+            uniform token info:id = "ND_realitykit_oneminus_float"
+            float inputs:in.connect = </Root/DissolveMaterial/Range.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-181.83653, 195.21837)
+            int ui:nodegraph:node:stackingOrder = 1617
+        }
+
+        def Scope "Group" (
+            kind = "group"
+        )
+        {
+            string ui:group:annotation = "Dissolve Over Time"
+            string ui:group:annotationDescription = "Remove these nodes and convert `DissolveAmount` to a Uniform Input to control the dissolve amount yourself."
+            string[] ui:group:members = ["p:Sin01", "p:Sin", "p:Time"]
+        }
+
+        def Scope "Group2" (
+            kind = "group"
+        )
+        {
+            string ui:group:annotation = "Dissolve Edge Color"
+            string ui:group:annotationDescription = ""
+            string[] ui:group:members = ["p:Distance", "p:Range", "i:inputs:DissolveWidth", "i:inputs:DissolveColor", "p:Subtract", "p:Oneminus", "p:Multiply_1"]
+        }
+
+        def Shader "Dot_2"
+        {
+            uniform token info:id = "ND_dot_float"
+            float inputs:in.connect = </Root/DissolveMaterial/PerlinNoise.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-654.75525, -10.586707)
+            int ui:nodegraph:node:stackingOrder = 1668
+        }
+
+        def Shader "Dot_3"
+        {
+            uniform token info:id = "ND_dot_float"
+            float inputs:in.connect = </Root/DissolveMaterial/Dot_2.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-18.199722, -11.323209)
+            int ui:nodegraph:node:stackingOrder = 1666
+        }
+
+        def Scope "Group3" (
+            kind = "group"
+        )
+        {
+            string ui:group:annotation = "Dissolve Pattern/Noise"
+            string ui:group:annotationDescription = ""
+            string[] ui:group:members = ["i:inputs:DissolveScale", "p:Position", "p:PerlinNoise", "p:Multiply"]
+        }
+    }
+}
+

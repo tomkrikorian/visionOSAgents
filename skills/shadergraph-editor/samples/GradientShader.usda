@@ -1,0 +1,139 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.60.1.0.1)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["GradientShaderEntity", "GradientShaderEntity", "GradientMaterial"]
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Material "GradientMaterial"
+    {
+        color3f inputs:FarColor = (1, 0.14913142, 0) (
+            colorSpace = "srgb_texture"
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-72.50751, -112.21897)
+                    int stackingOrderInSubgraph = 352
+                }
+            }
+        )
+        float inputs:FarDistance = 1 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-384.54037, 65.23242)
+                    int stackingOrderInSubgraph = 329
+                }
+            }
+        )
+        color3f inputs:NearColor = (0.581883, 0.21569154, 1) (
+            colorSpace = "srgb_texture"
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-72.861244, -50.61234)
+                    int stackingOrderInSubgraph = 331
+                }
+            }
+        )
+        float inputs:NearDistance = 0 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-392.78772, 4.742659)
+                    int stackingOrderInSubgraph = 329
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/GradientMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:node:pos = (1180.5723, 255.39648)
+        int ui:nodegraph:node:stackingOrder = 2
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (508.6597, 63.80434)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 325
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor.connect = </Root/GradientMaterial/Mix.outputs:out>
+            float inputs:metallic
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (298.51993, 0.89934444)
+            int ui:nodegraph:node:stackingOrder = 325
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:metallic"]
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            string inputs:space = "world"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-599.0496, -77.1162)
+            int ui:nodegraph:node:stackingOrder = 150
+        }
+
+        def Shader "CameraPosition"
+        {
+            uniform token info:id = "ND_realitykit_cameraposition_vector3"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-643.04755, -135.56915)
+            int ui:nodegraph:node:stackingOrder = 150
+        }
+
+        def Shader "CameraDistance"
+        {
+            uniform token info:id = "ND_MTL_distance_vector3_float"
+            float3 inputs:x.connect = </Root/GradientMaterial/CameraPosition.outputs:out>
+            float3 inputs:y.connect = </Root/GradientMaterial/Position.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-403.50143, -118.26459)
+            int ui:nodegraph:node:stackingOrder = 130
+        }
+
+        def Shader "Mix"
+        {
+            uniform token info:id = "ND_mix_color3"
+            color3f inputs:bg.connect = </Root/GradientMaterial.inputs:NearColor>
+            color3f inputs:fg.connect = </Root/GradientMaterial.inputs:FarColor>
+            float inputs:mix.connect = </Root/GradientMaterial/Remap01.outputs:out>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (111.88983, -85.35406)
+            int ui:nodegraph:node:stackingOrder = 300
+        }
+
+        def Shader "Remap01"
+        {
+            uniform token info:id = "ND_range_float"
+            bool inputs:doclamp = 1
+            float inputs:gamma
+            float inputs:in.connect = </Root/GradientMaterial/CameraDistance.outputs:out>
+            float inputs:inhigh.connect = </Root/GradientMaterial.inputs:FarDistance>
+            float inputs:inlow.connect = </Root/GradientMaterial.inputs:NearDistance>
+            float inputs:outhigh
+            float inputs:outlow
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-213.3282, 48.768913)
+            int ui:nodegraph:node:stackingOrder = 327
+        }
+    }
+
+    def Sphere "GradientShaderEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/GradientMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+    }
+}
+

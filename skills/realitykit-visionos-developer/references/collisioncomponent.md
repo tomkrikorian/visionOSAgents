@@ -62,6 +62,84 @@ collision.filter = CollisionFilter(group: [], mask: [])
 entity.components.set(collision)
 ```
 
+### Detecting Collisions (CollisionEvents)
+
+RealityKit emits collision events when two entities collide:
+
+- `CollisionEvents.Began` — first contact
+- `CollisionEvents.Updated` — every frame while in contact
+- `CollisionEvents.Ended` — separation after contact
+
+Prerequisites:
+
+- Both entities need a `CollisionComponent` with at least one collision shape.
+  - Either assign shapes explicitly (`CollisionComponent(shapes:)`) or call `generateCollisionShapes(recursive:)` on entities that have a mesh.
+- For rigid-body collisions, also add `PhysicsBodyComponent` (at least one entity should be `.dynamic`).
+- For overlap-only triggers, set `collision.mode = .trigger` and **don’t** add a `PhysicsBodyComponent` to the trigger entity (RealityKit ignores collision mode when a physics body is present).
+
+In visionOS `RealityView`, subscribe via `content.subscribe(to:on:_:)` and retain the returned `EventSubscription` (dropping it cancels the subscription).
+
+```swift
+import SwiftUI
+import RealityKit
+
+struct CollisionEventsExample: View {
+    @State private var entityA = Entity()
+    @State private var entityB = Entity()
+    @State private var collisionBegan: EventSubscription?
+    @State private var collisionEnded: EventSubscription?
+
+    var body: some View {
+        RealityView { content in
+            // Create entities once; RealityView updates can run multiple times.
+            if entityA.parent == nil && entityB.parent == nil {
+                entityA.name = "A"
+                entityA.position = [0, 0.25, 0]
+                entityA.components.set(CollisionComponent(shapes: [.generateSphere(radius: 0.05)]))
+
+                var aBody = PhysicsBodyComponent()
+                aBody.mode = .dynamic
+                entityA.components.set(aBody)
+
+                entityB.name = "B"
+                entityB.position = [0, 0, 0]
+                entityB.components.set(CollisionComponent(shapes: [.generateBox(size: [0.4, 0.05, 0.4])]))
+
+                var bBody = PhysicsBodyComponent()
+                bBody.mode = .static
+                entityB.components.set(bBody)
+
+                content.add(entityA)
+                content.add(entityB)
+            }
+
+            // Subscribe once, and filter to collisions between A and B.
+            if collisionBegan == nil {
+                collisionBegan = content.subscribe(to: CollisionEvents.Began.self, on: entityA) { event in
+                    guard event.entityA == entityB || event.entityB == entityB else { return }
+                    print("Collision began: \(event.entityA.name) vs \(event.entityB.name)")
+                }
+            }
+
+            if collisionEnded == nil {
+                collisionEnded = content.subscribe(to: CollisionEvents.Ended.self, on: entityA) { event in
+                    guard event.entityA == entityB || event.entityB == entityB else { return }
+                    print("Collision ended: \(event.entityA.name) vs \(event.entityB.name)")
+                }
+            }
+        }
+    }
+}
+```
+
+If you need per-contact data (`event.contacts`), configure collision reporting:
+
+```swift
+var collision = CollisionComponent(shapes: [.generateBox(size: [0.1, 0.1, 0.1])])
+collision.collisionOptions = .fullContactInformation
+entity.components.set(collision)
+```
+
 ## Key Properties
 
 - `shapes: [ShapeResource]` - Collection of shape resources representing the entity's collision boundaries

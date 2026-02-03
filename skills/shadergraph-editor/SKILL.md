@@ -26,10 +26,13 @@ When editing ShaderGraph materials in .usda files, this skill should:
 3. **Show connections** - Explain how to connect node outputs to shader inputs
 4. **Handle material binding** - Show how to bind materials to geometry
 5. **Troubleshoot issues** - Help identify and fix common material problems
+6. **Prefer sample graphs when available** - If the requested effect matches an example in `samples/`, start from that file and point the user to it.
 
 Load the appropriate reference file from the tables below for detailed usage, code examples, and best practices.
 
 ### Quick Start Workflow
+
+Before building a new effect from scratch, check `samples/` for a close match and adapt it.
 
 1. Open the `.usda` file in a text editor.
 2. Find or create a `def Material "MaterialName"` block in the correct scope.
@@ -72,6 +75,23 @@ The shader node identifier used by USD and RealityKit to determine the node's be
 | Reference | When to Use |
 |-----------|-------------|
 | [`REFERENCE.MD`](references/REFERENCE.MD) | When looking for ShaderGraph node and material reference guide. |
+
+### Samples (Common Effects)
+
+This repo includes common ShaderGraph examples in `samples/`. When a user asks for a specific visual effect, **start by selecting the closest sample** and tell them to open it so you can align on the exact look and parameters.
+
+- [`samples/ShaderSamplesScene.usda`](samples/ShaderSamplesScene.usda) — A single scene that references the other samples for quick preview/inspection.
+- [`samples/OutlineShader.usda`](samples/OutlineShader.usda) — Mesh outline via duplicated mesh + vertex expansion (geometry modifier) and `cullMode = "front"`.
+- [`samples/FresnelShader.usda`](samples/FresnelShader.usda) — Fresnel/rim glow (emissive) with tunable color and falloff.
+- [`samples/GradientShader.usda`](samples/GradientShader.usda) — Near/far color gradient driven by camera distance.
+- [`samples/LavaShader.usda`](samples/LavaShader.usda) — Animated lava emissive using 3D noise + time.
+- [`samples/DissolveShader.usda`](samples/DissolveShader.usda) — Animated dissolve with noise threshold and emissive edge.
+- [`samples/VertexDisplacementShader.usda`](samples/VertexDisplacementShader.usda) — Animated vertex displacement using `outputs:realitykit:vertex` (geometry modifier).
+- [`samples/NormalCorrectionShader.usda`](samples/NormalCorrectionShader.usda) — Vertex displacement with corrected normals for cleaner lighting.
+- [`samples/ToonShader.usda`](samples/ToonShader.usda) — Toon shading using diffuse/specular ramp textures.
+- [`samples/PBRToonShader.usda`](samples/PBRToonShader.usda) — PBR-to-toon node graph (banding/quantization) applied to an existing material graph.
+
+Some samples reference external assets (for example ramp textures or a referenced `.usdz`). When copying a sample into your project, keep or update those asset paths as needed.
 
 ### Implementation Patterns
 

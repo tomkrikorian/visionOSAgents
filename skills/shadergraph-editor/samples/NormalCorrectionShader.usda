@@ -1,0 +1,595 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.16.0.3)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["NormalCorrectionEntity", "NormalCorrectionMaterial"]
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Sphere "NormalCorrectionEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+        customData = {
+            float3 rotationEulerHint = (0, 0, 0)
+        }
+    )
+    {
+        rel material:binding = </Root/NormalCorrectionMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        float2 ui:nodegraph:node:pos = (-17.327148, 202.86328)
+        int ui:nodegraph:node:stackingOrder = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Material "NormalCorrectionMaterial"
+    {
+        reorder nameChildren = ["PreviewSurface", "GeometryModifier", "Position", "Displacement", "NodeGraph"]
+        float inputs:Amplitude = 0.025 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-386.88672, 129.46484)
+                    int stackingOrderInSubgraph = 414
+                }
+            }
+        )
+        float inputs:Rate = 1 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-370.82812, 188.98438)
+                    int stackingOrderInSubgraph = 414
+                }
+            }
+        )
+        float inputs:Scale = 10 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-372.47656, 248.32031)
+                    int stackingOrderInSubgraph = 414
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/NormalCorrectionMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex.connect = </Root/NormalCorrectionMaterial/GeometryModifier.outputs:out>
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (335.25, 100.5)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 54
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor = (0, 0.5898009, 1) (
+                colorSpace = "srgb_texture"
+            )
+            color3f inputs:diffuseColor.connect = None
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (98.42969, 38.19922)
+            int ui:nodegraph:node:stackingOrder = 344
+        }
+
+        def Shader "GeometryModifier"
+        {
+            uniform token info:id = "ND_realitykit_geometrymodifier_2_0_vertexshader"
+            float3 inputs:bitangent
+            color4f inputs:color
+            float3 inputs:modelPositionOffset.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.outputs:ModelPositionOffset>
+            float3 inputs:normal.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.outputs:Normal>
+            float2 inputs:uv0
+            float4 inputs:uv5
+            float4 inputs:uv6
+            float4 inputs:uv7
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (66.671875, 305.52734)
+            int ui:nodegraph:node:stackingOrder = 86
+        }
+
+        def NodeGraph "OffsetAndNormal" (
+            active = true
+        )
+        {
+            float inputs:Amplitude = 0.15 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-353.84375, 5.2890625)
+                        int stackingOrderInSubgraph = 1194
+                    }
+                }
+            )
+            float inputs:Amplitude.connect = </Root/NormalCorrectionMaterial.inputs:Amplitude>
+            float inputs:Rate = 1 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-338.3047, 75.515625)
+                        int stackingOrderInSubgraph = 1267
+                    }
+                }
+            )
+            float inputs:Rate.connect = </Root/NormalCorrectionMaterial.inputs:Rate>
+            float inputs:Scale = 2 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-340.2461, 136.02734)
+                        int stackingOrderInSubgraph = 1267
+                    }
+                }
+            )
+            float inputs:Scale.connect = </Root/NormalCorrectionMaterial.inputs:Scale>
+            float3 outputs:ModelPositionOffset (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (123.067535, 301.11224)
+                        int stackingOrderInSubgraph = 882
+                    }
+                }
+            )
+            float3 outputs:ModelPositionOffset.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement.outputs:ModelPositionOffset>
+            float3 outputs:Normal (
+                customData = {
+                    dictionary realitykit = {
+                        int stackingOrderInSubgraph = 0
+                    }
+                }
+            )
+            float3 outputs:Normal.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Normalize.outputs:out>
+            float2 ui:nodegraph:node:pos = (-177.75781, 184.41797)
+            int ui:nodegraph:node:stackingOrder = 362
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:Amplitude"]
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (706.4068, 73.00086)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1102
+
+            def NodeGraph "Displacement" (
+                active = true
+            )
+            {
+                float inputs:Amplitude = 0.15 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-648.7539, -61.191406)
+                            int stackingOrderInSubgraph = 372
+                        }
+                    }
+                )
+                float inputs:Amplitude.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.inputs:Amplitude>
+                float3 inputs:Position = (0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-655.7383, 1.7929688)
+                            int stackingOrderInSubgraph = 372
+                        }
+                    }
+                )
+                float3 inputs:Position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Position.outputs:out>
+                float inputs:Rate = 1 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-631.20703, 182.14453)
+                            int stackingOrderInSubgraph = 419
+                        }
+                    }
+                )
+                float inputs:Rate.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.inputs:Rate>
+                float inputs:Scale = 2 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-636.60547, 60.527344)
+                            int stackingOrderInSubgraph = 372
+                        }
+                    }
+                )
+                float inputs:Scale.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.inputs:Scale>
+                float3 outputs:ModelPositionOffset (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-321.3379, 133.96875)
+                            int stackingOrderInSubgraph = 233
+                        }
+                    }
+                )
+                float3 outputs:ModelPositionOffset.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement/Noise3D.outputs:out>
+                float2 ui:nodegraph:node:pos = (-140.66797, 36.28125)
+                int ui:nodegraph:node:stackingOrder = 907
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:ModelOffsetPosition", "outputs:ModelOffsetPosition"]
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (-25.921875, 87.80859)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 233
+
+                def Shader "Noise3D"
+                {
+                    uniform token info:id = "ND_noise3d_vector3"
+                    float3 inputs:amplitude.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement/Convert.outputs:out>
+                    float inputs:pivot
+                    float3 inputs:position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement/Add.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-277.70703, 60.5625)
+                    int ui:nodegraph:node:stackingOrder = 232
+                }
+
+                def Shader "Convert"
+                {
+                    uniform token info:id = "ND_convert_float_vector3"
+                    float inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement.inputs:Amplitude>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-497.72656, -60.992188)
+                    int ui:nodegraph:node:stackingOrder = 372
+                }
+
+                def Shader "Multiply"
+                {
+                    uniform token info:id = "ND_multiply_vector3FA"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement.inputs:Position>
+                    float inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement.inputs:Scale>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-530.4883, 33.367188)
+                    int ui:nodegraph:node:stackingOrder = 372
+                }
+
+                def Shader "Time"
+                {
+                    uniform token info:id = "ND_time_float"
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-647.5508, 122.62109)
+                    int ui:nodegraph:node:stackingOrder = 419
+                }
+
+                def Shader "Add"
+                {
+                    uniform token info:id = "ND_add_vector3FA"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement/Multiply.outputs:out>
+                    float inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement/Multiply_1.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-439.8828, 91.79297)
+                    int ui:nodegraph:node:stackingOrder = 372
+                }
+
+                def Shader "Multiply_1"
+                {
+                    uniform token info:id = "ND_multiply_float"
+                    float inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement/Time.outputs:out>
+                    float inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement.inputs:Rate>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-530.1797, 151.02734)
+                    int ui:nodegraph:node:stackingOrder = 422
+                }
+            }
+
+            def Shader "Position"
+            {
+                uniform token info:id = "ND_position_vector3"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-634.4514, 38.842396)
+                int ui:nodegraph:node:stackingOrder = 1059
+            }
+
+            def NodeGraph "Neighbors"
+            {
+                float inputs:Distance = 0.01 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-757.23926, 160.73805)
+                            int stackingOrderInSubgraph = 572
+                        }
+                    }
+                )
+                float3 inputs:Position = (0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-669.9634, -69.69531)
+                            int stackingOrderInSubgraph = 572
+                        }
+                    }
+                )
+                float3 inputs:Position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Position.outputs:out>
+                float3 outputs:Neighbor1Position (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-828.2521, 99.11153)
+                            int stackingOrderInSubgraph = 880
+                        }
+                    }
+                )
+                float3 outputs:Neighbor1Position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Add.outputs:out>
+                float3 outputs:Neighbor2Position (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-828.2521, 99.11153)
+                            int stackingOrderInSubgraph = 881
+                        }
+                    }
+                )
+                float3 outputs:Neighbor2Position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Add_1.outputs:out>
+                float2 ui:nodegraph:node:pos = (-421.80078, 325.30664)
+                int ui:nodegraph:node:stackingOrder = 1061
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:Neighbor1", "outputs:Neighbor1Position"]
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (-320.3597, 14.921908)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 880
+
+                def Shader "Normal"
+                {
+                    uniform token info:id = "ND_normal_vector3"
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-1751.1444, 55.68751)
+                    int ui:nodegraph:node:stackingOrder = 572
+                }
+
+                def Shader "Add"
+                {
+                    uniform token info:id = "ND_add_vector3"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.inputs:Position>
+                    float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Multiply_2.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-517.8089, 10.453158)
+                    int ui:nodegraph:node:stackingOrder = 572
+                }
+
+                def Shader "Add_1"
+                {
+                    uniform token info:id = "ND_add_vector3"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.inputs:Position>
+                    float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Multiply_3.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-515.3103, 81.32212)
+                    int ui:nodegraph:node:stackingOrder = 572
+                }
+
+                def Shader "Bitangent"
+                {
+                    uniform token info:id = "ND_crossproduct_vector3"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Tangent.outputs:out>
+                    float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Normal.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-1010.57135, 83.88406)
+                    int ui:nodegraph:node:stackingOrder = 696
+                }
+
+                def Shader "NormalizedTangent"
+                {
+                    uniform token info:id = "ND_normalize_vector3"
+                    float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Tangent.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-801.4937, 11.611752)
+                    int ui:nodegraph:node:stackingOrder = 697
+                }
+
+                def Shader "NormalizedBitangent"
+                {
+                    uniform token info:id = "ND_normalize_vector3"
+                    float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Bitangent.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-794.99713, 83.75125)
+                    int ui:nodegraph:node:stackingOrder = 698
+                }
+
+                def Shader "Multiply_2"
+                {
+                    uniform token info:id = "ND_multiply_vector3FA"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/NormalizedTangent.outputs:out>
+                    float inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.inputs:Distance>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-615.1318, 20.089643)
+                    int ui:nodegraph:node:stackingOrder = 572
+                }
+
+                def Shader "Multiply_3"
+                {
+                    uniform token info:id = "ND_multiply_vector3FA"
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/NormalizedBitangent.outputs:out>
+                    float inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.inputs:Distance>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-613.3632, 90.85656)
+                    int ui:nodegraph:node:stackingOrder = 572
+                }
+
+                def Shader "Similarity"
+                {
+                    uniform token info:id = "ND_dotproduct_vector3"
+                    float3 inputs:in1 = (1, 0, 0)
+                    float3 inputs:in1.connect = None
+                    float3 inputs:in2 = (1, 0, 0)
+                    float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Normal.outputs:out>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-1565.1738, -29.141468)
+                    int ui:nodegraph:node:stackingOrder = 879
+                }
+
+                def Shader "Absval"
+                {
+                    uniform token info:id = "ND_absval_float"
+                    float inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Similarity.outputs:out>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-1412.3251, -28.75611)
+                    int ui:nodegraph:node:stackingOrder = 879
+                }
+
+                def Shader "Mix"
+                {
+                    uniform token info:id = "ND_mix_vector3"
+                    float3 inputs:bg = (1, 0, 0)
+                    float3 inputs:fg = (0, 1, 0)
+                    float inputs:mix.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Absval.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-1231.1888, -60.51499)
+                    int ui:nodegraph:node:stackingOrder = 879
+                }
+
+                def Shader "Tangent"
+                {
+                    uniform token info:id = "ND_crossproduct_vector3"
+                    float3 inputs:in1 = (1, 0, 0)
+                    float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Mix.outputs:out>
+                    float3 inputs:in2 = (1, 0, 0)
+                    float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors/Normal.outputs:out>
+                    float3 outputs:out
+                    float2 ui:nodegraph:node:pos = (-1009.14795, 12.075334)
+                    int ui:nodegraph:node:stackingOrder = 851
+                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in1"]
+                }
+            }
+
+            def "Neighbor2Displacement" (
+                active = true
+                instanceable = true
+                references = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement>
+            )
+            {
+                float3 inputs:Position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.outputs:Neighbor2Position>
+                float inputs:Scale.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.inputs:Scale>
+                float2 ui:nodegraph:node:pos = (-142.1875, 430.78906)
+                int ui:nodegraph:node:stackingOrder = 1054
+            }
+
+            def "Neighbor1Displacement" (
+                active = true
+                instanceable = true
+                references = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement>
+            )
+            {
+                float3 inputs:Position.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.outputs:Neighbor1Position>
+                float inputs:Scale.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal.inputs:Scale>
+                float2 ui:nodegraph:node:pos = (-142.38672, 258.7422)
+                int ui:nodegraph:node:stackingOrder = 1054
+            }
+
+            def Shader "Dot"
+            {
+                uniform token info:id = "ND_dot_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Position.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-390.96484, -62.392677)
+                int ui:nodegraph:node:stackingOrder = 1271
+            }
+
+            def Shader "Dot_1"
+            {
+                uniform token info:id = "ND_dot_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Dot.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-73.90558, -62.417675)
+                int ui:nodegraph:node:stackingOrder = 1152
+            }
+
+            def Shader "Dot_2"
+            {
+                uniform token info:id = "ND_dot_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.outputs:Neighbor1Position>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-218.69922, 155.65625)
+                int ui:nodegraph:node:stackingOrder = 1098
+            }
+
+            def Shader "Dot_4"
+            {
+                uniform token info:id = "ND_dot_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Dot_2.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-65.40234, 156.99219)
+                int ui:nodegraph:node:stackingOrder = 1098
+            }
+
+            def Shader "Add_2"
+            {
+                uniform token info:id = "ND_add_vector3"
+                float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbor2Displacement.outputs:ModelPositionOffset>
+                float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Dot_5.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (35.41449, 503.59973)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Normalize"
+            {
+                uniform token info:id = "ND_normalize_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Normal.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (473.35333, 374.1864)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Normal"
+            {
+                uniform token info:id = "ND_crossproduct_vector3"
+                float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Subtract_1.outputs:out>
+                float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Subtract.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (300.225, 373.44183)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Add_1"
+            {
+                uniform token info:id = "ND_add_vector3"
+                float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Dot_4.outputs:out>
+                float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbor1Displacement.outputs:ModelPositionOffset>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (35.84249, 277.5461)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Add"
+            {
+                uniform token info:id = "ND_add_vector3"
+                float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Dot_1.outputs:out>
+                float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Displacement.outputs:ModelPositionOffset>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (30.277016, 58.48719)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Subtract"
+            {
+                uniform token info:id = "ND_subtract_vector3"
+                float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Add_1.outputs:out>
+                float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Add.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (138.97995, 283.365)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Subtract_1"
+            {
+                uniform token info:id = "ND_subtract_vector3"
+                float3 inputs:in1.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Add_2.outputs:out>
+                float3 inputs:in2.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Add.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (139.84933, 462.3177)
+                int ui:nodegraph:node:stackingOrder = 1149
+            }
+
+            def Shader "Dot_5"
+            {
+                uniform token info:id = "ND_dot_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Dot_3.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-70.89453, 539.71094)
+                int ui:nodegraph:node:stackingOrder = 1106
+            }
+
+            def Shader "Dot_3"
+            {
+                uniform token info:id = "ND_dot_vector3"
+                float3 inputs:in.connect = </Root/NormalCorrectionMaterial/OffsetAndNormal/Neighbors.outputs:Neighbor2Position>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-218.04297, 538.6914)
+                int ui:nodegraph:node:stackingOrder = 1106
+            }
+        }
+    }
+}
+

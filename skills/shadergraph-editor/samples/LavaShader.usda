@@ -1,0 +1,162 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.16.0.3)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["LavaEntity", "LavaMaterial"]
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Sphere "LavaEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        reorder nameChildren = ["DefaultMaterial", "Lava"]
+        rel material:binding = </Root/LavaMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        float2 ui:nodegraph:node:pos = (1723.3041, 587.1288)
+        int ui:nodegraph:node:stackingOrder = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Material "LavaMaterial"
+    {
+        float inputs:Rate = 0.25 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-833.7529, 166.40308)
+                    int stackingOrderInSubgraph = 1180
+                }
+            }
+        )
+        float inputs:Scale = 25 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-834.983, 45.936)
+                    int stackingOrderInSubgraph = 1185
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/LavaMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (335.25, 100.5)
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            float inputs:clearcoat
+            float inputs:clearcoatRoughness
+            color3f inputs:diffuseColor = (0, 0, 0)
+            color3f inputs:diffuseColor.connect = None
+            color3f inputs:emissiveColor.connect = </Root/LavaMaterial/Mix.outputs:out>
+            float inputs:ior
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (93.5, 100.5)
+            int ui:nodegraph:node:stackingOrder = 1142
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["Advanced"]
+        }
+
+        def Shader "Mix"
+        {
+            uniform token info:id = "ND_mix_color3"
+            color3f inputs:bg = (0.9191657, 0.085778676, 0) (
+                colorSpace = "srgb_displayp3"
+            )
+            color3f inputs:fg = (0.9729826, 0.79667145, 0.28514934) (
+                colorSpace = "srgb_displayp3"
+            )
+            float inputs:mix.connect = </Root/LavaMaterial/Power.outputs:out>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-115.44396, 92.717705)
+            int ui:nodegraph:node:stackingOrder = 1141
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:bg"]
+        }
+
+        def Shader "WorleyNoise3D"
+        {
+            uniform token info:id = "ND_worleynoise3d_float"
+            float inputs:jitter = 1
+            float3 inputs:position.connect = </Root/LavaMaterial/Add_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-483.55145, 70.22769)
+            int ui:nodegraph:node:stackingOrder = 1141
+        }
+
+        def Shader "Multiply_2"
+        {
+            uniform token info:id = "ND_multiply_float"
+            float inputs:in1.connect = </Root/LavaMaterial/Time.outputs:out>
+            float inputs:in2.connect = </Root/LavaMaterial.inputs:Rate>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-725.2115, 135.33345)
+            int ui:nodegraph:node:stackingOrder = 1180
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-853.01324, -6.243443)
+            int ui:nodegraph:node:stackingOrder = 1180
+        }
+
+        def Shader "Multiply_3"
+        {
+            uniform token info:id = "ND_multiply_vector3FA"
+            float3 inputs:in1.connect = </Root/LavaMaterial/Position.outputs:out>
+            float inputs:in2.connect = </Root/LavaMaterial.inputs:Scale>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-726.10565, 19.36396)
+            int ui:nodegraph:node:stackingOrder = 1180
+        }
+
+        def Shader "Add_1"
+        {
+            uniform token info:id = "ND_add_vector3FA"
+            float3 inputs:in1.connect = </Root/LavaMaterial/Multiply_3.outputs:out>
+            float inputs:in2.connect = </Root/LavaMaterial/Multiply_2.outputs:out>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-635.3906, 75.42814)
+            int ui:nodegraph:node:stackingOrder = 1180
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in2"]
+        }
+
+        def Shader "Time"
+        {
+            uniform token info:id = "ND_time_float"
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-848.1495, 106.85166)
+            int ui:nodegraph:node:stackingOrder = 1180
+        }
+
+        def Shader "Power"
+        {
+            uniform token info:id = "ND_power_float"
+            float inputs:in1.connect = </Root/LavaMaterial/WorleyNoise3D.outputs:out>
+            float inputs:in2 = 5
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-281.13998, 124.80647)
+            int ui:nodegraph:node:stackingOrder = 1147
+        }
+    }
+}
+

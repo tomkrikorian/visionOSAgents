@@ -1,0 +1,176 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.16.0.3)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["FresnelEntity", "FresnelMaterial"]
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Sphere "FresnelEntity" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/FresnelMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Material "FresnelMaterial"
+    {
+        reorder nameChildren = ["PreviewSurface", "Fresnel_1"]
+        color3f inputs:OutlineColor = (0.99942404, 0.9855537, 0) (
+            colorSpace = "srgb_texture"
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-188.88281, 95.99609)
+                    int stackingOrderInSubgraph = 1220
+                }
+            }
+        )
+        float inputs:OutlineFalloff = 5 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-327.5957, 198.20703)
+                    int stackingOrderInSubgraph = 1222
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/FresnelMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (323.91797, 99.58984)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1224
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            float inputs:clearcoat
+            float inputs:clearcoatRoughness
+            color3f inputs:diffuseColor = (0, 0, 0) (
+                colorSpace = "srgb_texture"
+            )
+            color3f inputs:diffuseColor.connect = None
+            color3f inputs:emissiveColor.connect = </Root/FresnelMaterial/Multiply.outputs:out>
+            float inputs:ior
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:occlusion
+            float inputs:opacity
+            float inputs:roughness = 0.5
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (93.5, 100.5)
+            int ui:nodegraph:node:stackingOrder = 1178
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["Advanced"]
+        }
+
+        def NodeGraph "Fresnel"
+        {
+            float inputs:Falloff = 5 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-138.49043, -75.279785)
+                        int stackingOrderInSubgraph = 207
+                    }
+                }
+            )
+            float inputs:Falloff.connect = </Root/FresnelMaterial.inputs:OutlineFalloff>
+            float outputs:Out (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-75.62891, 116.12305)
+                        int stackingOrderInSubgraph = 2
+                    }
+                }
+            )
+            float outputs:Out.connect = </Root/FresnelMaterial/Fresnel/Power.outputs:out>
+            float2 ui:nodegraph:node:pos = (-170.8125, 184.86914)
+            int ui:nodegraph:node:stackingOrder = 1221
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (143.64453, -158.875)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 69
+
+            def Shader "ViewDirection"
+            {
+                uniform token info:id = "ND_realitykit_viewdirection_vector3"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-607.7715, -178.98535)
+                int ui:nodegraph:node:stackingOrder = 204
+            }
+
+            def Shader "DotProduct"
+            {
+                uniform token info:id = "ND_dotproduct_vector3"
+                float3 inputs:in1.connect = </Root/FresnelMaterial/Fresnel/ViewDirection.outputs:out>
+                float3 inputs:in2.connect = </Root/FresnelMaterial/Fresnel/Normal.outputs:out>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-391.8711, -150.22266)
+                int ui:nodegraph:node:stackingOrder = 204
+            }
+
+            def Shader "Normal"
+            {
+                uniform token info:id = "ND_normal_vector3"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-564.7676, -121.55176)
+                int ui:nodegraph:node:stackingOrder = 204
+            }
+
+            def Shader "Oneminus"
+            {
+                uniform token info:id = "ND_realitykit_oneminus_float"
+                float inputs:in.connect = </Root/FresnelMaterial/Fresnel/Clamp.outputs:out>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-114.01953, -140.22656)
+                int ui:nodegraph:node:stackingOrder = 206
+            }
+
+            def Shader "Power"
+            {
+                uniform token info:id = "ND_power_float"
+                float inputs:in1.connect = </Root/FresnelMaterial/Fresnel/Oneminus.outputs:out>
+                float inputs:in2.connect = </Root/FresnelMaterial/Fresnel.inputs:Falloff>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (13.134888, -131.30992)
+                int ui:nodegraph:node:stackingOrder = 63
+            }
+
+            def Shader "Clamp"
+            {
+                uniform token info:id = "ND_clamp_float"
+                float inputs:high
+                float inputs:in.connect = </Root/FresnelMaterial/Fresnel/DotProduct.outputs:out>
+                float inputs:low
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-229.01172, -194.7461)
+                int ui:nodegraph:node:stackingOrder = 204
+            }
+        }
+
+        def Shader "Multiply"
+        {
+            uniform token info:id = "ND_multiply_color3FA"
+            color3f inputs:in1.connect = </Root/FresnelMaterial.inputs:OutlineColor>
+            float inputs:in2.connect = </Root/FresnelMaterial/Fresnel.outputs:Out>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-52.023438, 158.98047)
+            int ui:nodegraph:node:stackingOrder = 1220
+        }
+    }
+}
+

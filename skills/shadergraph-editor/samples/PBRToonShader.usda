@@ -1,0 +1,544 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.0.16.0.3)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    float3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    def Xform "Transform" (
+        active = true
+        customData = {
+            float3 rotationEulerHint = (0, 1.5707963, 0)
+        }
+    )
+    {
+        quatf xformOp:orient = (0.70710677, 0, 0.7071067, 0)
+        float3 xformOp:translate = (0, -0.06372945, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def "ToyBiplane" (
+            active = true
+            customData = {
+                float3 rotationEulerHint = (0, -1.5707963, 0)
+            }
+            references = @ToyBiplane.usdz@
+        )
+        {
+            quatf xformOp:orient = (0.70710677, 0, -0.70710677, 0)
+            float3 xformOp:scale = (1, 1, 1)
+            float3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+            over "geom"
+            {
+                over "realistic"
+                {
+                    over "materials"
+                    {
+                        over "usdpreviewsurface3sg"
+                        {
+                            string inputs:file5:varname (
+                                customData = {
+                                    dictionary realitykit = {
+                                        float2 positionInSubgraph = (321.75, 1141.5)
+                                    }
+                                }
+                            )
+                            string inputs:file6:varname (
+                                customData = {
+                                    dictionary realitykit = {
+                                        float2 positionInSubgraph = (534.75, 1141.5)
+                                    }
+                                }
+                            )
+                            string inputs:file7:varname (
+                                customData = {
+                                    dictionary realitykit = {
+                                        float2 positionInSubgraph = (746.75, 1141.5)
+                                    }
+                                }
+                            )
+                            string inputs:file8:varname (
+                                customData = {
+                                    dictionary realitykit = {
+                                        float2 positionInSubgraph = (960.75, 1141.5)
+                                    }
+                                }
+                            )
+                            string inputs:file16:varname (
+                                customData = {
+                                    dictionary realitykit = {
+                                        float2 positionInSubgraph = (1180.75, 1141.5)
+                                    }
+                                }
+                            )
+                            token outputs:mtlx:surface.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/UnlitSurface.outputs:out>
+                            token outputs:realitykit:vertex
+                            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (1124.591, 781.3352)
+                            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1765
+
+                            over "file16_mtlx_scale" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (624, 692.5)
+                                int ui:nodegraph:node:stackingOrder = 1648
+                            }
+
+                            over "Lookup_st" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (589.6002, 358.03653)
+                                int ui:nodegraph:node:stackingOrder = 1783
+                            }
+
+                            over "file16_mtlx" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (1107.3075, 739.5544)
+                                int ui:nodegraph:node:stackingOrder = 1783
+                            }
+
+                            over "file7_mtlx" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (1166.2113, 516.5082)
+                                int ui:nodegraph:node:stackingOrder = 1783
+                            }
+
+                            over "file16_mtlx_offset" (
+                                active = false
+                            )
+                            {
+                                float3 inputs:in1
+                                float2 ui:nodegraph:node:pos = (894, 692.5)
+                                int ui:nodegraph:node:stackingOrder = 1648
+                            }
+
+                            over "file5_mtlx" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (1376.8035, 393.52734)
+                                int ui:nodegraph:node:stackingOrder = 1783
+                            }
+
+                            over "file6_mtlx" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (1375.494, 165.86418)
+                                int ui:nodegraph:node:stackingOrder = 1783
+                            }
+
+                            over "file8_mtlx" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (807.80963, 834.9534)
+                                int ui:nodegraph:node:stackingOrder = 1783
+                            }
+
+                            over "toy_biplane_realistic_mat_mtlx" (
+                                active = false
+                            )
+                            {
+                                float2 ui:nodegraph:node:pos = (1164, 512)
+                                int ui:nodegraph:node:stackingOrder = 1603
+                            }
+
+                            def Shader "UnlitSurface"
+                            {
+                                uniform token info:id = "ND_realitykit_unlit_surfaceshader"
+                                color3f inputs:color.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.outputs:Out>
+                                bool inputs:hasPremultipliedAlpha
+                                token outputs:out
+                                float2 ui:nodegraph:node:pos = (903.5935, 775.91754)
+                                int ui:nodegraph:node:stackingOrder = 1765
+                            }
+
+                            def Scope "Group" (
+                                kind = "group"
+                            )
+                            {
+                                string ui:group:annotation = "PBR Toon Material Node"
+                                string ui:group:annotationDescription = "Use this node to create a PBR toon shader effect."
+                                string[] ui:group:members = ["p:PBRToon"]
+                            }
+
+                            def NodeGraph "PBRToon"
+                            {
+                                float inputs:AmbientOcclusion = 1 (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (41.783875, 157.41298)
+                                            int stackingOrderInSubgraph = 1479
+                                        }
+                                    }
+                                )
+                                float inputs:AmbientOcclusion.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase.outputs:AmbientOcclusion>
+                                float inputs:Bands = 8 (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (982.62335, 443.72845)
+                                            int stackingOrderInSubgraph = 2219
+                                        }
+                                    }
+                                )
+                                color3f inputs:BaseColor (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (65.376625, 96.77849)
+                                            int stackingOrderInSubgraph = 1479
+                                        }
+                                    }
+                                )
+                                color3f inputs:BaseColor.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase.outputs:BaseColor>
+                                half inputs:Metallic (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (166.66643, 344.25192)
+                                            int stackingOrderInSubgraph = 1460
+                                        }
+                                    }
+                                )
+                                half inputs:Metallic.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase.outputs:Metallic>
+                                float3 inputs:Normal = (0, 0, 0) (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (155.74826, 403.99472)
+                                            int stackingOrderInSubgraph = 1460
+                                        }
+                                    }
+                                )
+                                float3 inputs:Normal.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase.outputs:Normal>
+                                half inputs:Roughness (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (156.43358, 222.63751)
+                                            int stackingOrderInSubgraph = 1460
+                                        }
+                                    }
+                                )
+                                half inputs:Roughness.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase.outputs:Roughness>
+                                half inputs:Specular = 0.5 (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (164.27063, 284.362)
+                                            int stackingOrderInSubgraph = 1460
+                                        }
+                                    }
+                                )
+                                color3f outputs:Out (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            int stackingOrderInSubgraph = 1150
+                                        }
+                                    }
+                                )
+                                color3f outputs:Out.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/HSVToRGB.outputs:out>
+                                float2 ui:nodegraph:node:pos = (656.28455, 777.99854)
+                                int ui:nodegraph:node:stackingOrder = 1769
+                                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:Bands"]
+                                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (2030.036, 297.3024)
+                                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 2179
+
+                                def Shader "Add"
+                                {
+                                    uniform token info:id = "ND_add_color3"
+                                    color3f inputs:in1.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/RealitykitEnvironmentRadiance.outputs:diffuseRadiance>
+                                    color3f inputs:in2.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/RealitykitEnvironmentRadiance.outputs:specularRadiance>
+                                    color3f outputs:out
+                                    float2 ui:nodegraph:node:pos = (558.35266, 324.20056)
+                                    int ui:nodegraph:node:stackingOrder = 1031
+                                }
+
+                                def Shader "Multiply_1"
+                                {
+                                    uniform token info:id = "ND_multiply_float"
+                                    float inputs:in1.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/SquareRoot.outputs:out>
+                                    float inputs:in2 = 1
+                                    float inputs:in2.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:Bands>
+                                    float outputs:out
+                                    float2 ui:nodegraph:node:pos = (1115.0052, 408.54324)
+                                    int ui:nodegraph:node:stackingOrder = 2222
+                                }
+
+                                def Shader "Divide"
+                                {
+                                    uniform token info:id = "ND_divide_float"
+                                    float inputs:in1.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Round.outputs:out>
+                                    float inputs:in2.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:Bands>
+                                    float outputs:out
+                                    float2 ui:nodegraph:node:pos = (1363.0105, 412.55197)
+                                    int ui:nodegraph:node:stackingOrder = 2219
+                                }
+
+                                def Shader "RealitykitEnvironmentRadiance"
+                                {
+                                    uniform token info:id = "ND_realitykit_environment_radiance"
+                                    color3f inputs:baseColor.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Multiply.outputs:out>
+                                    half inputs:metallic = 0.199951
+                                    half inputs:metallic.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:Metallic>
+                                    float3 inputs:normal.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:Normal>
+                                    half inputs:roughness = 0.0999756
+                                    half inputs:roughness.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:Roughness>
+                                    half inputs:specular = 1
+                                    half inputs:specular.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:Specular>
+                                    color3f outputs:diffuseRadiance
+                                    color3f outputs:specularRadiance
+                                    float2 ui:nodegraph:node:pos = (394, 245)
+                                    int ui:nodegraph:node:stackingOrder = 1410
+                                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:normal"]
+                                }
+
+                                def Shader "Multiply"
+                                {
+                                    uniform token info:id = "ND_multiply_color3FA"
+                                    color3f inputs:in1.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:BaseColor>
+                                    float inputs:in2.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon.inputs:AmbientOcclusion>
+                                    color3f outputs:out
+                                    float2 ui:nodegraph:node:pos = (194.95062, 123.41346)
+                                    int ui:nodegraph:node:stackingOrder = 1479
+                                }
+
+                                def Shader "Round"
+                                {
+                                    uniform token info:id = "ND_round_float"
+                                    float inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Multiply_1.outputs:out>
+                                    float outputs:out
+                                    float2 ui:nodegraph:node:pos = (1235.3623, 385.20825)
+                                    int ui:nodegraph:node:stackingOrder = 2219
+                                }
+
+                                def Shader "RGBToHSV"
+                                {
+                                    uniform token info:id = "ND_rgbtohsv_color3"
+                                    color3f inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Add.outputs:out>
+                                    color3f outputs:out
+                                    float2 ui:nodegraph:node:pos = (690.9893, 324.0977)
+                                    int ui:nodegraph:node:stackingOrder = 2079
+                                }
+
+                                def Shader "Separate3"
+                                {
+                                    uniform token info:id = "ND_separate3_color3"
+                                    color3f inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/RGBToHSV.outputs:out>
+                                    float outputs:outb
+                                    float outputs:outg
+                                    float outputs:outr
+                                    float2 ui:nodegraph:node:pos = (871.092, 323.7702)
+                                    int ui:nodegraph:node:stackingOrder = 2090
+                                }
+
+                                def Shader "Combine3"
+                                {
+                                    uniform token info:id = "ND_combine3_color3"
+                                    float inputs:in1.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Separate3.outputs:outr>
+                                    float inputs:in2.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Separate3.outputs:outg>
+                                    float inputs:in3.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Power.outputs:out>
+                                    color3f outputs:out
+                                    float2 ui:nodegraph:node:pos = (1672.7736, 325.87274)
+                                    int ui:nodegraph:node:stackingOrder = 2223
+                                }
+
+                                def Shader "HSVToRGB"
+                                {
+                                    uniform token info:id = "ND_hsvtorgb_color3"
+                                    color3f inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Combine3.outputs:out>
+                                    color3f outputs:out
+                                    float2 ui:nodegraph:node:pos = (1851.9973, 325.35718)
+                                    int ui:nodegraph:node:stackingOrder = 2179
+                                }
+
+                                def Shader "SquareRoot"
+                                {
+                                    uniform token info:id = "ND_sqrt_float"
+                                    float inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Separate3.outputs:outb>
+                                    float outputs:out
+                                    float2 ui:nodegraph:node:pos = (997.1276, 372.1079)
+                                    int ui:nodegraph:node:stackingOrder = 2134
+                                }
+
+                                def Shader "Power"
+                                {
+                                    uniform token info:id = "ND_power_float"
+                                    float inputs:in1.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/PBRToon/Divide.outputs:out>
+                                    float inputs:in2 = 2
+                                    float outputs:out
+                                    float2 ui:nodegraph:node:pos = (1513.8176, 380.43158)
+                                    int ui:nodegraph:node:stackingOrder = 2179
+                                }
+                            }
+
+                            def NodeGraph "ToyBiplaneBase"
+                            {
+                                float outputs:AmbientOcclusion (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (961.4239, 423.33374)
+                                            int stackingOrderInSubgraph = 1786
+                                        }
+                                    }
+                                )
+                                float outputs:AmbientOcclusion.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/file6_mtlx.outputs:out>
+                                color3f outputs:BaseColor (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (1138.7902, 806.07135)
+                                            int stackingOrderInSubgraph = 1788
+                                        }
+                                    }
+                                )
+                                color3f outputs:BaseColor.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/file5_mtlx.outputs:out>
+                                half outputs:Metallic (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (964.5356, 273.97272)
+                                            int stackingOrderInSubgraph = 1784
+                                        }
+                                    }
+                                )
+                                half outputs:Metallic.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/MetallicHalf.outputs:out>
+                                float3 outputs:Normal (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (1132.5668, 869.86096)
+                                            int stackingOrderInSubgraph = 1787
+                                        }
+                                    }
+                                )
+                                float3 outputs:Normal.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/NormalMap.outputs:out>
+                                half outputs:Roughness (
+                                    customData = {
+                                        dictionary realitykit = {
+                                            float2 positionInSubgraph = (964.5356, 273.97272)
+                                            int stackingOrderInSubgraph = 1785
+                                        }
+                                    }
+                                )
+                                half outputs:Roughness.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/RoughnessHalf.outputs:out>
+                                float2 ui:nodegraph:node:pos = (394.54922, 765.4079)
+                                int ui:nodegraph:node:stackingOrder = 1765
+                                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (977.90247, 520.6726)
+                                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1786
+
+                                def Shader "Normal"
+                                {
+                                    uniform token info:id = "ND_normal_vector3"
+                                    float3 outputs:out
+                                    float2 ui:nodegraph:node:pos = (380, 1326)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "file6_mtlx" (
+                                    references = @ToyBiplane.usdz[materials/usdpreviewsurface3sg.usdc]@</usdpreviewsurface3sg/file6_mtlx>
+                                )
+                                {
+                                    uniform token info:id = "ND_image_float"
+                                    float2 inputs:texcoord.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/Lookup_st.outputs:out>
+                                    float2 ui:nodegraph:node:pos = (380, 100.5)
+                                    int ui:nodegraph:node:stackingOrder = 1785
+                                }
+
+                                def Shader "file8_mtlx" (
+                                    references = @ToyBiplane.usdz[materials/usdpreviewsurface3sg.usdc]@</usdpreviewsurface3sg/file8_mtlx>
+                                )
+                                {
+                                    uniform token info:id = "ND_image_float"
+                                    float2 inputs:texcoord.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/Lookup_st.outputs:out>
+                                    float2 ui:nodegraph:node:pos = (380, 361.5)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "file7_mtlx" (
+                                    references = @ToyBiplane.usdz[materials/usdpreviewsurface3sg.usdc]@</usdpreviewsurface3sg/file7_mtlx>
+                                )
+                                {
+                                    uniform token info:id = "ND_image_float"
+                                    float2 inputs:texcoord.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/Lookup_st.outputs:out>
+                                    float2 ui:nodegraph:node:pos = (380, 622.5)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "Lookup_st" (
+                                    references = @ToyBiplane.usdz[materials/usdpreviewsurface3sg.usdc]@</usdpreviewsurface3sg/Lookup_st>
+                                )
+                                {
+                                    uniform token info:id = "ND_geompropvalue_vector2"
+                                    float2 ui:nodegraph:node:pos = (91, 522)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "NormalMap"
+                                {
+                                    uniform token info:id = "ND_normalmap"
+                                    float3 inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/file16_mtlx.outputs:out>
+                                    float3 inputs:normal.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/Normal.outputs:out>
+                                    float inputs:scale
+                                    string inputs:space
+                                    float3 inputs:tangent
+                                    float3 outputs:out
+                                    float2 ui:nodegraph:node:pos = (673.5, 1044)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "RoughnessHalf"
+                                {
+                                    uniform token info:id = "ND_convert_float_half"
+                                    float inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/file8_mtlx.outputs:out>
+                                    half outputs:out
+                                    float2 ui:nodegraph:node:pos = (673.5, 361.5)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "MetallicHalf"
+                                {
+                                    uniform token info:id = "ND_convert_float_half"
+                                    float inputs:in.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/file7_mtlx.outputs:out>
+                                    half outputs:out
+                                    float2 ui:nodegraph:node:pos = (673.5, 622.5)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "file16_mtlx" (
+                                    references = @ToyBiplane.usdz[materials/usdpreviewsurface3sg.usdc]@</usdpreviewsurface3sg/file16_mtlx>
+                                )
+                                {
+                                    uniform token info:id = "ND_image_vector3"
+                                    float2 inputs:texcoord.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/Lookup_st.outputs:out>
+                                    float2 ui:nodegraph:node:pos = (380, 883.5)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+
+                                def Shader "file5_mtlx" (
+                                    references = @ToyBiplane.usdz[materials/usdpreviewsurface3sg.usdc]@</usdpreviewsurface3sg/file5_mtlx>
+                                )
+                                {
+                                    uniform token info:id = "ND_image_color3"
+                                    float2 inputs:texcoord.connect = </Root/Transform/ToyBiplane/geom/realistic/materials/usdpreviewsurface3sg/ToyBiplaneBase/Lookup_st.outputs:out>
+                                    float2 ui:nodegraph:node:pos = (380, 1144.5)
+                                    int ui:nodegraph:node:stackingOrder = 1783
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
