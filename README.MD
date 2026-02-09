@@ -47,6 +47,20 @@ GroupActivities and SharePlay session lifecycle and sync patterns.
 npx skills add https://github.com/tomkrikorian/visionOSAgents --skill shareplay-developer
 ```
 
+#### visionos-widgetkit-developer
+WidgetKit widgets for Apple Vision Pro, including mounting styles, textures, and proximity-aware layouts.
+
+```bash
+npx skills add https://github.com/tomkrikorian/visionOSAgents --skill visionos-widgetkit-developer
+```
+
+#### visionos-immersive-media-developer
+Immersive and spatial video playback patterns for visionOS, including RealityKit `VideoPlayerComponent` viewing modes, transitions, and comfort mitigation.
+
+```bash
+npx skills add https://github.com/tomkrikorian/visionOSAgents --skill visionos-immersive-media-developer
+```
+
 ### Code Quality & Workflow
 
 #### coding-standards-enforcer

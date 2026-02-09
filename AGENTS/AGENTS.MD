@@ -27,6 +27,8 @@ Use this table to decide what skill to use when starting a task:
 | **ralph-driven-development-linear** | When automating task execution from a Linear project and when you need a runner that advances issues and asks for the next task automatically. |
 | **shareplay-developer**           | When implementing SharePlay features, GroupActivities, GroupSession lifecycle management, messaging/journals, ShareLink UI, or spatial coordination on visionOS.                                       |
 | **spatial-swiftui-developer**     | When building spatial UI with SwiftUI, integrating RealityKit content via RealityView, using Model3D, creating attachments, implementing volumetric windows, ImmersiveSpace, or spatial gestures.      |
+| **visionos-widgetkit-developer**  | When building or debugging WidgetKit widgets for Apple Vision Pro, including mounting styles (elevated/recessed), textures (glass/paper), and proximity-aware layouts via LevelOfDetail.            |
+| **visionos-immersive-media-developer** | When implementing immersive/spatial video on visionOS, including RealityKit VideoPlayerComponent setup, portal/progressive/full viewing modes, transitions/events, and comfort mitigation.       |
 | **shadergraph-editor**            | When creating, editing, or troubleshooting ShaderGraph materials, RealityKit material networks, or .usda files for custom shaders and material properties.                                             |
 | **tkr-skill-writer**              | When creating new skills or updating existing skill documentation. Use to ensure consistent formatting, clear documentation, and proper reference organization.                                        |
 
@@ -45,4 +47,3 @@ Use this table to decide what skill to use when starting a task:
 5. Review for consistency, style, and platform guidelines using /coding-standards-enforcer skill
 6. Use the MCP XCodeBuildMCP to verify the build runs without errors.
 7. If errors are found, fix them.
-
