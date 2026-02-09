@@ -1,7 +1,7 @@
 ---
-
-## name: shareplay-developer
+name: shareplay-developer
 description: Build, integrate, and troubleshoot SharePlay GroupActivities features, including GroupActivity definitions, activation flows, GroupSession lifecycle, messaging and journals, ShareLink and SharePlay UI surfaces, and visionOS spatial coordination. Use when implementing or debugging SharePlay experiences across Apple platforms, especially visionOS.
+---
 
 # SharePlay Developer
 
