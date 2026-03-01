@@ -70,20 +70,6 @@ Swift 6 concurrency and language standards enforcement.
 npx skills add https://github.com/tomkrikorian/visionOSAgents --skill coding-standards-enforcer
 ```
 
-#### ralph-driven-development
-Ralph Driven Development (RDD) spec runner workflow and tooling.
-
-```bash
-npx skills add https://github.com/tomkrikorian/visionOSAgents --skill ralph-driven-development
-```
-
-#### ralph-driven-development-linear
-RDD workflow that pulls Linear project issues via Linear MCP and runs them sequentially.
-
-```bash
-npx skills add https://github.com/tomkrikorian/visionOSAgents --skill ralph-driven-development-linear
-```
-
 ### Skill Development
 
 #### tkr-skill-writer
