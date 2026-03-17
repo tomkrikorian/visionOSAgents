@@ -1,7 +1,7 @@
 # ARKit visionOS Code Patterns
 
 ## Notes
-- Run ARKit only in a Full Space (ImmersiveSpace).
+- Follow each provider's documented presentation requirements. Some providers require immersive space, while others can run in more specific configurations such as a volumetric window.
 - Keep strong references to the session and providers for the lifetime of the feature.
 
 ## Provider guides
@@ -33,7 +33,7 @@ final class ARKitManager {
     private let planeProvider = PlaneDetectionProvider(alignments: [.horizontal, .vertical])
 
     func start() async {
-        let results = await session.requestAuthorization(for: planeProvider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: PlaneDetectionProvider.requiredAuthorizations)
         let allowed = results.values.allSatisfy { $0 == .allowed }
         guard allowed else {
             return

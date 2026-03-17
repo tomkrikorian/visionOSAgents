@@ -9,8 +9,9 @@ AccessoryTrackingProvider supplies real-time pose updates for accessories in the
 - Check `AccessoryTrackingProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` and handle denied states before running the session.
 - Track only the accessories needed for the experience to reduce noise.
+- Apple documents accessory tracking in a volumetric-window workflow, so do not require immersive space unless the rest of the experience needs it.
 - Use `anchorUpdates` to add, update, and remove entities, and use `predictAnchor(for:at:)` when you need a future pose.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -27,7 +28,7 @@ final class AccessoryTrackingModel {
         let provider = AccessoryTrackingProvider(accessories: accessories)
         self.provider = provider
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: AccessoryTrackingProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

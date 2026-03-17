@@ -7,7 +7,7 @@ description: Guide for modifying USD ASCII (.usda) files, including prims, prope
 
 ## Description and Goals
 
-This skill guides safe, minimal edits to USD ASCII (.usda) files and the proper use of USD command-line tools. It focuses on preserving stage structure, using correct specifiers and property types, and avoiding composition mistakes while making targeted changes.
+This skill guides safe, minimal edits to USD ASCII (.usda) files and the proper use of official USD command-line tools. It focuses on preserving stage structure, using correct specifiers and property types, and avoiding composition mistakes while making targeted changes.
 
 ### Goals
 
@@ -80,8 +80,7 @@ Animated or time-varying data stored in `timeSamples` dictionaries.
 | [`usdrecord`](references/usdrecord.md) | When rendering images from USD files. |
 | [`usdtree`](references/usdtree.md) | When inspecting the prim hierarchy of a USD file. |
 | [`usdzip`](references/usdzip.md) | When creating or inspecting USDZ packages. |
-| [`usdcrush`](references/usdcrush.md) | When compressing USD or USDZ assets for size. |
-| [`usdextract`](references/usdextract.md) | When extracting files from USD-compatible packages. |
+| [`usdedit`](references/usdedit.md) | When you need the official text-editing workflow for a USD-readable file. |
 
 ### Implementation Patterns
 

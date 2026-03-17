@@ -1,0 +1,7 @@
+interface:
+  display_name: "Spatial SwiftUI Developer"
+  short_description: "Build spatial SwiftUI and RealityKit UI"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $spatial-swiftui-developer to help choose between WindowGroup, ImmersiveSpace, Model3D, and RealityView for this UI."

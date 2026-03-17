@@ -1,31 +1,31 @@
 ---
 name: shadergraph-editor
-description: Create and edit ShaderGraph and RealityKit material networks in .usda files. Use when manually editing USD ASCII files to build, modify, or troubleshoot materials, shader nodes, and connections for RealityKit.
+description: Author, load, and troubleshoot Reality Composer Pro Shader Graph materials for RealityKit on visionOS. Use when building Shader Graph materials, exposing promoted inputs for runtime control, or debugging exported USD and MaterialX interop.
 ---
 
 # ShaderGraph Editor
 
 ## Description and Goals
 
-This skill provides guidance for manually editing USD ASCII (.usda) files to create and modify RealityKit materials and ShaderGraph networks. It covers material prims, shader nodes, connections, and material binding patterns.
+This skill provides guidance for the Apple-documented Shader Graph workflow: author materials in Reality Composer Pro, load them with `ShaderGraphMaterial`, and update promoted inputs at runtime. It also covers how to inspect exported USD and MaterialX when you need advanced debugging or interoperability, but raw `.usda` editing is not the default authoring path.
 
 ### Goals
 
-- Enable developers to create custom materials in USD format
-- Guide manual editing of .usda files for ShaderGraph networks
-- Help troubleshoot material and shader node issues
-- Support creation of complex material networks
-- Ensure proper material binding to geometry
+- Enable developers to create RealityKit materials with Shader Graph in Reality Composer Pro
+- Guide loading and runtime control of `ShaderGraphMaterial`
+- Help troubleshoot material graphs, promoted inputs, and exported assets
+- Support advanced USD and MaterialX inspection without treating it as the primary workflow
+- Point to repo samples when they provide a close starting point
 
 ## What This Skill Should Do
 
-When editing ShaderGraph materials in .usda files, this skill should:
+When working with Shader Graph materials, this skill should:
 
-1. **Guide material creation** - Show how to define material prims and surface shaders
-2. **Explain shader nodes** - Demonstrate how to add and configure shader node prims
-3. **Show connections** - Explain how to connect node outputs to shader inputs
-4. **Handle material binding** - Show how to bind materials to geometry
-5. **Troubleshoot issues** - Help identify and fix common material problems
+1. **Default to Reality Composer Pro** - Treat the Shader Graph editor as the main authoring workflow.
+2. **Guide node selection** - Help choose the correct RealityKit surface, geometry, texture, and math nodes for the effect.
+3. **Explain runtime integration** - Show how promoted inputs map to `ShaderGraphMaterial` parameters.
+4. **Troubleshoot exports** - Inspect exported USD and MaterialX only when debugging, interop, or asset review requires it.
+5. **Cross-link appropriately** - Defer raw USD structure edits to `usd-editor` when the task is really about prims, composition, or text-level USD authoring.
 6. **Prefer sample graphs when available** - If the requested effect matches an example in `samples/`, start from that file and point the user to it.
 
 Load the appropriate reference file from the tables below for detailed usage, code examples, and best practices.
@@ -34,13 +34,13 @@ Load the appropriate reference file from the tables below for detailed usage, co
 
 Before building a new effect from scratch, check `samples/` for a close match and adapt it.
 
-1. Open the `.usda` file in a text editor.
-2. Find or create a `def Material "MaterialName"` block in the correct scope.
-3. Define a `def Shader "Surface"` prim and connect `outputs:surface` to the material output.
-4. Add shader node prims (`def Shader`) for textures and math operations.
-5. Connect node outputs to shader inputs with the `.connect` syntax.
-6. Set constant values on inputs that are not connected.
-7. Bind the material to geometry with `rel material:binding`.
+1. Create or open the material in Reality Composer Pro's Shader Graph editor.
+2. Choose the appropriate RealityKit surface node and add the graph nodes needed for the effect.
+3. Promote the inputs you expect to change at runtime.
+4. Save the material in the Reality Composer Pro asset package that ships with the app.
+5. Load the material with `ShaderGraphMaterial` at runtime.
+6. Update promoted inputs with runtime parameter APIs when the experience needs dynamic control.
+7. Inspect exported USD and MaterialX only when you need to debug the authored graph or interoperate with other asset tooling.
 
 ## Information About the Skill
 
@@ -48,27 +48,23 @@ Before building a new effect from scratch, check `samples/` for a close match an
 
 #### Material Prim
 
-The root of a material definition in USD. Contains the material structure and connects to a surface shader.
+Reality Composer Pro exports Shader Graph materials into USD-based assets, but the material should be authored in the Shader Graph editor rather than hand-written as text by default.
 
-#### Surface Shader
+#### Shader Graph Authoring
 
-A `Shader` prim that drives `outputs:surface`. Typically uses `UsdPreviewSurface` or RealityKit-specific shader identifiers.
+Shader Graph materials are composed visually in Reality Composer Pro. Use RealityKit-specific nodes such as the surface and geometry modifier nodes that Apple documents for Shader Graph.
 
-#### Shader Nodes
+#### Promoted Inputs and Runtime Control
 
-Additional `Shader` prims for textures, transforms, and math operations. Each node has an `info:id` that identifies its type.
+Promoted inputs let the app change material parameters after loading the material. This is the main Apple-supported workflow for runtime customization.
 
-#### Connections
+#### Exported USD and MaterialX
 
-`.connect` syntax links between node outputs and shader inputs. Creates the material network graph.
+Exported assets may contain USD and MaterialX representations of the graph. Treat those files as implementation artifacts for debugging or interop, not as the primary authoring surface.
 
-#### Material Binding
+#### Samples and Interop Boundaries
 
-`rel material:binding` on a mesh prim associates the material with geometry.
-
-#### info:id
-
-The shader node identifier used by USD and RealityKit to determine the node's behavior.
+The samples in this repo are useful starting points, but they are repo-owned examples. Do not treat raw exported `info:id` strings or USD graph structure as stable Apple API unless Apple documents them directly.
 
 ### Reference Files
 
@@ -95,76 +91,24 @@ Some samples reference external assets (for example ramp textures or a reference
 
 ### Implementation Patterns
 
-#### Basic Red PBR Material (UsdPreviewSurface)
+#### Recommended Authoring Flow
 
-```usda
-def Material "RedMaterial"
-{
-    token outputs:surface.connect = <./Surface.outputs:surface>
+- Start with a Shader Graph material in Reality Composer Pro.
+- Use Apple-documented RealityKit Shader Graph nodes such as the surface nodes and geometry modifier nodes for the effect you need.
+- Promote any inputs that must change at runtime.
+- Load the material in app code with `ShaderGraphMaterial`.
+- Change promoted values at runtime rather than editing exported USD directly.
 
-    def Shader "Surface"
-    {
-        uniform token info:id = "UsdPreviewSurface"
-        color3f inputs:diffuseColor = (1, 0, 0) # Red
-        float inputs:roughness = 0.2
-        float inputs:metallic = 0.0
-        token outputs:surface
-    }
-}
-```
+#### When Raw USD Review Is Appropriate
 
-#### Texture-Mapped Material
-
-```usda
-def Material "TexturedMaterial"
-{
-    token outputs:surface.connect = <./Surface.outputs:surface>
-
-    def Shader "Surface"
-    {
-        uniform token info:id = "UsdPreviewSurface"
-        color3f inputs:diffuseColor.connect = <../DiffuseTexture.outputs:rgb>
-        token outputs:surface
-    }
-
-    def Shader "DiffuseTexture"
-    {
-        uniform token info:id = "UsdUVTexture"
-        asset inputs:file = @textures/wood_albedo.png@
-        float2 inputs:st.connect = <../PrimvarReader.outputs:result>
-        float3 outputs:rgb
-    }
-
-    def Shader "PrimvarReader"
-    {
-        uniform token info:id = "UsdPrimvarReader_float2"
-        string inputs:varname = "st" # Name of UV set on mesh
-        float2 outputs:result
-    }
-}
-```
-
-#### RealityKit-Specific Nodes
-
-```usda
-def Material "UnlitMaterial"
-{
-    token outputs:surface.connect = <./UnlitSurface.outputs:surface>
-
-    def Shader "UnlitSurface"
-    {
-        # Identifier may vary based on RealityKit version/export
-        uniform token info:id = "ND_realitykit_unlit_surfaceshader"
-        color3f inputs:color = (0, 1, 0)
-        token outputs:surface
-    }
-}
-```
+- Inspect exported files when a material fails to load or render as expected.
+- Compare repo samples to an exported asset when debugging a graph translation issue.
+- Hand off prim-level edits to `usd-editor` when the task is really about USD structure, paths, or composition.
 
 ### Pitfalls and Checks
 
-- Ensure `outputs:surface.connect` is present on the material.
-- Verify `info:id` values match the expected node identifiers.
-- Confirm all `.connect` paths point to valid outputs.
-- Provide a `PrimvarReader` when using UV textures.
-- Bind materials to geometry with `rel material:binding`.
+- Do not present `UsdPreviewSurface` networks as equivalent to Reality Composer Pro Shader Graph materials.
+- Do not rely on undocumented exported `info:id` strings as stable Apple API.
+- Prefer promoted inputs and runtime parameter updates over raw text edits when the app needs dynamic control.
+- Use `usd-editor` for prim paths, composition arcs, or other text-level USD authoring tasks.
+- Treat the samples as repo examples, not as an exhaustive Apple-backed schema reference.

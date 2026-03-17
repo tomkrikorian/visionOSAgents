@@ -1,0 +1,7 @@
+interface:
+  display_name: "visionOS WidgetKit Developer"
+  short_description: "Build and debug visionOS widgets"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $visionos-widgetkit-developer to help build or debug this visionOS widget, including mounting, texture, and LevelOfDetail behavior."

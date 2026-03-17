@@ -10,7 +10,7 @@ HandTrackingProvider supplies real-time data about a person's hands and joints v
 - Check `HandTrackingProvider.isSupported` and handle unsupported devices gracefully.
 - Use `anchorUpdates` for continuous updates and `latestAnchors` for instant access.
 - Treat hand data as transient and avoid persisting it.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class HandTrackingModel {
     func start() async {
         guard HandTrackingProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: HandTrackingProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

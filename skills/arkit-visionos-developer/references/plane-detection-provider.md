@@ -10,7 +10,7 @@ PlaneDetectionProvider detects planar surfaces in a person's surroundings and em
 - Check `PlaneDetectionProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use `anchorUpdates` to add, update, and remove plane-backed entities.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class PlaneDetectionModel {
     func start() async {
         guard PlaneDetectionProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: PlaneDetectionProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

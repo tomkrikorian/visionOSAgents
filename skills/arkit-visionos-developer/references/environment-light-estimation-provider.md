@@ -10,7 +10,7 @@ EnvironmentLightEstimationProvider supplies lighting information about the envir
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use anchor updates to refresh RealityKit lighting or image-based lighting resources.
 - Avoid heavy lighting recomputation on the main actor.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class LightEstimationModel {
     func start() async {
         guard EnvironmentLightEstimationProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: EnvironmentLightEstimationProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

@@ -4,7 +4,7 @@
 
 ## Overview
 
-A component containing additional information about a view attachment entity provided via the `Attachment` function. This component manages a SwiftUI view hierarchy embedded in 3D space, allowing you to place SwiftUI UI elements directly in your RealityKit scene.
+A component containing additional information about a view attachment entity. Use it when you need to create or manage a SwiftUI-backed attachment entity directly in RealityKit, alongside the `RealityView` attachment builder APIs.
 
 ## When to Use
 
@@ -78,7 +78,7 @@ entity.components.set(attachment)
 
 ## Key Properties
 
-- `id: UUID` - The identifier used for this view attachment
+- `id: AnyHashable` - The identifier used for this view attachment
 - `bounds: BoundingBox` - The bounding box of the view attachment, expressed in meters
 
 ## Important Notes
@@ -86,13 +86,13 @@ entity.components.set(attachment)
 - View attachments are transient components - they don't serialize to files
 - The view hierarchy is managed by RealityKit and updates automatically
 - View attachments are positioned relative to their entity's transform
-- Use this instead of the `RealityView` attachments closure for better performance
+- `RealityView` attachment builders and `ViewAttachmentComponent` are complementary APIs; choose based on whether the SwiftUI view is declared by `RealityView` or attached directly to an entity
 
 ## Best Practices
 
 - Keep view attachments lightweight - complex SwiftUI views can impact performance
 - Use view attachments for UI elements that need to stay attached to entities
-- Prefer `ViewAttachmentComponent` over the `RealityView` attachments closure
+- Prefer the `RealityView` attachments builder for declarative SwiftUI-defined attachments, and use `ViewAttachmentComponent` when direct entity ownership is more natural
 - Use materials and blur effects for better visual integration with 3D content
 - Position view attachments carefully to avoid occlusion issues
 

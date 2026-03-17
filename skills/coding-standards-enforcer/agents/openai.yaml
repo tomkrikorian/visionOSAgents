@@ -1,0 +1,7 @@
+interface:
+  display_name: "Coding Standards Enforcer"
+  short_description: "Review Swift code against the repo standards"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $coding-standards-enforcer to review these Swift changes for concurrency, Observation, and style issues."

@@ -10,7 +10,7 @@ StereoPropertiesProvider supplies the latest viewpoint properties for stereo ren
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Read `latestViewpointProperties` as needed and avoid heavy processing on the main actor.
 - Combine stereo properties with your rendering loop instead of polling excessively.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class StereoPropertiesModel {
     func start() async {
         guard StereoPropertiesProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: StereoPropertiesProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

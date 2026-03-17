@@ -1,6 +1,6 @@
 # ShaderGraph Nodes for Apple RealityKit
 
-Complete list of all available nodes in ShaderGraph for RealityKit, organized by category.
+Reference list of commonly used Shader Graph nodes for RealityKit, organized by category. Treat this file as a practical repo reference, not an exhaustive Apple-backed catalog.
 
 ## RealityKit-Specific Nodes
 

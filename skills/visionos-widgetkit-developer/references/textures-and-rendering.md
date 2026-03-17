@@ -1,6 +1,6 @@
 # Textures and rendering (glass, paper, accented)
 
-## Widget textures (visionOS 26+)
+## Widget textures
 
 Widgets offered by a visionOS app can specify a texture for the widget’s coating layer:
 
@@ -32,4 +32,3 @@ Practical checks:
 
 - WidgetKit updates (Vision Pro + Liquid Glass notes): https://developer.apple.com/documentation/updates/widgetkit
 - `WidgetTexture`: https://developer.apple.com/documentation/widgetkit/widgettexture
-

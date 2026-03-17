@@ -10,7 +10,7 @@ RoomTrackingProvider supplies real-time information about the room a person is c
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use `currentRoomAnchor` for the latest room state and `anchorUpdates` for changes.
 - Treat room anchors as authoritative for spatial layout decisions.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class RoomTrackingModel {
     func start() async {
         guard RoomTrackingProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: RoomTrackingProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

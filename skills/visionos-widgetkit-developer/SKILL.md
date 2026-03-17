@@ -25,6 +25,7 @@ When you ask to build or debug a Vision Pro widget, this skill should:
 3. **Configure visionOS widget presentation**:
    - Set `supportedMountingStyles` (elevated/recessed) appropriately.
    - Choose `widgetTexture` (glass/paper) where available/appropriate.
+   - Split widgets into separate configurations when different families need different supported mounting styles.
 4. **Validate legibility and content density**: Ensure the simplified layout remains readable from across the room.
 5. **Handle updates**: Implement a sound timeline strategy and define when/how the widget reloads.
 6. **Debug and iterate**: Provide concrete checks for common failure modes (missing families, bad Info.plist, broken layouts in recessed mode, stale timelines).
@@ -41,7 +42,7 @@ On Vision Pro, widgets are pinned to horizontal or vertical surfaces and behave 
 
 #### Mounting styles: elevated vs recessed
 
-On vertical surfaces, a widget can appear **recessed** (embedded into a wall) or **elevated** (sitting on top of the surface). Some widget designs only make sense in one mode.
+On vertical surfaces, a widget can appear **recessed** (embedded into a wall) or **elevated** (sitting on top of the surface). Elevated is the default style because it works on both horizontal and vertical surfaces; recessed applies only on vertical surfaces.
 
 #### Textures: glass vs paper
 
@@ -56,7 +57,10 @@ visionOS can change a widget’s `LevelOfDetail` based on **user proximity**. Tr
 
 #### Family support differences for extra-large widgets
 
-visionOS supports system widget families including extra-large, but the correct family to declare depends on whether your widget is part of a visionOS app vs a compatible iOS/iPadOS app.
+visionOS supports system widget families including extra-large, but the correct family to declare depends on whether your widget is part of a visionOS app vs a compatible iOS/iPadOS app:
+
+- visionOS app widgets use `WidgetFamily.systemExtraLargePortrait`
+- compatible iOS/iPadOS widgets use `WidgetFamily.systemExtraLarge`
 
 ### Reference Tables
 
@@ -85,7 +89,8 @@ struct MyVisionOSWidget: Widget {
         .description("Glanceable info in your space.")
         .supportedMountingStyles([.elevated, .recessed])
         .widgetTexture(.glass)
-        // Choose families intentionally; see references for Vision Pro rules.
+        // Choose families intentionally; create a separate widget configuration
+        // if a different family set needs different mounting-style support.
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
@@ -118,4 +123,3 @@ struct MyWidgetView: View {
 - Avoid tiny typography and low-contrast UI; pinned widgets are often viewed from far away.
 - Don’t forget to include the right widget families (especially extra-large differences).
 - If timelines seem stale, confirm your timeline policy and reload strategy.
-

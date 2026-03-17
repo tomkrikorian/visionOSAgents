@@ -39,12 +39,12 @@ These patterns are synthesized examples to illustrate common GroupActivities flo
 When you only want participants to share the same immersive space (co-located group immersive space) without any object synchronization:
 
 1. Set `supportsGroupImmersiveSpace = true` and a `spatialTemplatePreference` on `SystemCoordinator` before `join()`.
-2. Set `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene.
+2. If your experience should keep the system immersive environment visible, set `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene. This is an environment preference, not the API that spatially coordinates participants.
 3. Use `prepareForActivation()` to either call `activate()` directly or fall back to a share sheet.
 
 See: [`visionos-immersive-space.md`](visionos-immersive-space.md) and [`activation-ui.md`](activation-ui.md).
 
-### Define a GroupActivity with Transferable metadata
+### Define a GroupActivity, and add Transferable support when needed
 
 ```swift
 import CoreTransferable

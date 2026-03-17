@@ -39,13 +39,13 @@ Load the appropriate component or system reference file from the tables below fo
 - Entities are lightweight containers; behavior comes from components.
 - Prefer composition over inheritance and use custom `Component` + `Codable` when you need per-entity state.
 - Register custom components once with `Component.registerComponent()` before use.
-- Keep entity transforms and component updates on the main actor.
+- Mutate entities from documented RealityKit entry points such as `RealityView` closures, event handlers, and systems.
 
 #### RealityView and Attachments
 
 - Use `RealityView` to bridge SwiftUI and RealityKit.
 - Load assets with `Entity(named:)` or `Entity(contentsOf:)` asynchronously and handle errors.
-- Always use `ViewAttachmentComponent` for SwiftUI overlays in 3D and avoid the `RealityView` attachments closure.
+- Use the `RealityView` attachments closure when you want SwiftUI attachment entities defined alongside the view, and use `ViewAttachmentComponent` when a component-based attachment is the better fit.
 
 #### Systems and Queries
 
@@ -236,5 +236,5 @@ SpinSystem.registerSystem()
 - Always load assets asynchronously; avoid blocking the main actor.
 - Avoid `ARView` on visionOS; use `RealityView`.
 - Add `CollisionComponent` + `InputTargetComponent` for draggable or tappable entities.
-- Never use the `RealityView` update closure; use a custom `System` for continuous behavior instead.
-- Mesh generation is limited to `box`, `sphere`, `plane`, `cylinder`, and `cone`.
+- Use the `RealityView` update closure for state-driven content updates, and prefer a custom `System` for continuous per-frame behavior that spans many entities.
+- Built-in mesh generation supports more than the basic primitives, including text and custom mesh content through `MeshResource` APIs.

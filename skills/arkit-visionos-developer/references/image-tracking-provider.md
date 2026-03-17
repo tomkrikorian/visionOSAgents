@@ -10,7 +10,7 @@ ImageTrackingProvider tracks known 2D images in a person's surroundings and emit
 - Check `ImageTrackingProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Keep the reference image set focused to improve detection performance.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -27,7 +27,7 @@ final class ImageTrackingModel {
         let provider = ImageTrackingProvider(referenceImages: referenceImages)
         self.provider = provider
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: ImageTrackingProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

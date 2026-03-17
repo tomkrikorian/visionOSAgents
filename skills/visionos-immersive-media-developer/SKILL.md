@@ -7,7 +7,7 @@ description: Implement immersive and spatial video experiences on Apple Vision P
 
 ## Description and Goals
 
-This skill provides a practical playbook for building **immersive and spatial media** experiences on **Apple Vision Pro**. It focuses on RealityKit’s `VideoPlayerComponent` (with `AVPlayer`) for video playback that can move between **window/portal** playback and **immersive** playback, plus the event and comfort toolset that helps you ship a comfortable, accessible experience.
+This skill provides a practical playbook for building **immersive and spatial media** experiences on **Apple Vision Pro**. Start with AVKit when the system player experience fits your app. Use RealityKit’s `VideoPlayerComponent` when you need custom placement, custom environments, or deeper scene integration for video playback that can move between **window/portal** playback and **immersive** playback.
 
 It also outlines how Apple’s **ImmersiveMediaSupport** framework fits into authoring and packaging **Apple Immersive Video** content.
 
@@ -28,7 +28,8 @@ When asked to add immersive/spatial video to a visionOS app, this skill should:
    - Is the content mono, stereo, spatial video, or immersive media?
    - Do you need passthrough tinting, captions/subtitles, or multi-user playback sync?
 2. **Pick a playback architecture**
-   - RealityKit `VideoPlayerComponent` + `AVPlayer` for video surfaces and immersive playback modes.
+   - Prefer AVKit when the system playback interface matches the product requirements.
+   - Use RealityKit `VideoPlayerComponent` when the experience needs custom placement, custom environments, or scene-aware playback behavior.
    - Escalate to CompositorServices only for custom engines or bespoke full-space rendering.
 3. **Implement playback + UI**
    - Create a video entity, attach `VideoPlayerComponent`, and manage UI affordances.
@@ -44,9 +45,9 @@ Load the appropriate reference file from the tables below for detailed usage, co
 
 ### Core Concepts
 
-#### `VideoPlayerComponent` is the backbone
+#### Choose AVKit first, then RealityKit when needed
 
-RealityKit’s `VideoPlayerComponent` is a first-class video playback component powered by `AVPlayer`. It’s designed to support playback controls and visionOS-specific behaviors like passthrough tinting and immersive viewing modes.
+AVKit provides the preferred system playback experience on visionOS. Use RealityKit’s `VideoPlayerComponent` when you need the video to participate directly in a custom 3D scene, custom environment, or bespoke interaction model.
 
 #### Immersive viewing modes
 
@@ -135,4 +136,3 @@ subscription = content.subscribe(to: VideoPlayerEvents.VideoComfortMitigationDid
 - Always test Spatial Video vs immersive media behavior (they differ; progressive isn’t used for Spatial Video).
 - Subscribe to transitions/events early; many UX issues appear only during mode changes.
 - For visionOS 26+, handle comfort mitigation events and align your UI with the system’s mitigation choice.
-

@@ -1,0 +1,7 @@
+interface:
+  display_name: "TKR Skill Writer"
+  short_description: "Create and update Codex skills consistently"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $tkr-skill-writer to structure this skill, tighten trigger guidance, and add the right references and metadata."

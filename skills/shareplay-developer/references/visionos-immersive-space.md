@@ -9,7 +9,7 @@ Use this recipe when you want participants to join the same immersive space (spa
    - Ensure `com.apple.developer.group-session = true` is present.
 2. Define a `GroupActivity` for the experience.
 3. Observe sessions and configure `SystemCoordinator` before `join()`.
-4. Set `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene.
+4. If the experience should keep the system immersive environment visible, set `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene. Don’t treat that modifier as the API that spatially coordinates participants.
 
 ## GroupActivity
 
@@ -38,7 +38,7 @@ struct MyImmersiveActivity: GroupActivity, Transferable, Sendable {
 
 ## Session manager (observe, configure, join)
 
-Keep the manager `@MainActor` and hold strong references to the session and messenger/journal (even if you are not using messenger yet).
+Keep the manager `@MainActor` and hold strong references to the session and to any messenger or journal objects you create for that session.
 
 ```swift
 import Combine
@@ -106,7 +106,7 @@ ImmersiveSpace(id: "ImmersiveSpace") {
 
 ## Notes
 
-- `SystemCoordinator.Configuration` must be set before `join()` for the system to spatially coordinate the session.
+- Configure `SystemCoordinator.Configuration` before `join()` so the system can apply your immersive-space support and spatial template preferences as the session starts.
 - `.sideBySide` is a safe default for “shared viewpoint” collaboration; you can choose another template later.
-- This recipe intentionally does not send any messages or journals; add that once you need actual shared state.
-
+- Participant co-location comes from the `SystemCoordinator` configuration, not from `.immersiveEnvironmentBehavior(.coexist)` itself.
+- This recipe intentionally does not send any messages or create a journal; add those once you need actual shared state or file/data transfer.

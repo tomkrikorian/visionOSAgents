@@ -1,0 +1,7 @@
+interface:
+  display_name: "ShaderGraph Editor"
+  short_description: "Edit ShaderGraph and RealityKit USD materials"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $shadergraph-editor to help edit this USDA material graph and fix node connections for RealityKit."

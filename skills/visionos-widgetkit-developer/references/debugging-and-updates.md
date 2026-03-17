@@ -24,11 +24,10 @@
 
 ## Notes about Vision Pro specifics
 
-- Treat the `.simplified` layout as required; a widget that’s unreadable at distance is effectively broken.
+- Treat the `.simplified` layout as a strong design requirement for widgets that need to remain legible at distance.
 - Recessed mounting can change perceived contrast and edges; verify your background strategy.
 
 ## Primary sources (Apple)
 
 - Developing a WidgetKit strategy: https://developer.apple.com/documentation/widgetkit/developing-a-widgetkit-strategy
 - Updating your widgets for visionOS: https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
-

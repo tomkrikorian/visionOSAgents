@@ -10,7 +10,7 @@ CameraRegionProvider captures camera streams from defined regions in space using
 - Define region sizes in meters that match your capture needs and avoid oversized regions.
 - Use `anchorUpdates(forID:)` to observe the region updates you care about.
 - Remove anchors when you no longer need a region to keep processing lightweight.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -26,7 +26,7 @@ final class CameraRegionModel {
     func start() async {
         guard CameraRegionProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: CameraRegionProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {
@@ -36,14 +36,19 @@ final class CameraRegionModel {
         }
     }
 
-    func addRegion(width: Float, height: Float) {
+    func addRegion(width: Float, height: Float) async {
         let anchor = CameraRegionAnchor(
             originFromAnchorTransform: matrix_identity_float4x4,
             width: width,
             height: height,
             cameraEnhancement: .stabilization
         )
-        provider.addAnchor(anchor)
+        do {
+            try await provider.addAnchor(anchor)
+        } catch {
+            print("Failed to add camera region: \(error)")
+            return
+        }
 
         Task {
             for await update in provider.anchorUpdates(forID: anchor.id) {

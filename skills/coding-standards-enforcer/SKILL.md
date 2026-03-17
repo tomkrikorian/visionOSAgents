@@ -50,7 +50,7 @@ Think in isolation domains rather than threads:
 
 #### Strict Concurrency
 
-Swift 6.2 defaults to `@MainActor` isolation for Views and UI logic. Assume strict isolation checks are active. Everything is `@MainActor` by default.
+Swift 6.2 strict concurrency does not make arbitrary code `@MainActor` by default. SwiftUI view `body` is `@MainActor`, and unannotated code only gets default actor isolation when the project opts into it with settings like `SWIFT_DEFAULT_ACTOR_ISOLATION`.
 
 #### Async and Parallel Work
 
@@ -70,12 +70,21 @@ let profile = Profile(avatar: try await avatar, banner: try await banner)
 ```swift
 .task { avatar = await downloadAvatar() }
 
-Task { await saveProfile() }
+let saveTask = Task { try await saveProfile() }
+try await saveTask.value
 
-try await withThrowingTaskGroup(of: Void.self) { group in
-    group.addTask { avatar = try await downloadAvatar() }
-    group.addTask { bio = try await fetchBio() }
-    try await group.waitForAll()
+let values = try await withThrowingTaskGroup(
+    of: (String, String).self,
+    returning: [String: String].self
+) { group in
+    group.addTask { ("avatarURL", try await fetchAvatarURL()) }
+    group.addTask { ("bio", try await fetchBioText()) }
+
+    var collected: [String: String] = [:]
+    for try await (key, value) in group {
+        collected[key] = value
+    }
+    return collected
 }
 ```
 
@@ -96,7 +105,7 @@ actor BankAccount {
 #### Approachable Concurrency Settings (Swift 6.2+)
 
 - `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` keeps UI code on the main actor by default.
-- `SWIFT_APPROACHABLE_CONCURRENCY = YES` keeps nonisolated async on the caller's actor.
+- `SWIFT_APPROACHABLE_CONCURRENCY = YES` enables a group of Swift concurrency features intended to ease migration, such as outward actor inference and inferred sendability changes.
 
 ```swift
 @concurrent func processLargeFile() async { }
@@ -140,7 +149,7 @@ Cancel long-running tasks on teardown.
 #### Quick Reference
 
 - `async` and `await` for suspension points.
-- `Task { }` for structured async work.
+- `Task { }` for unstructured async work that inherits the current actor context.
 - `actor` for isolated mutable state.
 - `Sendable` for cross-actor data transfer.
 
@@ -148,12 +157,12 @@ Cancel long-running tasks on teardown.
 
 #### Observable Classes
 
-`@Observable` classes are `@MainActor` by default, so explicit `@MainActor` annotation is not needed and should always be removed.
+`@Observable` does not imply `@MainActor`. Add `@MainActor` when the model owns UI-bound state; otherwise leave the type unannotated or isolate it more narrowly based on the actual concurrency requirements.
 
 #### Observation vs Combine
 
-- Prefer `@Observable` + `@State` for reference-type models.
-- Avoid `ObservableObject`, `@StateObject`, and `@ObservedObject` unless interacting with legacy code that still requires Combine.
+- Prefer Observation (`@Observable`, `@Bindable`, plain stored properties) in new SwiftUI code when your deployment target supports it.
+- Keep `ObservableObject`, `@StateObject`, and `@ObservedObject` when existing Combine-based architecture or platform constraints still require them.
 
 #### Swift-Native APIs
 
@@ -173,7 +182,7 @@ Prefer static member lookup to struct instances where possible, such as `.circle
 
 #### Modern Concurrency
 
-Never use old-style Grand Central Dispatch concurrency such as `DispatchQueue.main.async()`. If behavior like this is needed, always use modern Swift concurrency.
+Prefer Swift concurrency over Grand Central Dispatch for new async application code. Keep Dispatch-based interop only where framework APIs or existing infrastructure still require it.
 
 #### Text Filtering
 

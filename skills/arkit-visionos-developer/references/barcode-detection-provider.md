@@ -10,7 +10,7 @@ BarcodeDetectionProvider supplies real-time position updates for barcodes detect
 - Limit the symbologies to the ones your experience needs to reduce false positives.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use `anchorUpdates` to add, update, and remove barcode-driven content.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -27,7 +27,7 @@ final class BarcodeTrackingModel {
         let provider = BarcodeDetectionProvider(symbologies: symbologies)
         self.provider = provider
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: BarcodeDetectionProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

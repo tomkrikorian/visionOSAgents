@@ -34,10 +34,10 @@ Load the appropriate reference file from the tables below for detailed usage, co
 1. Identify the presentation surface: `WindowGroup`, volumetric window, or `ImmersiveSpace`.
 2. Choose a 3D API: `Model3D` for simple models, `RealityView` for full RealityKit scenes.
 3. Load RealityKit content asynchronously and add entities in the `RealityView` make closure.
-4. Use RealityView attachments to place SwiftUI UI in 3D space when needed.
+4. Use either `Attachment` plus `RealityViewAttachments.entity(for:)` or `ViewAttachmentComponent` to place SwiftUI UI in 3D space when needed.
 5. Add spatial interaction with `SpatialTapGesture` or entity-targeted gestures.
 6. Update RealityKit content in the `RealityView` update closure, not in SwiftUI body.
-7. Validate scale using `defaultSize` for volumes and `immersionStyle` for immersive spaces.
+7. Use `defaultSize` when you want a predictable initial volumetric size, and use `immersionStyle` to configure immersive spaces.
 
 ## Information About the Skill
 
@@ -45,7 +45,7 @@ Load the appropriate reference file from the tables below for detailed usage, co
 
 #### Scene and Spatial Presentation
 
-- Use `WindowGroup` with `windowStyle(.volumetric)` and `defaultSize` for volumes.
+- Use `WindowGroup` with `windowStyle(.volumetric)` for volumes. Add `defaultSize` when you want a predictable initial size, but treat it as a hint rather than a hard guarantee.
 - Use `ImmersiveSpace` for unbounded spatial scenes and `immersionStyle` selection.
 - Use `openImmersiveSpace` and `dismissImmersiveSpace` for transitions.
 
@@ -88,5 +88,5 @@ Load the appropriate reference file from the tables below for detailed usage, co
 - Do not block the main actor with synchronous model or entity loading.
 - Do not update RealityKit entities inside SwiftUI body computation.
 - Do not use volumetric window style with `Window` instead of `WindowGroup`.
-- Do not omit `defaultSize` for volumes; physical scale will be inconsistent.
-- Prefer `.glassBackgroundEffect()` for backgrounds instead of custom blur/material backgrounds.
+- Do not treat `defaultSize` as a hard requirement or guaranteed final size; the system can clamp or restore window geometry.
+- Use `.glassBackgroundEffect()` when you want the system glass treatment on visionOS, and use custom backgrounds deliberately when the design needs a different visual language.

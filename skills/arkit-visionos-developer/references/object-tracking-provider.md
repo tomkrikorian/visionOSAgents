@@ -10,7 +10,7 @@ ObjectTrackingProvider tracks reference objects in a person's surroundings and e
 - Check `ObjectTrackingProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use the tracking configuration to balance performance and fidelity for your use case.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -33,7 +33,7 @@ final class ObjectTrackingModel {
         )
         self.provider = provider
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: ObjectTrackingProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

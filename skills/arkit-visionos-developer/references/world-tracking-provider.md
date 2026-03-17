@@ -10,7 +10,7 @@ WorldTrackingProvider supplies device pose and world anchor updates in a person'
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use `anchorUpdates` for world anchor changes and `queryDeviceAnchor(atTimestamp:)` for predicted device pose.
 - Manage anchor lifecycle carefully and remove anchors when no longer needed.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class WorldTrackingModel {
     func start() async {
         guard WorldTrackingProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: WorldTrackingProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

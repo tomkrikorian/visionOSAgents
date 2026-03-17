@@ -8,7 +8,7 @@ WindowGroup is a scene that presents a group of identically structured windows. 
 
 - Use explicit `id` values for WindowGroup and ImmersiveSpace so you can open them programmatically.
 - Keep windows and volumes in WindowGroup scenes and immersive content in ImmersiveSpace scenes.
-- Set `windowStyle(.volumetric)` and `defaultSize` for volumes to ensure consistent physical scale.
+- Set `windowStyle(.volumetric)` for volumes, and add `defaultSize` when you want a predictable initial size. Treat it as an initial-size hint rather than a guaranteed final size.
 - Open and dismiss immersive spaces using the environment actions; only one immersive space can be open at a time.
 - Use RemoteImmersiveSpace for macOS apps that present compositor content on visionOS hardware.
 

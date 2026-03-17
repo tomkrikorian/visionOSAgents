@@ -1,0 +1,7 @@
+interface:
+  display_name: "USD Editor"
+  short_description: "Edit and validate USD ASCII scene files"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $usd-editor to help make a safe USDA edit and preserve composition, paths, and transforms."

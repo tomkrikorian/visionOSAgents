@@ -1,0 +1,7 @@
+interface:
+  display_name: "visionOS Immersive Media Developer"
+  short_description: "Implement immersive and spatial video on visionOS"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $visionos-immersive-media-developer to help implement immersive video playback, transitions, and comfort handling on visionOS."

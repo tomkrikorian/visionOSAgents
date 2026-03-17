@@ -10,7 +10,7 @@ SceneReconstructionProvider supplies mesh data about the shape of a person's sur
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Choose reconstruction modes that match your needs, such as classification when you need semantic labels.
 - Offload mesh processing to avoid blocking the main actor.
-- Run in Full Space and keep the session and provider alive for the feature lifetime.
+- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
 
 ## Code Examples
 
@@ -25,7 +25,7 @@ final class SceneReconstructionModel {
     func start() async {
         guard SceneReconstructionProvider.isSupported else { return }
 
-        let results = await session.requestAuthorization(for: provider.requiredAuthorizations)
+        let results = await session.requestAuthorization(for: SceneReconstructionProvider.requiredAuthorizations)
         guard results.values.allSatisfy({ $0 == .allowed }) else { return }
 
         do {

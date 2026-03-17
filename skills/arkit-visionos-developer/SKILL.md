@@ -1,6 +1,6 @@
 ---
 name: arkit-visionos-developer
-description: Build and debug ARKit features for visionOS, including ARKitSession setup, authorization, data providers (world tracking, plane detection, scene reconstruction, hand tracking), anchor processing, and RealityKit integration. Use when implementing ARKit workflows in immersive spaces or troubleshooting ARKit data access and provider behavior on visionOS.
+description: Build and debug ARKit features for visionOS, including ARKitSession setup, authorization, data providers (world tracking, plane detection, scene reconstruction, hand tracking), anchor processing, and RealityKit integration. Use when implementing ARKit workflows on visionOS or troubleshooting provider-specific space, privacy, and lifecycle behavior.
 ---
 
 # ARKit visionOS Developer
@@ -32,8 +32,8 @@ Load the appropriate reference file from the tables below for detailed usage, co
 
 ### Quick Start Workflow
 
-1. Add `NSWorldSensingUsageDescription` and `NSHandsTrackingUsageDescription` to `Info.plist` as needed.
-2. Ensure the experience runs in a Full Space (ARKit data is unavailable in Shared Space).
+1. Add `NSWorldSensingUsageDescription`, `NSHandsTrackingUsageDescription`, and `NSMainCameraUsageDescription` to `Info.plist` as needed for the providers you use.
+2. Use the presentation style required by the selected providers. Some providers require immersive space, while others have more specific rules.
 3. Create a long-lived `ARKitSession` and the data providers you need.
 4. Request authorization for provider-required data types before running the session.
 5. Run the session with your providers and observe `anchorUpdates` streams.
@@ -84,7 +84,7 @@ Load the appropriate reference file from the tables below for detailed usage, co
 | [`HandTrackingProvider`](references/hand-tracking-provider.md) | When tracking hand poses and gestures for interaction. |
 | [`PlaneDetectionProvider`](references/plane-detection-provider.md) | When detecting horizontal and vertical surfaces (floors, walls, tables). |
 | [`SceneReconstructionProvider`](references/scene-reconstruction-provider.md) | When creating detailed 3D mesh reconstructions of the environment. |
-| [`ImageTrackingProvider`](references/image-tracking-provider.md) | When tracking known images or reference objects. |
+| [`ImageTrackingProvider`](references/image-tracking-provider.md) | When tracking known 2D images in the environment. |
 | [`ObjectTrackingProvider`](references/object-tracking-provider.md) | When tracking 3D objects in the environment. |
 | [`RoomTrackingProvider`](references/room-tracking-provider.md) | When tracking room boundaries and room-scale experiences. |
 | [`AccessoryTrackingProvider`](references/accessory-tracking-provider.md) | When tracking Apple Vision Pro accessories. |
@@ -103,7 +103,7 @@ Load the appropriate reference file from the tables below for detailed usage, co
 
 ### Pitfalls and Checks
 
-- Do not use `ARView` on visionOS; use `RealityView` and `ARKitSession` instead.
-- Do not expect ARKit data in Shared Space; use Full Space only.
+- In SwiftUI-first visionOS apps, prefer `RealityView` for presentation and `ARKitSession` for tracking data; use `ARView` only when you specifically need its UIKit/AppKit-style view APIs.
+- Do not assume every ARKit provider has the same presentation requirements; check the provider-specific guidance before choosing Shared Space, a volumetric window, or an immersive space.
 - Do not block the main actor while awaiting provider updates.
 - Do not drop session references; ARKit stops sessions on deinit.
