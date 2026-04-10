@@ -2,15 +2,23 @@
 
 ## Context
 
-WindowGroup is a scene that presents a group of identically structured windows. ImmersiveSpace presents content in an unbounded space on visionOS, and RemoteImmersiveSpace presents an unbounded space on a remote device.
+WindowGroup is a scene that presents a group of identically structured windows.
+ImmersiveSpace presents content in an unbounded space on visionOS.
 
 ## Best Practices
 
 - Use explicit `id` values for WindowGroup and ImmersiveSpace so you can open them programmatically.
 - Keep windows and volumes in WindowGroup scenes and immersive content in ImmersiveSpace scenes.
 - Set `windowStyle(.volumetric)` for volumes, and add `defaultSize` when you want a predictable initial size. Treat it as an initial-size hint rather than a guaranteed final size.
+- Set `windowResizability(_:)` (`.contentSize`, `.contentMinSize`) when the window's intrinsic size should drive resizability.
+- Use `defaultWorldScaling(_:)` with a `WorldScalingBehavior` value when the scene should scale with viewing distance instead of staying at a fixed real-world size.
+- Use `supportedVolumeViewpoints(_:)` and `onVolumeViewpointChange(updateStrategy:initial:_:)` to adapt a volume when the viewer moves around it.
+- Use `volumeBaseplateVisibility(_:)` to hide or show the system baseplate under a volumetric window.
+- Use `defaultLaunchBehavior(.presented / .automatic / .suppressed)` to control launch presentation.
+- Use `restorationBehavior(.disabled)` when a scene should not restore on relaunch.
+- Use `immersiveEnvironmentBehavior(.coexist)` when an immersive space should coexist with the active system immersive environment.
+- Use `breakthroughEffect(_:)` for visionOS 26 RealityView attachments that should render with the system breakthrough effect.
 - Open and dismiss immersive spaces using the environment actions; only one immersive space can be open at a time.
-- Use RemoteImmersiveSpace for macOS apps that present compositor content on visionOS hardware.
 
 ## Code Examples
 
@@ -49,6 +57,24 @@ struct VolumeApp: App {
         }
         .windowStyle(.volumetric)
         .defaultSize(width: 0.6, height: 0.6, depth: 0.6, in: .meters)
+        .defaultWorldScaling(.dynamic)
+        .supportedVolumeViewpoints(.all)
+        .volumeBaseplateVisibility(.hidden)
+    }
+}
+```
+
+### Reacting to volume viewpoint changes
+
+```swift
+struct VolumeContent: View {
+    var body: some View {
+        RealityView { content in
+            // ...
+        }
+        .onVolumeViewpointChange(updateStrategy: .continuous, initial: true) { _, newViewpoint in
+            // Adjust layout based on the new viewer direction.
+        }
     }
 }
 ```
@@ -205,18 +231,6 @@ var body: some Scene {
   }
   .immersionStyle(selection: $selectedStyle, in: .mixed)
   .immersiveEnvironmentBehavior(.coexist)
-}
-```
-
-#### Remote immersive space
-
-```swift
-RemoteImmersiveSpace(id: "preview-space") {
-  CompositorLayer(configuration: config) { /* ... */ }
-}
-
-WindowGroup("Main Stage", id: "main") {
-  StageView()
 }
 ```
 

@@ -1,61 +1,66 @@
 ---
 name: shareplay-developer
-description: Build, integrate, and troubleshoot SharePlay GroupActivities features, including GroupActivity definitions, activation flows, GroupSession lifecycle, messaging and journals, ShareLink and SharePlay UI surfaces, and visionOS spatial coordination. Use when implementing or debugging SharePlay experiences across Apple platforms, especially visionOS.
+description: Build, integrate, and troubleshoot SharePlay GroupActivities features for visionOS 26, including GroupActivity definitions, activation flows, GroupSession lifecycle, messaging and journals, ShareLink and SharePlay UI surfaces, and spatial coordination.
 ---
 
 # SharePlay Developer
 
-## Description and Goals
+## Quick Start
 
-This skill provides comprehensive guidance for implementing SharePlay experiences with the GroupActivities framework. It covers activity definition, session lifecycle, state synchronization, UI surfaces, and visionOS spatial coordination.
+1. Decide whether this experience is launch-only co-location or shared state sync.
+2. Add the Group Activities capability and the required entitlement before you build any UI around the session.
+3. Define one `GroupActivity` per experience and keep the payload minimal and `Codable`.
+4. Load the right reference only after you know the workflow:
+   - `visionos-immersive-space.md` for same-space immersive experiences without sync
+   - `activation-ui.md` for activation and start-button flow
+   - `REFERENCE.md` for GroupActivities patterns and examples
+5. Configure `SystemCoordinator` before joining whenever spatial personas or immersive spaces are involved.
+6. If the issue is app launch, test flow, simulator behavior, or signing, switch to the plugin's `build-run-debug` workflow skill.
 
-### Goals
+## Tracks
 
-- Enable developers to build SharePlay experiences across Apple platforms
-- Guide proper GroupActivity definition and activation
-- Support GroupSession lifecycle management
-- Help implement state synchronization with messaging and journals
-- Enable spatial coordination for visionOS immersive experiences (group immersive space)
+### Launch-Only Same Space
 
-## What This Skill Should Do
+Use this track when participants should enter the same immersive space, but you do not need live state sync yet.
 
-When implementing SharePlay features, this skill should:
+- Define lightweight `GroupActivity` metadata.
+- Set `supportsGroupImmersiveSpace = true` when the session should coordinate a group immersive experience.
+- Use `.immersiveEnvironmentBehavior(.coexist)` only when the system immersive environment should remain visible.
+- Call `join()` only after the session has been configured and the UI is ready.
 
-1. **Guide activity setup** - Help you define GroupActivity types and metadata
-2. **Handle activation** - Show how to check eligibility and activate SharePlay
-3. **Manage sessions** - Demonstrate GroupSession lifecycle and participant management
-4. **Sync state** - Provide patterns for messaging and journal-based synchronization
-5. **Coordinate spatially** - Show how to use SystemCoordinator for visionOS spatial experiences and group immersive spaces
-6. **Present UI** - Guide use of ShareLink and other SharePlay UI surfaces
+### Shared State Sync
 
-Load the appropriate reference file from the tables below for detailed usage, code examples, and best practices.
+Use this track when participants must share state, messages, or durable data.
 
-### Quick Start Workflow
+- Keep session payloads minimal.
+- Use `GroupSessionMessenger` for transient events.
+- Use `GroupSessionJournal` for durable shared objects.
+- Send a state snapshot when participants change so late joiners catch up.
 
-1. Add the Group Activities capability and `com.apple.developer.group-session` entitlement in Xcode.
-2. Define a `GroupActivity` type per experience and keep its data minimal and `Codable`.
-3. Provide `GroupActivityMetadata` with a clear title, type, and fallback URL.
-4. Check `GroupStateObserver.isEligibleForGroupSession` and activate or present SharePlay UI.
-5. Listen for sessions with `for await session in Activity.sessions()` and store the session strongly.
-6. Configure `SystemCoordinator` before `join()` when spatial personas or immersive spaces are involved.
-7. Call `session.join()` only after UI and state are ready.
-8. Sync state with `GroupSessionMessenger` (time-sensitive messages) or `GroupSessionJournal` (durable shared data objects).
-9. Observe `activeParticipants` and send a state snapshot for late joiners.
-10. Call `leave()` or `end()` and cancel tasks when the session invalidates.
+### Start Surface
 
-### visionOS Launch-Only Workflow (Same Space, No Sync)
+Use this track when you are deciding how the user starts SharePlay.
 
-Use this when you only want participants to enter the same immersive space with spatial coordination, without synchronizing entities or interactions yet.
+- Use `activate()` when FaceTime is active and the app should join that call.
+- Use `ShareLink` or `GroupActivitySharingController` when the user needs an explicit sharing surface.
+- Use `GroupActivityTransferRepresentation` only when the activity should be startable from transferable surfaces.
 
-1. Define a `GroupActivity` with lightweight metadata. Add `GroupActivityTransferRepresentation` only when you want to start the activity from `ShareLink`, a share sheet, or another transferable context.
-2. Provide a `SharePlayManager` that observes sessions and configures `SystemCoordinator`:
-   - `supportsGroupImmersiveSpace = true`
-   - `spatialTemplatePreference = .sideBySide` (or another appropriate template)
-3. If your immersive experience should keep the system immersive environment visible, set `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene. Don’t treat that modifier as the API that spatially coordinates participants.
-4. Provide a start button:
-   - If FaceTime is active and activation is preferred, call `activate()`.
-   - Otherwise present `GroupActivitySharingController` (UIKit) or `ShareLink` (SwiftUI).
-5. Join the session with `session.join()` once configured.
+## Load References When
+
+| Reference | When to Use |
+|-----------|-------------|
+| [`REFERENCE.md`](references/REFERENCE.md) | When you need GroupActivities-focused patterns and examples. |
+| [`visionos-immersive-space.md`](references/visionos-immersive-space.md) | When implementing launch-only SharePlay for a visionOS immersive space. |
+| [`activation-ui.md`](references/activation-ui.md) | When wiring the SharePlay entry point or start button flow. |
+
+## Guardrails
+
+- Keep `GroupActivity` data small and `Codable`.
+- Store strong references to `GroupSession`, `GroupSessionMessenger`, and `GroupSessionJournal`.
+- Configure `SystemCoordinator` before `join()` when using spatial coordination.
+- Do not treat `.immersiveEnvironmentBehavior(.coexist)` as the coordination API.
+- Join only after the UI and local state are ready.
+- Route launch, test, or debugging problems to the plugin's `build-run-debug` workflow skill instead of expanding this skill with execution steps.
 
 ## Information About the Skill
 
@@ -73,9 +78,9 @@ Use this when you only want participants to enter the same immersive space with 
 
 - Use `GroupSession` to manage the live activity; call `join()`, `leave()`, or `end()`.
 - Observe `GroupSession.state`, `activeParticipants`, and `isLocallyInitiated` to drive UI.
-- Use `GroupSession.sceneSessionIdentifier` to map sessions to scenes when needed.
-- Call `requestForegroundPresentation()` when the activity needs the app visible.
-- Use `GroupSession.showNotice(_:)` or `postEvent(_:)` for system playback notices.
+- Use `View.groupActivityAssociation(_:)` and `GroupActivityAssociationInteraction` to tie a SwiftUI scene to the active session instead of hard-coding scene identifiers.
+- Call `GroupSession.requestForegroundPresentation()` when the activity needs the app visible.
+- Use `GroupSession.postEvent(_:)` for transient session-wide notices such as playback state changes (no system-level `showNotice` API exists on visionOS).
 
 #### Messaging and Transfer
 
@@ -86,25 +91,25 @@ Use this when you only want participants to enter the same immersive space with 
 #### UI Surfaces to Start SharePlay
 
 - Use `ShareLink` with `Transferable` + `GroupActivityTransferRepresentation` in SwiftUI.
-- Use `GroupActivitySharingController` in UIKit/AppKit when no FaceTime call is active.
+- Use `GroupActivitySharingController` in UIKit when no FaceTime call is active.
 - Use `NSItemProvider.registerGroupActivity(...)` in share sheets when needed.
 
 #### visionOS Spatial Coordination
 
-- Use `SystemCoordinator` from `GroupSession.systemCoordinator` for spatial layout.
-- Set `spatialTemplatePreference` and `supportsGroupImmersiveSpace` as needed.
+- Use `SystemCoordinator` from `GroupSession.systemCoordinator` (async property) for spatial layout.
+- Set `spatialTemplatePreference` and `supportsGroupImmersiveSpace` on `SystemCoordinator.Configuration` before join.
 - Use `localParticipantStates` and `remoteParticipantStates` to track poses.
-- Use `groupActivityAssociation(_:)` to choose the primary scene.
-- For immersive spaces, use `.immersiveEnvironmentBehavior(.coexist)` only when you want the system immersive environment to remain visible; participant co-location comes from `SystemCoordinator` configuration.
+- Use `View.groupActivityAssociation(_:)` and `GroupActivityAssociationInteraction` to associate a SwiftUI scene with the session instead of hard-coding scene identifiers.
+- On visionOS 26, iterate `SystemCoordinator.groupImmersionStyle` (an `AsyncSequence` of `SystemCoordinator.GroupImmersionStyles` values) to react when the group immersion style changes and align the local immersive experience with remote participants.
+- For immersive spaces, use `Scene.immersiveEnvironmentBehavior(.coexist)` only when you want the system immersive environment to remain visible; participant co-location comes from `SystemCoordinator` configuration, not from the environment behavior modifier.
 
 ### Reference Files
 
 | Reference                                 | When to Use                                                         |
 | ----------------------------------------- | ------------------------------------------------------------------- |
-| [`REFERENCE.md`](references/REFERENCE.md) | When looking for GroupActivities-focused code samples and excerpts. |
-| [`visionos-immersive-space.md`](references/visionos-immersive-space.md) | When implementing “launch-only” SharePlay for a visionOS immersive space (same space, no sync). |
-| [`activation-ui.md`](references/activation-ui.md) | When wiring the start button (FaceTime-active activation vs share sheet fallback). |
-
+| [`REFERENCE.md`](references/REFERENCE.md) | When you need GroupActivities-focused patterns and examples. |
+| [`visionos-immersive-space.md`](references/visionos-immersive-space.md) | When implementing launch-only SharePlay for a visionOS immersive space. |
+| [`activation-ui.md`](references/activation-ui.md) | When wiring the SharePlay entry point or start button flow. |
 
 ### Implementation Patterns
 

@@ -33,6 +33,14 @@ SwiftUI + RealityKit spatial UI patterns for visionOS.
 npx skills add https://github.com/tomkrikorian/visionOSAgents --skill spatial-swiftui-developer
 ```
 
+#### spatial-app-architecture
+Choose visionOS surfaces, scene boundaries, state ownership, and file layout
+before implementation or refactor work.
+
+```bash
+npx skills add https://github.com/tomkrikorian/visionOSAgents --skill spatial-app-architecture
+```
+
 #### shadergraph-editor
 Manual .usda ShaderGraph and material editing for RealityKit.
 
@@ -109,6 +117,34 @@ You can also pass one or more skill names to update only those directories:
 ```bash
 ./scripts/pull-update-skills.sh arkit-visionos-developer spatial-swiftui-developer
 ```
+
+## Sync shared skills with `visionos-plugin-codex`
+
+This repo shares a curated core skill set with the packaged Codex plugin in
+`visionos-plugin-codex`. The shared skill list lives in
+`sync/shared-skills.json`, and both repos keep the same lock file in
+`sync/shared-skills.lock.json`.
+
+Use the repo-to-repo sync script when you want to move shared skill changes in
+either direction:
+
+```bash
+python3 scripts/sync_shared_skills.py status \
+  --agents-repo /path/to/visionOSAgents \
+  --plugin-repo /path/to/visionos-plugin-codex
+
+python3 scripts/sync_shared_skills.py sync --from agents --to plugin \
+  --agents-repo /path/to/visionOSAgents \
+  --plugin-repo /path/to/visionos-plugin-codex
+
+python3 scripts/sync_shared_skills.py sync --from plugin --to agents \
+  --agents-repo /path/to/visionOSAgents \
+  --plugin-repo /path/to/visionos-plugin-codex
+```
+
+The sync stops if the same shared skill changed in both repos since the last
+successful sync. That conflict must be merged manually before you rerun the
+tool.
 
 ---
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spatial App Architecture"
+  short_description: "Choose visionOS surfaces, ownership boundaries, and file layout"
+  default_prompt: "Use $spatial-app-architecture to choose the right visionOS surface model, assign state ownership cleanly, define the file/module shape, and produce a concrete architecture or refactor plan before handing implementation to $spatial-swiftui-developer, $realitykit-visionos-developer, $arkit-visionos-developer, $shareplay-developer, or $build-run-debug."

@@ -42,6 +42,35 @@ Before building a new effect from scratch, check `samples/` for a close match an
 6. Update promoted inputs with runtime parameter APIs when the experience needs dynamic control.
 7. Inspect exported USD and MaterialX only when you need to debug the authored graph or interoperate with other asset tooling.
 
+### Loading and Runtime Parameter Control
+
+```swift
+import RealityKit
+import RealityKitContent
+
+func loadGlowMaterial(name: String) async throws -> ShaderGraphMaterial {
+    var material = try await ShaderGraphMaterial(
+        named: "/Root/\(name)",
+        from: "Materials.usda",
+        in: realityKitContentBundle
+    )
+
+    // Promoted inputs configured in Reality Composer Pro are set via
+    // setParameter(name:value:) at runtime.
+    try material.setParameter(name: "glowStrength", value: .float(1.5))
+    try material.setParameter(name: "baseColor", value: .color(.systemBlue))
+    return material
+}
+```
+
+For hot paths, cache a `ShaderGraphMaterial.ParameterHandle` returned by
+`parameterHandle(forName:)` and call `setParameter(handle:value:)` instead of
+the name-based variant.
+
+> On visionOS, `ShaderGraphMaterial` is the first-class custom material. Do
+> not introduce `CustomMaterial` flows from iOS/macOS code — migrate them to
+> Shader Graph materials instead.
+
 ## Information About the Skill
 
 ### Core Concepts
@@ -70,7 +99,7 @@ The samples in this repo are useful starting points, but they are repo-owned exa
 
 | Reference | When to Use |
 |-----------|-------------|
-| [`REFERENCE.MD`](references/REFERENCE.MD) | When looking for ShaderGraph node and material reference guide. |
+| [`REFERENCE.md`](references/REFERENCE.md) | When looking for ShaderGraph node and material reference guide. |
 
 ### Samples (Common Effects)
 

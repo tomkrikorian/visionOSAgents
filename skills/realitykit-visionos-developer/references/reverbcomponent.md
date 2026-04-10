@@ -84,10 +84,10 @@ roomEntity.addChild(soundSource)
 
 - Only one reverb component is active at a time per entity
 - The nearest reverb component in an entity's ancestry determines the spatial audio reverb behavior
-- In mixed immersion (visionOS 1), spatial audio is reverberated according to real-world acoustics
-- In visionOS 2+, the system supports progressive immersive environments (blending real acoustics with preset reverb) and full immersive environments (only preset is used)
+- In mixed immersion, spatial audio is reverberated according to real-world acoustics
+- In progressive and full immersive environments on current visionOS releases, the system can blend real acoustics with preset reverb or rely entirely on the preset, depending on the immersion level
 - Reverb presets are more usable in immersive spaces than in mixed reality
-- Available primarily on visionOS, especially with features introduced in visionOS 2
+- Available primarily on visionOS
 
 ## Best Practices
 

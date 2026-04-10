@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "lastSync": {
+    "at": "2026-04-10T08:51:38+00:00",
+    "source": "plugin",
+    "destination": "agents",
+    "skills": [
+      "spatial-app-architecture",
+      "spatial-swiftui-developer"
+    ]
+  },
+  "skills": {
+    "arkit-visionos-developer": {
+      "digest": "60166f5074e92b2e1b764a9a1c79b4b6e9fa00b4a57d7e00ab1636a5f2efa4e7"
+    },
+    "coding-standards-enforcer": {
+      "digest": "d88e9c2deb1fa38f2dd2220ada3c2e4e7319026ddcbb7032ba02be27ec1be57c"
+    },
+    "realitykit-visionos-developer": {
+      "digest": "9ce417668b5fec4b95c4aa00965edfc64b83da3a227fa1ebf3969e45bafec43f"
+    },
+    "shadergraph-editor": {
+      "digest": "0707e73e6acd0233648d198b6e02f2a53f1fae4bd8d717068ad42f80233972b8"
+    },
+    "shareplay-developer": {
+      "digest": "ce13308d122dad4f4a8a96001191d54241d6cc9f630c35bc0558526ffdd0017d"
+    },
+    "spatial-app-architecture": {
+      "digest": "f21145a7e022d06d1f200f801254da94d29b6b47d85f9526a88ee3021c2ed6c3"
+    },
+    "spatial-swiftui-developer": {
+      "digest": "1d4cbce4bf0a3dc3e4586c67b3568e66f3d10ffead316bc5798bcf1786103bc2"
+    },
+    "usd-editor": {
+      "digest": "90d443390b855cf2c96cbde96045b39642480c29b6505b1554f9fea888e9bb70"
+    },
+    "visionos-immersive-media-developer": {
+      "digest": "4f8c1879c4af60621d9549ac6f93506966e73af63e1fddeb1dc70392bfdec917"
+    },
+    "visionos-widgetkit-developer": {
+      "digest": "ce3048a340b65acb10498fabc51c94f06fe1d75be4469e7f4e114ec174003908"
+    }
+  }
+}

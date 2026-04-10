@@ -1,34 +1,76 @@
 ---
 name: realitykit-visionos-developer
-description: Build, debug, and optimize RealityKit scenes for visionOS, including entity/component setup, rendering, animation, physics, audio, input, attachments, and custom systems. Use when implementing RealityKit features or troubleshooting ECS behavior on visionOS.
+description: Build, debug, and optimize RealityKit scenes for visionOS 26, including entity/component setup, rendering, animation, physics, audio, input, attachments, and custom systems. Use when implementing RealityKit features or troubleshooting ECS behavior on visionOS.
 ---
 
 # RealityKit visionOS Developer
 
-## Description and Goals
+## Quick Start
 
-This skill provides comprehensive guidance for implementing RealityKit-based spatial experiences on visionOS. RealityKit uses an Entity Component System (ECS) architecture where entities are lightweight containers, behavior comes from components, and systems drive per-frame updates.
+1. Decide whether the task is component selection, scene setup, animation, physics, audio, input, or ECS debugging.
+2. Load only the component or system references that match the task instead of reading the whole catalog.
+3. Use `RealityView` as the SwiftUI bridge and keep all content mutation inside documented RealityKit entry points.
+4. Register custom components before use, then keep per-frame behavior in systems instead of ad hoc view logic.
+5. If the issue is app launch, simulator flow, or build/debug plumbing, switch to the plugin's `build-run-debug` workflow skill.
 
-### Goals
+## Tracks
 
-- Enable developers to build immersive 3D experiences on visionOS using RealityKit
-- Provide clear guidance on when to use each component and system
-- Help developers understand ECS patterns and best practices
-- Support debugging and optimization of RealityKit scenes
-- Ensure proper integration with SwiftUI via RealityView
+### Scene Assembly
 
-## What This Skill Should Do
+Use this track when you are building or restructuring the entity graph.
 
-When implementing RealityKit features on visionOS, this skill should:
+- Prefer composition over inheritance.
+- Use custom `Component` plus `Codable` when you need per-entity state.
+- Register custom components once with `Component.registerComponent()`.
+- Mutate entities from `RealityView` closures, event handlers, or systems.
 
-1. **Guide component selection** - Help you choose the right components for rendering, interaction, physics, audio, and animation needs
-2. **Provide system implementation patterns** - Show how to create custom systems for continuous behavior
-3. **Offer code examples** - Demonstrate common patterns like async asset loading, interactive entities, and custom systems
-4. **Highlight best practices** - Emphasize proper async loading, component registration, and performance considerations
-5. **Warn about pitfalls** - Identify common mistakes like using ARView on visionOS or blocking the main actor
+### Loading and Attachments
 
-Load the appropriate component or system reference file from the tables below for detailed usage, code examples, and best practices.
+Use this track when SwiftUI and RealityKit must coexist in the same scene.
 
+- Use `RealityView` for the bridge.
+- Load assets asynchronously with `Entity(named:)` or `Entity(contentsOf:)`.
+- Use the `RealityView` attachments closure when the attachment belongs with the view.
+- Use `ViewAttachmentComponent` when the attachment is better modeled as ECS state.
+
+### Systems and Queries
+
+Use this track when behavior must update continuously or across many entities.
+
+- Use a custom `System` for per-frame behavior.
+- Query entities with `EntityQuery` and `QueryPredicate`.
+- Keep the update path in `update(context:)`.
+- Use `SystemDependency` when system ordering matters.
+
+### Component Selection
+
+Use this track when you need the right API for the job and are not sure which component to pick.
+
+- Load only the matching reference rows below.
+- Prefer the smallest component that solves the problem.
+- Keep the larger catalog in the tables, but do not treat it as a required read.
+
+## Load References When
+
+| Reference | When to Use |
+|-----------|-------------|
+| [`ModelComponent`](references/modelcomponent.md) | When rendering 3D geometry with meshes and materials on entities. |
+| [`InputTargetComponent`](references/inputtargetcomponent.md) | When making entities interactive or handling user input events. |
+| [`AnchoringComponent`](references/anchoringcomponent.md) | When anchoring content to detected planes, hand locations, or world targets. |
+| [`SpatialAudioComponent`](references/spatialaudiocomponent.md) | When playing positioned 3D audio. |
+| [`CollisionComponent`](references/collisioncomponent.md) | When defining collision shapes for hit testing or physics interactions. |
+| [`ViewAttachmentComponent`](references/viewattachmentcomponent.md) | When embedding SwiftUI views into 3D space. |
+| [`SynchronizationComponent`](references/synchronizationcomponent.md) | When synchronizing state across networked sessions. |
+| [`System and Component Creation`](references/systemandcomponentcreation.md) | When creating custom systems or custom per-entity state. |
+
+## Guardrails
+
+- Always load assets asynchronously; avoid blocking the main actor.
+- On visionOS, `ARView` is not available — it inherits from `UIView`/`NSView`. Always use `RealityView`.
+- Keep `RealityView` update logic and ECS mutation out of SwiftUI body code.
+- Add `CollisionComponent` plus `InputTargetComponent` for draggable or tappable entities.
+- Prefer a custom `System` when behavior spans multiple entities or needs continuous updates.
+- Route launch, build, simulator, and codesign problems to the plugin's `build-run-debug` workflow skill instead of expanding this skill with execution steps.
 
 ## Information About the Skill
 
@@ -76,7 +118,7 @@ Use this table to decide which component reference file to load when implementin
 | [`InputTargetComponent`](references/inputtargetcomponent.md) | When making entities interactive (tappable, draggable) or handling user input events. |
 | [`ManipulationComponent`](references/manipulationcomponent.md) | When implementing built-in drag, rotate, and scale interactions with hand gestures or trackpad. |
 | [`GestureComponent`](references/gesturecomponent.md) | When implementing custom gesture recognition beyond what ManipulationComponent provides. |
-| [`HoverEffectComponent`](references/hovereffectcomponent.md) | When providing visual feedback when users look at or hover over interactive entities. |
+| [`HoverEffectComponent`](references/hovereffectcomponent.md) | When providing visual feedback when users look at or hover over interactive entities. For custom shader-driven hover effects on visionOS 26, pair with `HoverEffectComponent.ShaderHoverEffectInputs` and a Reality Composer Pro Shader Graph `Hover State (RealityKit)` node. |
 | [`AccessibilityComponent`](references/accessibilitycomponent.md) | When making entities accessible to screen readers, VoiceOver, or other assistive technologies. |
 | [`BillboardComponent`](references/billboardcomponent.md) | When creating 2D sprites, text labels, or UI elements that should always face the viewer. |
 
@@ -167,11 +209,17 @@ Use this table to decide which component reference file to load when implementin
 | [`ImagePresentationComponent`](references/imagepresentationcomponent.md) | When displaying images or textures on entities in 3D space. |
 | [`VideoPlayerComponent`](references/videoplayercomponent.md) | When playing video content on entity surfaces using AVPlayer. |
 
+#### Tracking
+
+| API | When to Use |
+|-----|-------------|
+| [`SpatialTrackingSession`](references/spatialtrackingsession.md) | When an entity needs anchor-derived transforms (plane, hand, image, world) without running an `ARKitSession` yourself. RealityKit drives the session and publishes results through `AnchoringComponent`. |
+
 #### Networking and Sync
 
 | Component | When to Use |
 |-----------|-------------|
-| [`SynchronizationComponent`](references/synchronizationcomponent.md) | When synchronizing entity state, transforms, and components across networked multiplayer sessions. |
+| [`SynchronizationComponent`](references/synchronizationcomponent.md) | When synchronizing entity state, transforms, and components across networked multiplayer sessions. For new visionOS 26 multi-user work, prefer the `shareplay-developer` skill (GroupActivities + `SystemCoordinator`) as the recommended path. |
 | [`TransientComponent`](references/transientcomponent.md) | When marking entities as temporary, non-persistent, and excluded from network synchronization. |
 
 ### Systems Reference
@@ -199,12 +247,23 @@ RealityView { content in
 
 #### Interactive Entity Setup
 
+Prefer `ManipulationComponent.configureEntity(_:hoverEffect:allowedInputTypes:collisionShapes:)`
+— it installs `CollisionComponent`, `InputTargetComponent`, the hover effect,
+and the manipulation component in one call with Apple's recommended defaults.
+
 ```swift
 let entity = ModelEntity(mesh: .generateBox(size: 0.1))
-entity.components.set(CollisionComponent(shapes: [.generateBox(size: [0.1, 0.1, 0.1])]))
-entity.components.set(InputTargetComponent())
-entity.components.set(ManipulationComponent())
+ManipulationComponent.configureEntity(
+    entity,
+    hoverEffect: .spotlight(.init()),
+    allowedInputTypes: .all,
+    collisionShapes: [.generateBox(size: [0.1, 0.1, 0.1])]
+)
 ```
+
+Only fall back to manually setting `CollisionComponent`, `InputTargetComponent`,
+and `ManipulationComponent` separately when you need to customize individual
+component configurations that `configureEntity` does not expose.
 
 #### Custom System Skeleton
 
@@ -234,7 +293,7 @@ SpinSystem.registerSystem()
 ### Pitfalls and Checks
 
 - Always load assets asynchronously; avoid blocking the main actor.
-- Avoid `ARView` on visionOS; use `RealityView`.
-- Add `CollisionComponent` + `InputTargetComponent` for draggable or tappable entities.
+- On visionOS, `ARView` is not available — it inherits from `UIView`/`NSView`. Always use `RealityView`.
+- For draggable or tappable entities, prefer `ManipulationComponent.configureEntity(_:hoverEffect:allowedInputTypes:collisionShapes:)` over manually setting `CollisionComponent` + `InputTargetComponent` + `ManipulationComponent`.
 - Use the `RealityView` update closure for state-driven content updates, and prefer a custom `System` for continuous per-frame behavior that spans many entities.
 - Built-in mesh generation supports more than the basic primitives, including text and custom mesh content through `MeshResource` APIs.

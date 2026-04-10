@@ -29,6 +29,38 @@ When asked to modify a .usda file, this skill should:
 
 If the change is material- or shader-related for RealityKit, prefer the `shadergraph-editor` skill for node-specific guidance.
 
+### Loading USD/USDZ into a visionOS App
+
+Reality Composer Pro projects ship as a Swift package (typically named
+`RealityKitContent`) inside the app. Load the authored scene by its prim path
+and the content bundle, not by raw file name:
+
+```swift
+import RealityKit
+import RealityKitContent
+
+let scene = try await Entity(
+    named: "Scene",                // matches the prim path inside the RCP package
+    in: realityKitContentBundle    // exposed by the RealityKitContent module
+)
+```
+
+For raw `.usdz` files that ship alongside the app binary, use
+`Entity(contentsOf:)` with a bundle URL. Keep assets inside the RCP package
+whenever possible so Reality Composer Pro can author composition, materials,
+and references without touching app code.
+
+### USDZ on visionOS Pitfalls
+
+- Apple Vision Pro expects meters as the stage unit and Y-up as the up axis
+  for USDZ content. Authoring with centimeters or Z-up will render but feel
+  wrong, and will interact badly with `AnchoringComponent` scale.
+- Validate distribution-ready `.usdz` with `usdchecker --arkit <path>` to
+  catch unsupported schemas, missing textures, and reference cycles before
+  shipping.
+- Prefer PNG/JPEG textures over EXR/TIFF in USDZ payloads; Reality Composer
+  Pro accepts more formats at authoring time than the runtime pipeline.
+
 ### Quick Start Workflow
 
 1. Locate the prim path you need to edit (search by prim name or `SdfPath`).

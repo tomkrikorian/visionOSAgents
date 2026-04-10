@@ -1,80 +1,112 @@
 ---
 name: spatial-swiftui-developer
-description: Design and implement visionOS SwiftUI scenes that integrate RealityKit content. Use when building spatial UI with RealityView, Model3D, attachments, volumetric windows, ImmersiveSpace, or spatial gestures, or when choosing SwiftUI vs RealityKit APIs for 3D presentation.
+description: Design and implement visionOS 26 SwiftUI scenes that integrate RealityKit content. Use when building spatial UI with RealityView, Model3D, attachments, volumetric windows, ImmersiveSpace, or spatial gestures, or when choosing SwiftUI vs RealityKit APIs for 3D presentation.
 ---
 
 # Spatial SwiftUI Developer
 
-## Description and Goals
+## Quick Start
 
-This skill provides guidance for designing and implementing visionOS SwiftUI scenes that integrate RealityKit content. It helps you choose between SwiftUI and RealityKit APIs for 3D presentation and shows how to bridge between the two frameworks effectively.
+1. If the task is really about surface choice, scene ownership, or file
+   structure, switch to `spatial-app-architecture` first.
+2. Pick the rendering track: `Model3D` for simple asset display, `RealityView`
+   for custom entity graphs and attachments.
+3. Load the matching reference only after you know the track you are on:
+   - `windowing-immersion.md` for scene structure and transitions
+   - `realityview.md` for RealityView, attachments, and update flow
+   - `model3d.md` for model loading and simple presentation
+   - `interaction.md` for gestures and manipulation
+   - `spatial-layout.md` for layout, sizing, and debug helpers
+4. Implement async loading and keep RealityKit mutations inside `RealityView`
+   closures or explicit systems.
+5. Route build, launch, simulator, and test problems to the plugin's
+   `build-run-debug` workflow skill instead of expanding this skill with
+   execution steps.
 
-### Goals
+## Tracks
 
-- Enable developers to build spatial UI experiences on visionOS
-- Guide selection between SwiftUI and RealityKit APIs for 3D content
-- Show how to integrate RealityKit content into SwiftUI scenes
-- Demonstrate spatial interaction patterns with gestures
-- Support proper windowing and immersion patterns
+### Scene Shell
 
-## What This Skill Should Do
+Use this track when the surface model is already chosen and you need to map it
+to SwiftUI APIs.
 
-When building spatial UI with SwiftUI on visionOS, this skill should:
+- Start with `WindowGroup` unless the UI needs volume or immersion.
+- Use `windowStyle(.volumetric)` for volume-style surfaces.
+- Use `ImmersiveSpace` only when the experience needs an unbounded spatial scene.
+- Use `defaultSize` as a hint for initial geometry, not a guarantee.
 
-1. **Guide presentation surface selection** - Help you choose between WindowGroup, volumetric windows, and ImmersiveSpace
-2. **Select 3D APIs** - Show when to use Model3D vs RealityView for different use cases
-3. **Integrate RealityKit** - Demonstrate how to load and embed RealityKit content in SwiftUI
-4. **Handle spatial interaction** - Provide patterns for spatial gestures and entity-targeted interactions
-5. **Manage lifecycle** - Ensure proper async loading and state management
+### RealityKit Bridge
 
-Load the appropriate reference file from the tables below for detailed usage, code examples, and best practices.
+Use this track when SwiftUI needs to host real 3D scene content.
 
-### Quick Start Workflow
+- Use `RealityView` for scene loading, attachments, and state-driven entity updates.
+- Use `Attachment` or `ViewAttachmentComponent` for SwiftUI UI placed in 3D.
+- Keep entity mutation out of SwiftUI body computation.
 
-1. Identify the presentation surface: `WindowGroup`, volumetric window, or `ImmersiveSpace`.
-2. Choose a 3D API: `Model3D` for simple models, `RealityView` for full RealityKit scenes.
-3. Load RealityKit content asynchronously and add entities in the `RealityView` make closure.
-4. Use either `Attachment` plus `RealityViewAttachments.entity(for:)` or `ViewAttachmentComponent` to place SwiftUI UI in 3D space when needed.
-5. Add spatial interaction with `SpatialTapGesture` or entity-targeted gestures.
-6. Update RealityKit content in the `RealityView` update closure, not in SwiftUI body.
-7. Use `defaultSize` when you want a predictable initial volumetric size, and use `immersionStyle` to configure immersive spaces.
+### Interaction and Motion
 
-## Information About the Skill
+Use this track when the scene needs direct manipulation or spatial gestures.
 
-### Core Concepts
+- Add `SpatialTapGesture` and entity-targeted input where needed.
+- Prefer attachment-driven labels and controls for UI that must stay SwiftUI-native.
+- Use `interaction.md` before adding custom gesture or manipulation logic.
 
-#### Scene and Spatial Presentation
+### Data Visualization
+
+Use this track when the scene is primarily charts or analytic surfaces.
+
+- Load `charts-3d.md` only after confirming the chart belongs in spatial UI.
+- Keep chart state separate from the spatial shell so it can be reused in 2D fallbacks.
+
+## Load References When
+
+| Reference | When to Use |
+|-----------|-------------|
+| [`REFERENCE.md`](references/REFERENCE.md) | When you need the general feature map, examples, and routing guidance for this skill. |
+| [`model3d.md`](references/model3d.md) | When using `Model3D` for async model loading, assets, animation, or manipulation. |
+| [`realityview.md`](references/realityview.md) | When setting up `RealityView`, attachments, or RealityKit integration patterns. |
+| [`interaction.md`](references/interaction.md) | When implementing gestures or manipulation patterns for spatial input. |
+| [`windowing-immersion.md`](references/windowing-immersion.md) | When managing windows, volumetric surfaces, or immersive space transitions. |
+| [`spatial-layout.md`](references/spatial-layout.md) | When using SwiftUI spatial layout APIs, sizing, or debug tools. |
+| [`charts-3d.md`](references/charts-3d.md) | When implementing `Chart3D` or other spatial data-visualization patterns. |
+
+## Guardrails
+
+- Keep RealityKit loads async; do not block the main actor with asset or entity loading.
+- Mutate RealityKit content in `RealityView` make/update closures or in a system, not in SwiftUI body code.
+- Use `Model3D` only when you need simple display and layout, not a custom ECS graph.
+- Treat `ImmersiveSpace` as a separate scene with its own lifecycle and environment actions.
+- Use `defaultSize` as an initial hint only; the system can clamp or restore geometry.
+- Switch to the plugin's `build-run-debug` skill when the question is about launch, build, simulator, codesign, or debugging workflow.
+- Use `spatial-app-architecture` when the question is about scene boundaries,
+  ownership, or feature decomposition rather than API usage.
+
+## Core Concepts
+
+### Scene and Spatial Presentation
 
 - Use `WindowGroup` with `windowStyle(.volumetric)` for volumes. Add `defaultSize` when you want a predictable initial size, but treat it as a hint rather than a hard guarantee.
 - Use `ImmersiveSpace` for unbounded spatial scenes and `immersionStyle` selection.
 - Use `openImmersiveSpace` and `dismissImmersiveSpace` for transitions.
+- On visionOS 26, apply `defaultWorldScaling(_:)` with a `WorldScalingBehavior` when you want a volume or window to scale with viewing distance, and use `supportedVolumeViewpoints(_:)` + `onVolumeViewpointChange(updateStrategy:initial:_:)` to adjust layout when the viewer moves around a volume.
+- Use `volumeBaseplateVisibility(_:)` to hide or show the system baseplate under a volume.
 
-#### RealityKit Embedding in SwiftUI
+### RealityKit Embedding in SwiftUI
 
-- Use `RealityView` for full RealityKit scenes and per-frame updates.
+- Use `RealityView` for full RealityKit scenes and state-driven updates.
 - Use `Attachment` and RealityView attachments to embed SwiftUI views in 3D.
 - Use `ViewAttachmentEntity` and `ViewAttachmentComponent` for attachment entities.
+- Use `breakthroughEffect(_:)` to apply the visionOS 26 breakthrough effect to RealityView attachments when the design calls for it.
+- Use `visualEffect3D(_:)` to layer 3D visual effects on spatial content.
 
-#### 3D Model Presentation
+### 3D Model Presentation
 
 - Use `Model3D` for async model loading with SwiftUI layout.
 - Use `Model3DPhase` and `Model3DAsset` for loading phases and animation choices.
 
-#### Spatial Input
+### Spatial Input
 
 - Use `SpatialTapGesture` for spatial tap locations in 2D/3D coordinate spaces.
-
-### Reference Files
-
-| Reference | When to Use |
-|-----------|-------------|
-| [`REFERENCE.md`](references/REFERENCE.md) | When looking for feature-focused code patterns and general guidance. |
-| [`model3d.md`](references/model3d.md) | When using Model3D for async model loading, assets, animation, and manipulation. |
-| [`realityview.md`](references/realityview.md) | When setting up RealityView, attachments, and RealityKit integration patterns. |
-| [`interaction.md`](references/interaction.md) | When implementing gestures and manipulation patterns for spatial input. |
-| [`windowing-immersion.md`](references/windowing-immersion.md) | When managing windows and immersive space patterns. |
-| [`spatial-layout.md`](references/spatial-layout.md) | When using SwiftUI spatial layout APIs and debug tools. |
-| [`charts-3d.md`](references/charts-3d.md) | When implementing Chart3D and surface plot patterns. |
 
 ### Implementation Patterns
 
@@ -82,6 +114,8 @@ Load the appropriate reference file from the tables below for detailed usage, co
 - Keep RealityKit mutations inside `RealityView` make/update closures.
 - Prefer attachments for UI that should remain SwiftUI-driven but positioned in 3D.
 - Treat `ImmersiveSpace` as a separate scene with its own lifecycle and environment actions.
+- Prefer a custom `System` or `SceneEvents.Update` when behavior truly needs
+  continuous per-frame updates.
 
 ### Pitfalls and Checks
 

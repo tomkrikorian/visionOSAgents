@@ -1,6 +1,6 @@
 ---
 name: visionos-widgetkit-developer
-description: Build and debug WidgetKit widgets for Apple Vision Pro (visionOS), including mounting styles (elevated/recessed), textures (glass/paper), proximity-aware layouts via LevelOfDetail, and timeline update troubleshooting.
+description: Build and debug WidgetKit widgets for Apple Vision Pro (visionOS), including mounting styles (elevated/recessed), textures (glass/paper), proximity-aware layouts via LevelOfDetail, interactive widgets with AppIntents, widget rendering modes (accented/fullColor), and timeline update troubleshooting. (visionOS widgets are pinned spatial objects, not watch complications.)
 ---
 
 # visionOS WidgetKit Developer
@@ -11,7 +11,7 @@ This skill helps you design, implement, and troubleshoot **WidgetKit widgets for
 
 ### Goals
 
-- Help you choose the right widget strategy for Vision Pro (visionOS app vs compatibility widgets).
+- Help you choose the right widget strategy for a native visionOS app on Vision Pro.
 - Implement visionOS-specific widget presentation: mounting styles, textures, and families.
 - Ensure glanceability at distance using `LevelOfDetail`-driven layouts.
 - Provide a practical debugging checklist for timelines, refreshes, and rendering issues.
@@ -20,7 +20,7 @@ This skill helps you design, implement, and troubleshoot **WidgetKit widgets for
 
 When you ask to build or debug a Vision Pro widget, this skill should:
 
-1. **Clarify scope and platform**: Is this a visionOS app widget, or an iOS/iPadOS widget running on Vision Pro in compatibility mode? Which widget families must be supported?
+1. **Clarify scope and platform**: Is this a native visionOS widget, and which widget families must it support on Vision Pro?
 2. **Choose layout strategy**: Define a “default” layout (close) and a “simplified” layout (far) using `@Environment(\.levelOfDetail)`.
 3. **Configure visionOS widget presentation**:
    - Set `supportedMountingStyles` (elevated/recessed) appropriately.
@@ -55,12 +55,32 @@ visionOS can change a widget’s `LevelOfDetail` based on **user proximity**. Tr
 - `.default`: more information, smaller typography, richer layout.
 - `.simplified`: less information, larger typography, fewer elements, more contrast.
 
-#### Family support differences for extra-large widgets
+#### Family support for extra-large widgets
 
-visionOS supports system widget families including extra-large, but the correct family to declare depends on whether your widget is part of a visionOS app vs a compatible iOS/iPadOS app:
+For native visionOS widgets, use `WidgetFamily.systemExtraLargePortrait` when
+you need the extra-large family on Vision Pro. Compatible iOS apps running on
+visionOS should continue to use `systemExtraLarge`.
 
-- visionOS app widgets use `WidgetFamily.systemExtraLargePortrait`
-- compatible iOS/iPadOS widgets use `WidgetFamily.systemExtraLarge`
+> StandBy and watch complications do not apply on visionOS. visionOS widgets
+> are pinned spatial objects that participate in the room, not Watch
+> complications and not iOS StandBy mode.
+
+#### Rendering modes and accented rendering
+
+visionOS renders widgets in multiple modes depending on background treatment
+and mounting. Use `@Environment(\.widgetRenderingMode)` to branch layout when
+the mode changes, and use `widgetAccentedRenderingMode(_:)` to declare how the
+widget should participate in accented rendering. See Apple's
+"Preparing widgets for additional contexts and appearances" for the full list
+of modes.
+
+#### Interactive widgets
+
+visionOS widgets can be interactive by hosting `Button` and `Toggle` controls
+backed by `AppIntent` (via `AppIntentControlValueProvider` and related types).
+Keep the interaction surface small — a widget is glanceable, not a full
+control surface — and route richer flows into the host app via a deep link or
+`openAppIntent`.
 
 ### Reference Tables
 
@@ -104,6 +124,7 @@ import WidgetKit
 
 struct MyWidgetView: View {
     @Environment(\.levelOfDetail) private var levelOfDetail
+    @Environment(\.widgetRenderingMode) private var renderingMode
     let entry: Provider.Entry
 
     var body: some View {
@@ -116,10 +137,37 @@ struct MyWidgetView: View {
 }
 ```
 
+#### Interactive widget with AppIntent
+
+```swift
+import AppIntents
+import SwiftUI
+import WidgetKit
+
+struct ToggleFavoriteIntent: AppIntent {
+    static var title: LocalizedStringResource = "Toggle Favorite"
+    @Parameter(title: "Item ID") var itemID: String
+
+    func perform() async throws -> some IntentResult {
+        // Mutate store, then request timeline reload for the kind.
+        return .result()
+    }
+}
+
+struct FavoritesWidgetView: View {
+    let entry: Provider.Entry
+    var body: some View {
+        Button(intent: ToggleFavoriteIntent(itemID: entry.itemID)) {
+            Label("Favorite", systemImage: entry.isFavorite ? "star.fill" : "star")
+        }
+    }
+}
+```
+
 ### Pitfalls and Checks
 
 - Don’t ship a single dense layout: always consider `.simplified` for distance readability.
 - Don’t assume recessed mode “just works”: test layouts and backgrounds in recessed mounting.
 - Avoid tiny typography and low-contrast UI; pinned widgets are often viewed from far away.
-- Don’t forget to include the right widget families (especially extra-large differences).
+- Don’t forget to include the right widget families, including `systemExtraLargePortrait` when you need an extra-large Vision Pro widget.
 - If timelines seem stale, confirm your timeline policy and reload strategy.

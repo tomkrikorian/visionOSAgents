@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "sharedSkills": [
+    "arkit-visionos-developer",
+    "coding-standards-enforcer",
+    "realitykit-visionos-developer",
+    "shadergraph-editor",
+    "shareplay-developer",
+    "spatial-app-architecture",
+    "spatial-swiftui-developer",
+    "usd-editor",
+    "visionos-immersive-media-developer",
+    "visionos-widgetkit-developer"
+  ]
+}

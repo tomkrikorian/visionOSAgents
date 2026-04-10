@@ -1,6 +1,6 @@
 ---
 name: coding-standards-enforcer
-description: Enforce repository coding standards for Swift 6.2 concurrency, Swift language rules. Use when reviewing or implementing Swift code changes.
+description: Enforce repository coding standards for Swift 6.2 strict concurrency, actor isolation, @Observable models, SWIFT_APPROACHABLE_CONCURRENCY, @concurrent functions, and modern Swift APIs across visionOS app code. Use when reviewing, writing, or migrating Swift code in this plugin's scope.
 ---
 
 # Coding Standards Enforcer
