@@ -4,13 +4,16 @@
 
 BarcodeDetectionProvider supplies real-time position updates for barcodes detected in a person's surroundings. It publishes BarcodeAnchor updates and requires the barcode detection entitlement to deliver data.
 
+
+For shared session setup, authorization, and lifecycle rules, see [session-basics.md](session-basics.md). For model-layer reconciliation, see [anchor-processing.md](anchor-processing.md).
+
 ## Best Practices
 
 - Ensure the barcode detection entitlement is present; without it the provider delivers no data.
 - Limit the symbologies to the ones your experience needs to reduce false positives.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use `anchorUpdates` to add, update, and remove barcode-driven content.
-- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
+- Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
 

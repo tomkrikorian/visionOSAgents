@@ -5,107 +5,23 @@ description: Guide for modifying USD ASCII (.usda) files, including prims, prope
 
 # USD Editor
 
-## Description and Goals
+## Quick Start
 
-This skill guides safe, minimal edits to USD ASCII (.usda) files and the proper use of official USD command-line tools. It focuses on preserving stage structure, using correct specifiers and property types, and avoiding composition mistakes while making targeted changes.
+Use this skill for minimal, text-level USD or USDA edits. Keep the change small
+and preserve existing composition unless the task explicitly says otherwise.
 
-### Goals
+If the change is material- or shader-specific for RealityKit, prefer
+`shadergraph-editor`.
 
-- Make precise edits without disrupting existing USD composition
-- Preserve file formatting and authoring style
-- Use correct prim specifiers, property types, and relationships
-- Avoid common USD pitfalls (wrong paths, missing xformOpOrder, broken connections)
-- Guide safe manipulation and inspection of USD assets using the command-line tools
-
-## What This Skill Should Do
-
-When asked to modify a .usda file, this skill should:
-
-1. **Inspect the stage structure** - Identify root prims, scopes, and relevant paths.
-2. **Choose the correct specifier** - Use `over` for edits to existing prims, `def` for new prims.
-3. **Edit only what is necessary** - Preserve unrelated content and formatting.
-4. **Respect composition** - Avoid changing subLayers, references, or variants unless asked.
-5. **Validate connections and paths** - Ensure `SdfPath` targets are valid and type-compatible.
-
-If the change is material- or shader-related for RealityKit, prefer the `shadergraph-editor` skill for node-specific guidance.
-
-### Loading USD/USDZ into a visionOS App
-
-Reality Composer Pro projects ship as a Swift package (typically named
-`RealityKitContent`) inside the app. Load the authored scene by its prim path
-and the content bundle, not by raw file name:
-
-```swift
-import RealityKit
-import RealityKitContent
-
-let scene = try await Entity(
-    named: "Scene",                // matches the prim path inside the RCP package
-    in: realityKitContentBundle    // exposed by the RealityKitContent module
-)
-```
-
-For raw `.usdz` files that ship alongside the app binary, use
-`Entity(contentsOf:)` with a bundle URL. Keep assets inside the RCP package
-whenever possible so Reality Composer Pro can author composition, materials,
-and references without touching app code.
-
-### USDZ on visionOS Pitfalls
-
-- Apple Vision Pro expects meters as the stage unit and Y-up as the up axis
-  for USDZ content. Authoring with centimeters or Z-up will render but feel
-  wrong, and will interact badly with `AnchoringComponent` scale.
-- Validate distribution-ready `.usdz` with `usdchecker --arkit <path>` to
-  catch unsupported schemas, missing textures, and reference cycles before
-  shipping.
-- Prefer PNG/JPEG textures over EXR/TIFF in USDZ payloads; Reality Composer
-  Pro accepts more formats at authoring time than the runtime pipeline.
-
-### Quick Start Workflow
-
-1. Locate the prim path you need to edit (search by prim name or `SdfPath`).
-2. Determine whether you should `over` an existing prim or `def` a new one.
-3. Apply the smallest possible change (attribute value, relationship target, or child prim).
-4. If adding transforms, update `xformOpOrder` to match your new ops.
-5. Re-check any paths or connections you touched.
-
-## Information About the Skill
-
-### Core Concepts
-
-#### Stage and Layer
-A USD stage is composed of one or more layers. A .usda file is a single ASCII layer that can sublayer or reference others.
-
-#### Prim and Specifier
-A prim is a scene graph node. Specifiers control behavior: `def` creates, `over` modifies, `class` defines a reusable template.
-
-#### Properties
-Attributes store typed data; relationships (`rel`) point to other prims.
-
-#### Composition Arc
-Mechanisms like sublayers, references, and payloads that bring other USD data into the stage.
-
-#### SdfPath
-A path to a prim or property, written like `</Root/Child>` or `</Root/Mat.outputs:surface>`.
-
-#### List Editing
-USD list ops (`prepend`, `append`, `delete`, `add`) modify lists without replacing them.
-
-#### Variants
-Variant sets provide alternative content branches for a prim.
-
-#### Time Samples
-Animated or time-varying data stored in `timeSamples` dictionaries.
-
-### Reference Tables
+## Load References When
 
 | Reference | When to Use |
 |-----------|-------------|
 | [`usd-syntax`](references/usd-syntax.md) | When you need a refresher on .usda syntax, values, and path formats. |
 | [`prims-properties`](references/prims-properties.md) | When adding or editing prims, attributes, or relationships. |
 | [`composition-variants`](references/composition-variants.md) | When touching sublayers, references, payloads, or variant sets. |
-| [`transforms-units`](references/transforms-units.md) | When editing transforms, xformOps, or stage units/up axis metadata. |
-| [`time-samples`](references/time-samples.md) | When modifying animated/time-sampled properties. |
+| [`transforms-units`](references/transforms-units.md) | When editing transforms, xformOps, or stage units and up-axis metadata. |
+| [`time-samples`](references/time-samples.md) | When modifying animated or time-sampled properties. |
 | [`command-line-tools`](references/command-line-tools.md) | When you need a quick reference for common USD command-line tools. |
 | [`usdcat`](references/usdcat.md) | When converting, flattening, or inspecting USD files. |
 | [`usdchecker`](references/usdchecker.md) | When validating USD or USDZ assets, including RealityKit-focused checks. |
@@ -113,38 +29,27 @@ Animated or time-varying data stored in `timeSamples` dictionaries.
 | [`usdtree`](references/usdtree.md) | When inspecting the prim hierarchy of a USD file. |
 | [`usdzip`](references/usdzip.md) | When creating or inspecting USDZ packages. |
 | [`usdedit`](references/usdedit.md) | When you need the official text-editing workflow for a USD-readable file. |
+| [`visionos-runtime-loading.md`](references/visionos-runtime-loading.md) | When the question is how the authored USD or USDZ actually loads and behaves in a visionOS app. |
 
-### Implementation Patterns
+## Workflow
 
-#### Override an Existing Prim
+1. Inspect the stage structure and locate the exact prim path.
+2. Choose `over`, `def`, or a list edit deliberately.
+3. Apply the minimum change needed.
+4. Re-check paths, transforms, or composition edges that were touched.
+5. Run the narrowest validation tool that matches the change.
 
-```usda
-over "Mesh"
-{
-    token visibility = "invisible"
-}
-```
+## Guardrails
 
-#### Add a Simple Xform with Translate
+- Do not replace a prim with `def` when `over` is the correct edit.
+- Avoid composition-arc changes unless they are explicitly requested.
+- Preserve existing formatting and comments when possible.
 
-```usda
-def Xform "Pivot"
-{
-    double3 xformOp:translate = (0.0, 0.1, 0.0)
-    uniform token[] xformOpOrder = ["xformOp:translate"]
-}
-```
+## Output Expectations
 
-#### Bind a Material Relationship
-
-```usda
-rel material:binding = </Materials/Mat>
-```
-
-### Pitfalls and Checks
-
-- Don't replace a prim with `def` when you only need an `over`.
-- Keep `xformOpOrder` consistent with the ops you add or remove.
-- Verify `SdfPath` targets exist and match the expected property type.
-- Avoid editing composition arcs unless explicitly requested.
-- Preserve existing formatting and comments to minimize diff noise.
+Provide:
+- the prim or path edited
+- which reference files were used
+- the exact class of USD change made
+- the validation step used
+- routing to `shadergraph-editor` or runtime testing if needed

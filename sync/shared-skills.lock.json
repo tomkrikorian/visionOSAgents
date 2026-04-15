@@ -1,44 +1,52 @@
 {
   "version": 1,
   "lastSync": {
-    "at": "2026-04-10T08:51:38+00:00",
+    "at": "2026-04-15T15:32:41+00:00",
     "source": "plugin",
     "destination": "agents",
     "skills": [
+      "arkit-visionos-developer",
+      "coding-standards-enforcer",
+      "realitykit-visionos-developer",
+      "shadergraph-editor",
+      "shareplay-developer",
       "spatial-app-architecture",
-      "spatial-swiftui-developer"
+      "spatial-swiftui-developer",
+      "usd-editor",
+      "visionos-immersive-media-developer",
+      "visionos-widgetkit-developer"
     ]
   },
   "skills": {
     "arkit-visionos-developer": {
-      "digest": "60166f5074e92b2e1b764a9a1c79b4b6e9fa00b4a57d7e00ab1636a5f2efa4e7"
+      "digest": "01ba452110dbdcb844950dfe225965402a9cd2561c1cf8e73b49e9d726efe2cd"
     },
     "coding-standards-enforcer": {
-      "digest": "d88e9c2deb1fa38f2dd2220ada3c2e4e7319026ddcbb7032ba02be27ec1be57c"
+      "digest": "3f12eae776d95812ece66707f7d86272c3f71905a001125bca937843d00860f9"
     },
     "realitykit-visionos-developer": {
-      "digest": "9ce417668b5fec4b95c4aa00965edfc64b83da3a227fa1ebf3969e45bafec43f"
+      "digest": "ff04622a2c5c43beea50061e09a4c6522bc3b76d1ed78dbb5bdd41bac4f75a9e"
     },
     "shadergraph-editor": {
-      "digest": "0707e73e6acd0233648d198b6e02f2a53f1fae4bd8d717068ad42f80233972b8"
+      "digest": "069e025ae231433cadda937bedc47c71da72e425f92c503e981d3826e322b235"
     },
     "shareplay-developer": {
-      "digest": "ce13308d122dad4f4a8a96001191d54241d6cc9f630c35bc0558526ffdd0017d"
+      "digest": "7991bbb9aa41a7ed80acd1bd0a993a6989678cb8519f1c1067d81e1f225b98e9"
     },
     "spatial-app-architecture": {
-      "digest": "f21145a7e022d06d1f200f801254da94d29b6b47d85f9526a88ee3021c2ed6c3"
+      "digest": "4198ab4d4551838454cfa3cbd385bf49b0d24df56073dee9819504d4540cb6f7"
     },
     "spatial-swiftui-developer": {
-      "digest": "1d4cbce4bf0a3dc3e4586c67b3568e66f3d10ffead316bc5798bcf1786103bc2"
+      "digest": "12468b16203d2ef97c653f6b65bb8c29743efc8535e7b36cb8b7264b51aa28f1"
     },
     "usd-editor": {
-      "digest": "90d443390b855cf2c96cbde96045b39642480c29b6505b1554f9fea888e9bb70"
+      "digest": "7ef0624f8b98d103ba88858e46b063fa4f94900e6d930c6be15c4be05aae1e97"
     },
     "visionos-immersive-media-developer": {
-      "digest": "4f8c1879c4af60621d9549ac6f93506966e73af63e1fddeb1dc70392bfdec917"
+      "digest": "c3f006f46fd44809957fc5c097aa897b7f5181ed67436ef3e1c0028af918d4c8"
     },
     "visionos-widgetkit-developer": {
-      "digest": "ce3048a340b65acb10498fabc51c94f06fe1d75be4469e7f4e114ec174003908"
+      "digest": "a370e4a67e60d2cf6411fde417c55643cb7e44ead24fb575ebf3210c3000ada0"
     }
   }
 }

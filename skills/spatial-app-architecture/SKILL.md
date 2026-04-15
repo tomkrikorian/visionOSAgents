@@ -9,61 +9,23 @@ description: Choose and refactor visionOS app architecture across surfaces, scen
 
 Use this skill for architecture questions, not API questions.
 
-### Use this skill when
-
+Use it when:
 - you need to choose the right surface: window, volume, immersive space, or a
   mixed flow
 - you are deciding which state is app-wide, scene-scoped, immersive-scoped, or
   view-local
 - a root file owns too many concerns and needs a refactor plan
-- you need a file/module plan before writing or splitting SwiftUI code
+- you need a file or module plan before writing or splitting SwiftUI code
 
-### Switch away from this skill when
+## Load References When
 
-- the surface and ownership model are already chosen, and you need to implement
-  `RealityView`, `Model3D`, attachments, or spatial gestures
-  -> use `spatial-swiftui-developer`
-- the work is entity/component/system heavy
-  -> use `realitykit-visionos-developer`
-- the work depends on ARKit providers, anchors, or tracked-world behavior
-  -> use `arkit-visionos-developer`
-- the work depends on SharePlay group lifecycle or shared immersive presence
-  -> use `shareplay-developer`
-- the architecture is settled and the next step is build/run/debug validation
-  -> use `build-run-debug`
-
-## Tracks
-
-### 1. Greenfield
-
-Use this track when you are shaping a new feature or app slice.
-
-- classify the user job first: browsing, editing, utility, spatial object,
-  shared activity, or immersive experience
-- choose the smallest surface that matches the job
-- decide the ownership boundary before writing view code
-- sketch the file/module layout before implementing UI details
-
-### 2. Surface and Lifecycle
-
-Use this track when the main question is how the feature appears or moves.
-
-- choose between window, volume, and immersive space by lifecycle needs, not by
-  novelty
-- decide whether the surface launches automatically or opens on demand
-- define who owns `openImmersiveSpace` / `dismissImmersiveSpace`
-- keep transitions explicit and keep state that must survive transitions outside
-  leaf controls
-
-### 3. Brownfield Refactor
-
-Use this track when the app already exists and the structure is the problem.
-
-- identify which file currently owns too many concerns
-- separate scene selection, feature composition, state ownership, and platform
-  glue
-- pull immersive lifecycle and RealityKit mutation up to explicit owners
-- split the refactor into small slices that preserve behavior
+| Reference | When to Use |
+|-----------|-------------|
+| [`references/surface-selection.md`](references/surface-selection.md) | When choosing window vs volume vs immersive space and their lifecycle boundaries. |
+| [`references/state-ownership.md`](references/state-ownership.md) | When deciding what belongs to the app, scene, feature coordinator, RealityKit owner, or view. |
+| [`references/file-layouts.md`](references/file-layouts.md) | When proposing a layered or feature-sliced file and module shape. |
+| [`references/refactor-playbook.md`](references/refactor-playbook.md) | When the app already exists and the main task is refactoring without breaking behavior. |
+| [`references/anti-patterns.md`](references/anti-patterns.md) | When you need to call out structural smells or explain why an approach is wrong. |
 
 ## Workflow
 
@@ -77,93 +39,25 @@ Use this track when the app already exists and the structure is the problem.
 6. If this is a refactor, sequence the extraction so behavior stays stable.
 7. Verify the structure with `build-run-debug` after the first usable slice.
 
-## Surface Selection
+## When To Switch Skills
 
-- Use a normal window when the feature is mostly textual, navigational, or
-  utility-oriented.
-- Use a volumetric window when the content should feel spatial but still live
-  in a bounded container.
-- Use an immersive space when the feature needs unbounded presence, tracked
-  world context, or a dedicated lifecycle.
-- Do not force a feature into immersion just because the platform allows it.
-- If the experience has multiple surfaces, define the launch surface first and
-  keep the entry path simple.
+- Switch to `spatial-swiftui-developer` when the surface and ownership model
+  are already chosen and the next step is implementing SwiftUI APIs.
+- Switch to `realitykit-visionos-developer` when the work is mainly about
+  entities, components, systems, or RealityKit runtime behavior.
+- Switch to `arkit-visionos-developer` when the architecture choice depends on
+  provider constraints, anchors, or tracked-world behavior.
+- Switch to `shareplay-developer` when the app structure is driven by group
+  activity or shared immersive presence.
+- Switch to `build-run-debug` after the first usable architectural slice exists
+  and needs validation.
 
-## Ownership Model
+## Guardrails
 
-Choose the narrowest ownership scope that matches the problem.
-
-| Scope | Owns |
-| --- | --- |
-| App | top-level scene declarations, app-wide dependency injection, persistent preferences |
-| Scene | navigation, presentation state, scene-local selection, immersive entry/exit coordination |
-| Feature model/coordinator | async work, service coordination, long-lived feature state |
-| Reality controller/system | entity graph mutation, component updates, simulation behavior |
-| View | ephemeral local UI state and intent dispatch |
-
-### State placement defaults
-
-- `@State`: local control state and small scene-owned observable models
-- `@Binding`: parent-owned value passed into a child
-- `@SceneStorage`: scene-local restoration when it genuinely fits
-- `@AppStorage`: app-wide preference or toggle
-- `@Environment(Type.self)`: shared service/coordinator or read-only app
-  context, following the project standard
-- Do not keep immersive lifecycle ownership or long-lived entity ownership in
-  transient leaf views.
-
-## Recommended File Shapes
-
-Choose one shape and apply it consistently in the slice you are touching.
-
-### Layered scene-first shape
-
-- `App/<AppName>App.swift`
-- `Scenes/<Feature>Scene.swift`
-- `Views/<Feature>RootView.swift`
-- `Views/<Feature>DetailView.swift`
-- `Models/*.swift`
-- `Stores/*.swift`
-- `Services/*.swift`
-- `Support/*.swift`
-
-Use this when the codebase is already layered or when multiple scenes share the
-same services and models.
-
-### Feature-sliced shape
-
-- `App/<AppName>App.swift`
-- `Scenes/MainWindowScene.swift`
-- `Scenes/ImmersiveRootScene.swift`
-- `Features/<Feature>/<Feature>View.swift`
-- `Features/<Feature>/<Feature>Model.swift`
-- `Reality/<Feature>RealityController.swift`
-
-Use this when the work is brownfield refactor of a large feature or when one
-spatial feature has strong ownership boundaries that deserve to stay together.
-
-If the repo already has a stronger convention, preserve it rather than forcing a
-new global layout.
-
-## Refactor Playbook
-
-1. Identify the current root owner and list the concerns it mixes.
-2. Freeze the scene boundary first.
-3. Move state to the correct owner before splitting views further.
-4. Extract immersive lifecycle and RealityKit mutation into named owners.
-5. Split files by responsibility, not by arbitrary line count.
-6. Re-run build and launch after each meaningful extraction slice.
-
-## Anti-Patterns
-
-- one giant `ContentView` owning every surface and lifecycle
-- scene selection, state ownership, networking, and RealityKit mutation in one
-  file
-- leaf controls that quietly own immersive entry or dismissal
-- unstable top-level branching between unrelated roots
-- forcing iOS-style stacked navigation onto a spatial flow without reason
-- choosing `RealityView` or ARKit before the surface and ownership model are
-  clear
+- Do not choose immersion by novelty alone.
+- Do not let transient views own long-lived immersive lifecycle or RealityKit
+  mutation.
+- Preserve strong repo conventions when they are already coherent.
 
 ## Output Expectations
 
@@ -176,4 +70,3 @@ Provide:
 - the next implementation handoff:
   `spatial-swiftui-developer`, `realitykit-visionos-developer`,
   `arkit-visionos-developer`, `shareplay-developer`, or `build-run-debug`
-

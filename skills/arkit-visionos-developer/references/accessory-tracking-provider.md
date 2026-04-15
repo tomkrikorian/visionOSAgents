@@ -4,6 +4,9 @@
 
 AccessoryTrackingProvider supplies real-time pose updates for accessories in the user's environment. It publishes AccessoryAnchor updates and can return the latest anchor state or a predicted pose for latency compensation.
 
+
+For shared session setup, authorization, and lifecycle rules, see [session-basics.md](session-basics.md). For model-layer reconciliation, see [anchor-processing.md](anchor-processing.md).
+
 ## Best Practices
 
 - Check `AccessoryTrackingProvider.isSupported` before creating the provider.
@@ -11,7 +14,7 @@ AccessoryTrackingProvider supplies real-time pose updates for accessories in the
 - Track only the accessories needed for the experience to reduce noise.
 - Apple documents accessory tracking in a volumetric-window workflow, so do not require immersive space unless the rest of the experience needs it.
 - Use `anchorUpdates` to add, update, and remove entities, and use `predictAnchor(for:at:)` when you need a future pose.
-- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
+- Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
 

@@ -4,13 +4,16 @@
 
 ImageTrackingProvider tracks known 2D images in a person's surroundings and emits ImageAnchor updates. Use it to attach content to specific printed or displayed images.
 
+
+For shared session setup, authorization, and lifecycle rules, see [session-basics.md](session-basics.md). For model-layer reconciliation, see [anchor-processing.md](anchor-processing.md).
+
 ## Best Practices
 
 - Supply reference images with accurate physical sizes for stable tracking.
 - Check `ImageTrackingProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Keep the reference image set focused to improve detection performance.
-- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
+- Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
 

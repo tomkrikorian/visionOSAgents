@@ -4,13 +4,16 @@
 
 SharedCoordinateSpaceProvider establishes a shared coordinate space among multiple participants. It provides event updates and lets you push coordinate space data for synchronization.
 
+
+For shared session setup, authorization, and lifecycle rules, see [session-basics.md](session-basics.md). For model-layer reconciliation, see [anchor-processing.md](anchor-processing.md).
+
 ## Best Practices
 
 - Check `SharedCoordinateSpaceProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Listen to `eventUpdates` to react to session state changes.
 - Push coordinate space data only when it changes to reduce bandwidth.
-- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
+- Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
 

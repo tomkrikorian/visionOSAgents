@@ -5,139 +5,52 @@ description: Author, load, and troubleshoot Reality Composer Pro Shader Graph ma
 
 # ShaderGraph Editor
 
-## Description and Goals
+## Quick Start
 
-This skill provides guidance for the Apple-documented Shader Graph workflow: author materials in Reality Composer Pro, load them with `ShaderGraphMaterial`, and update promoted inputs at runtime. It also covers how to inspect exported USD and MaterialX when you need advanced debugging or interoperability, but raw `.usda` editing is not the default authoring path.
+Default to Reality Composer Pro. Use raw USD or MaterialX inspection only when
+debugging exports or interoperability.
 
-### Goals
+1. Decide whether the task is node selection, runtime parameter control,
+   export debugging, or sample selection.
+2. Load only the matching reference files.
+3. Route text-level USD structure edits to `usd-editor`.
 
-- Enable developers to create RealityKit materials with Shader Graph in Reality Composer Pro
-- Guide loading and runtime control of `ShaderGraphMaterial`
-- Help troubleshoot material graphs, promoted inputs, and exported assets
-- Support advanced USD and MaterialX inspection without treating it as the primary workflow
-- Point to repo samples when they provide a close starting point
-
-## What This Skill Should Do
-
-When working with Shader Graph materials, this skill should:
-
-1. **Default to Reality Composer Pro** - Treat the Shader Graph editor as the main authoring workflow.
-2. **Guide node selection** - Help choose the correct RealityKit surface, geometry, texture, and math nodes for the effect.
-3. **Explain runtime integration** - Show how promoted inputs map to `ShaderGraphMaterial` parameters.
-4. **Troubleshoot exports** - Inspect exported USD and MaterialX only when debugging, interop, or asset review requires it.
-5. **Cross-link appropriately** - Defer raw USD structure edits to `usd-editor` when the task is really about prims, composition, or text-level USD authoring.
-6. **Prefer sample graphs when available** - If the requested effect matches an example in `samples/`, start from that file and point the user to it.
-
-Load the appropriate reference file from the tables below for detailed usage, code examples, and best practices.
-
-### Quick Start Workflow
-
-Before building a new effect from scratch, check `samples/` for a close match and adapt it.
-
-1. Create or open the material in Reality Composer Pro's Shader Graph editor.
-2. Choose the appropriate RealityKit surface node and add the graph nodes needed for the effect.
-3. Promote the inputs you expect to change at runtime.
-4. Save the material in the Reality Composer Pro asset package that ships with the app.
-5. Load the material with `ShaderGraphMaterial` at runtime.
-6. Update promoted inputs with runtime parameter APIs when the experience needs dynamic control.
-7. Inspect exported USD and MaterialX only when you need to debug the authored graph or interoperate with other asset tooling.
-
-### Loading and Runtime Parameter Control
-
-```swift
-import RealityKit
-import RealityKitContent
-
-func loadGlowMaterial(name: String) async throws -> ShaderGraphMaterial {
-    var material = try await ShaderGraphMaterial(
-        named: "/Root/\(name)",
-        from: "Materials.usda",
-        in: realityKitContentBundle
-    )
-
-    // Promoted inputs configured in Reality Composer Pro are set via
-    // setParameter(name:value:) at runtime.
-    try material.setParameter(name: "glowStrength", value: .float(1.5))
-    try material.setParameter(name: "baseColor", value: .color(.systemBlue))
-    return material
-}
-```
-
-For hot paths, cache a `ShaderGraphMaterial.ParameterHandle` returned by
-`parameterHandle(forName:)` and call `setParameter(handle:value:)` instead of
-the name-based variant.
-
-> On visionOS, `ShaderGraphMaterial` is the first-class custom material. Do
-> not introduce `CustomMaterial` flows from iOS/macOS code — migrate them to
-> Shader Graph materials instead.
-
-## Information About the Skill
-
-### Core Concepts
-
-#### Material Prim
-
-Reality Composer Pro exports Shader Graph materials into USD-based assets, but the material should be authored in the Shader Graph editor rather than hand-written as text by default.
-
-#### Shader Graph Authoring
-
-Shader Graph materials are composed visually in Reality Composer Pro. Use RealityKit-specific nodes such as the surface and geometry modifier nodes that Apple documents for Shader Graph.
-
-#### Promoted Inputs and Runtime Control
-
-Promoted inputs let the app change material parameters after loading the material. This is the main Apple-supported workflow for runtime customization.
-
-#### Exported USD and MaterialX
-
-Exported assets may contain USD and MaterialX representations of the graph. Treat those files as implementation artifacts for debugging or interop, not as the primary authoring surface.
-
-#### Samples and Interop Boundaries
-
-The samples in this repo are useful starting points, but they are repo-owned examples. Do not treat raw exported `info:id` strings or USD graph structure as stable Apple API unless Apple documents them directly.
-
-### Reference Files
+## Load References When
 
 | Reference | When to Use |
 |-----------|-------------|
-| [`REFERENCE.md`](references/REFERENCE.md) | When looking for ShaderGraph node and material reference guide. |
+| [`references/shadergraph-node-reference.md`](references/shadergraph-node-reference.md) | When choosing RealityKit Shader Graph nodes by category. |
+| [`references/runtime-api.md`](references/runtime-api.md) | When loading `ShaderGraphMaterial`, working with promoted inputs, or updating parameters at runtime. |
+| [`references/export-debug.md`](references/export-debug.md) | When inspecting exported USD or MaterialX, or when a graph fails to load or render as expected. |
+| [`references/samples.md`](references/samples.md) | When selecting the closest repo sample before authoring a new effect from scratch. |
 
-### Samples (Common Effects)
+## Workflow
 
-This repo includes common ShaderGraph examples in `samples/`. When a user asks for a specific visual effect, **start by selecting the closest sample** and tell them to open it so you can align on the exact look and parameters.
+1. Start from the closest existing sample when possible.
+2. Author or refine the graph in Reality Composer Pro.
+3. Promote the inputs that need runtime control.
+4. Load and update the material through the runtime API.
+5. Inspect exports only when the normal authoring path stops explaining the
+   failure.
 
-- [`samples/ShaderSamplesScene.usda`](samples/ShaderSamplesScene.usda) — A single scene that references the other samples for quick preview/inspection.
-- [`samples/OutlineShader.usda`](samples/OutlineShader.usda) — Mesh outline via duplicated mesh + vertex expansion (geometry modifier) and `cullMode = "front"`.
-- [`samples/FresnelShader.usda`](samples/FresnelShader.usda) — Fresnel/rim glow (emissive) with tunable color and falloff.
-- [`samples/GradientShader.usda`](samples/GradientShader.usda) — Near/far color gradient driven by camera distance.
-- [`samples/LavaShader.usda`](samples/LavaShader.usda) — Animated lava emissive using 3D noise + time.
-- [`samples/DissolveShader.usda`](samples/DissolveShader.usda) — Animated dissolve with noise threshold and emissive edge.
-- [`samples/VertexDisplacementShader.usda`](samples/VertexDisplacementShader.usda) — Animated vertex displacement using `outputs:realitykit:vertex` (geometry modifier).
-- [`samples/NormalCorrectionShader.usda`](samples/NormalCorrectionShader.usda) — Vertex displacement with corrected normals for cleaner lighting.
-- [`samples/ToonShader.usda`](samples/ToonShader.usda) — Toon shading using diffuse/specular ramp textures.
-- [`samples/PBRToonShader.usda`](samples/PBRToonShader.usda) — PBR-to-toon node graph (banding/quantization) applied to an existing material graph.
+## When To Switch Skills
 
-Some samples reference external assets (for example ramp textures or a referenced `.usdz`). When copying a sample into your project, keep or update those asset paths as needed.
+- Switch to `usd-editor` when the task is really about prim paths,
+  composition, or text-level USD authoring.
+- Switch to `realitykit-visionos-developer` when the blocker is entity setup,
+  material application, or scene integration rather than graph authoring.
 
-### Implementation Patterns
+## Guardrails
 
-#### Recommended Authoring Flow
+- Treat Reality Composer Pro as the default authoring surface.
+- Do not treat exported `info:id` strings or raw graph layout as stable public
+  API unless Apple documents them directly.
 
-- Start with a Shader Graph material in Reality Composer Pro.
-- Use Apple-documented RealityKit Shader Graph nodes such as the surface nodes and geometry modifier nodes for the effect you need.
-- Promote any inputs that must change at runtime.
-- Load the material in app code with `ShaderGraphMaterial`.
-- Change promoted values at runtime rather than editing exported USD directly.
+## Output Expectations
 
-#### When Raw USD Review Is Appropriate
-
-- Inspect exported files when a material fails to load or render as expected.
-- Compare repo samples to an exported asset when debugging a graph translation issue.
-- Hand off prim-level edits to `usd-editor` when the task is really about USD structure, paths, or composition.
-
-### Pitfalls and Checks
-
-- Do not present `UsdPreviewSurface` networks as equivalent to Reality Composer Pro Shader Graph materials.
-- Do not rely on undocumented exported `info:id` strings as stable Apple API.
-- Prefer promoted inputs and runtime parameter updates over raw text edits when the app needs dynamic control.
-- Use `usd-editor` for prim paths, composition arcs, or other text-level USD authoring tasks.
-- Treat the samples as repo examples, not as an exhaustive Apple-backed schema reference.
+Provide:
+- the selected effect or sample starting point
+- which references were used
+- how the material is authored or loaded
+- whether the issue is a graph problem, runtime problem, or export problem
+- explicit routing to `usd-editor` or RealityKit work if needed

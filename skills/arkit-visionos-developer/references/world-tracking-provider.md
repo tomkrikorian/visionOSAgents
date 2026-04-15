@@ -4,13 +4,16 @@
 
 WorldTrackingProvider supplies device pose and world anchor updates in a person's surroundings. Use it for world-locked content, spatial anchors, and device pose queries.
 
+
+For shared session setup, authorization, and lifecycle rules, see [session-basics.md](session-basics.md). For model-layer reconciliation, see [anchor-processing.md](anchor-processing.md).
+
 ## Best Practices
 
 - Check `WorldTrackingProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use `anchorUpdates` for world anchor changes and `queryDeviceAnchor(atTimestamp:)` for predicted device pose.
 - Manage anchor lifecycle carefully and remove anchors when no longer needed.
-- Run the provider in the presentation style Apple documents for that API, and keep the session and provider alive for the feature lifetime.
+- Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
 
