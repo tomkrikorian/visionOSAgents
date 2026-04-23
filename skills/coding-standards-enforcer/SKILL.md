@@ -12,6 +12,7 @@ whether the code matches the repository's concurrency, observation, and modern
 API standards.
 
 1. Classify the work first:
+   - Swift 6.2 build-setting / language-mode problem
    - isolation / actor / `Sendable` problem
    - view-model / observation / ownership problem
    - modern API / style / safety cleanup
@@ -53,8 +54,16 @@ API standards.
 
 - Do not impose a blanket `@MainActor` policy. The isolation choice has to
   match ownership and runtime behavior.
+- In new SwiftUI or visionOS code, do not introduce `ObservableObject`,
+  `@StateObject`, or `@ObservedObject` unless the user explicitly states a
+  compatibility constraint or the existing architecture cannot yet leave
+  Combine-based observation.
+- Do not put `@StateObject` or `@ObservedObject` around an `@Observable` type;
+  use `@State`, `@Bindable`, or typed `@Environment` according to ownership.
 - Do not "fix" concurrency warnings by introducing unnecessary `Task.detached`,
   `DispatchQueue.main.async`, or `@unchecked Sendable`.
+- Do not assume Swift 6.2 default actor isolation from memory; inspect project
+  build settings when that choice affects the fix.
 - Do not modernize APIs mechanically if it changes semantics.
 
 ## Output Expectations

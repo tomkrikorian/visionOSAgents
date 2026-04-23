@@ -24,7 +24,13 @@ need the review order before diving into a narrower topic.
 ## Repo-Level Expectations
 
 - Favor Swift concurrency over GCD for new asynchronous application code.
+- Verify Swift 6.2 language mode and default-actor-isolation build settings
+  before choosing an isolation fix.
 - Keep UI-owned mutable state on the main actor when it truly owns UI behavior.
-- Prefer Observation in new SwiftUI code when deployment targets allow it.
+- Use Observation in new SwiftUI code; treat new `ObservableObject`,
+  `@StateObject`, and `@ObservedObject` usage as a standards violation unless a
+  concrete compatibility blocker is documented.
+- Treat `@StateObject` or `@ObservedObject` around an `@Observable` model as a
+  standards violation; use `@State`, `@Bindable`, or typed environment instead.
 - Treat force unwraps, `try!`, and `@unchecked Sendable` as exceptions that
   require a strong justification.

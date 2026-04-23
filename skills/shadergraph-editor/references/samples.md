@@ -25,3 +25,14 @@ effect.
 
 Some samples reference external assets. Keep or update those asset paths when
 copying them into a project.
+
+## Selection Notes
+
+- Use `GradientShader.usda`, `DissolveShader.usda`, and `ToonShader.usda` when
+  you need examples with promoted inputs wired into graph nodes.
+- Use `VertexDisplacementShader.usda` or `NormalCorrectionShader.usda` when the
+  effect changes geometry rather than only surface color.
+- After copying a sample, inspect the material prim path and top-level
+  `inputs:<Name>` parameters before writing Swift runtime code.
+- Validate copied or packaged samples through `usd-editor` with
+  `usdchecker --arkit` when they are destined for a visionOS app bundle.

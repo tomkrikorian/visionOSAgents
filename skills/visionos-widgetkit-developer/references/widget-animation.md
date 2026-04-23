@@ -243,15 +243,16 @@ the wall at the same time.
 
 ## visionOS-Specific Gotchas
 
-### `.systemLarge` Is Not Supported for Native visionOS Apps
+### Extra-Large Families Differ By Target Type
 
 Use `.systemExtraLargePortrait` for the extra-large family on native visionOS
-widgets. Compatible iOS apps running on visionOS should continue to use
-`.systemExtraLarge`. Declaring `.systemLarge` in a native visionOS target has
-no effect.
+widgets. Compatible iOS and iPadOS widgets running on visionOS should continue
+to use `.systemExtraLarge`; the system presents that extra-large widget in a
+portrait form on Vision Pro.
 
-Supported families for native visionOS widgets: `.systemSmall`,
-`.systemMedium`, `.systemExtraLargePortrait`.
+Do not use `.systemLarge` as a workaround for the extra-large Vision Pro
+family. Treat it as its own large layout and verify it only when the target and
+SDK support that family for your widget.
 
 ### Widget Caching Is Aggressive
 

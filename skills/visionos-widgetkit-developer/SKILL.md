@@ -11,7 +11,9 @@ Treat visionOS widgets as spatial objects first, not as small 2D surfaces.
 
 1. Decide the platform and family scope first.
 2. Define both close and far layouts before polishing visuals.
-3. Load only the reference files that match the current problem.
+3. Treat timeline entries, shared storage, and App Intents as the integration
+   boundary; do not depend on live host-app state.
+4. Load only the reference files that match the current problem.
 
 ## Load References When
 
@@ -30,14 +32,22 @@ Treat visionOS widgets as spatial objects first, not as small 2D surfaces.
 
 1. Confirm the widget platform and family set.
 2. Choose mounting style, texture, and near/far layout strategy.
-3. Add interaction only if the widget still stays glanceable.
-4. Verify timelines, reloads, and rendering modes after the structure is set.
+3. Decide the data path: timeline-only, App Group/shared storage, background
+   URL session, or WidgetKit push notification.
+4. Add interaction only if the widget still stays glanceable.
+5. Verify timelines, reloads, rendering modes, and extension logs after the
+   structure is set.
 
 ## Guardrails
 
 - Always consider `.simplified` for distance readability.
+- Use native visionOS families intentionally; extra-large native visionOS
+  widgets use `.systemExtraLargePortrait`, while compatible iOS/iPadOS widgets
+  keep `.systemExtraLarge`.
 - Do not assume recessed mode works without explicit layout checks.
 - Avoid dense, low-contrast layouts.
+- Use `Link` or `widgetURL(_:)` for open-app navigation; reserve `Button` and
+  `Toggle` for real `AppIntent` actions.
 - Keep widget configurations per `WidgetBundle` within the practical limit.
 
 ## Output Expectations

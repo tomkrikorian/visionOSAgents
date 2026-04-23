@@ -28,5 +28,29 @@ same services and models.
 Use this when a spatial feature has strong ownership boundaries that deserve to
 stay together.
 
+## Mixed Surface Feature Shape
+
+- `Scenes/<Feature>WindowScene.swift`
+- `Scenes/<Feature>VolumeScene.swift`
+- `Scenes/<Feature>ImmersiveScene.swift`
+- `Features/<Feature>/<Feature>Coordinator.swift`
+- `Features/<Feature>/<Feature>State.swift`
+- `Features/<Feature>/<Feature>ControlsView.swift`
+- `Features/<Feature>/<Feature>ImmersiveView.swift`
+- `Features/<Feature>/<Feature>RealityController.swift`
+
+Use this when one user workflow crosses a window, bounded volume, and
+immersive space. Keep scene declarations separate from views so launch behavior,
+restoration, IDs, and default sizes are easy to audit.
+
+## Naming Defaults
+
+- Name scene files after the surface they declare.
+- Name coordinators after the workflow they coordinate, not after SwiftUI.
+- Name RealityKit owners `RealityController`, `RealityScene`, or `System`
+  according to the repo's existing convention.
+- Keep attachments near the Reality owner when placement is core behavior; keep
+  ordinary panels near SwiftUI views when they are just controls.
+
 If the repo already has a stronger convention, preserve it rather than forcing
 a new global layout.

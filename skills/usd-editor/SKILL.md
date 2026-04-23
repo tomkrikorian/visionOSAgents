@@ -33,16 +33,21 @@ If the change is material- or shader-specific for RealityKit, prefer
 
 ## Workflow
 
-1. Inspect the stage structure and locate the exact prim path.
-2. Choose `over`, `def`, or a list edit deliberately.
-3. Apply the minimum change needed.
-4. Re-check paths, transforms, or composition edges that were touched.
-5. Run the narrowest validation tool that matches the change.
+1. Inspect the stage with `usdtree`, `usdcat --loadOnly`, or `usdcat --flatten`
+   before editing, depending on the risk.
+2. Locate the exact prim path and layer that owns the opinion.
+3. Choose `over`, `def`, or a list edit deliberately.
+4. Apply the minimum change needed.
+5. Re-check paths, transforms, or composition edges that were touched.
+6. Run the narrowest validation tool that matches the change, then run
+   `usdchecker --arkit` for shipping visionOS USDZ assets.
 
 ## Guardrails
 
 - Do not replace a prim with `def` when `over` is the correct edit.
 - Avoid composition-arc changes unless they are explicitly requested.
+- Do not hand-edit a `.usdz` package in place; inspect or unpack it, edit the
+  source layer, rebuild the package, and validate the result.
 - Preserve existing formatting and comments when possible.
 
 ## Output Expectations

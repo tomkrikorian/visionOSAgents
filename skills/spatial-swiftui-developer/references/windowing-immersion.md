@@ -19,6 +19,28 @@ ImmersiveSpace presents content in an unbounded space on visionOS.
 - Use `immersiveEnvironmentBehavior(.coexist)` when an immersive space should coexist with the active system immersive environment.
 - Use `breakthroughEffect(_:)` for visionOS 26 RealityView attachments that should render with the system breakthrough effect.
 - Open and dismiss immersive spaces using the environment actions; only one immersive space can be open at a time.
+- Keep scene declarations in the app/scene layer. Put open/dismiss buttons in
+  views, but route the decision through a scene coordinator when multiple
+  controls can trigger the same surface.
+- Track immersive open state explicitly when user cancellation, failed open, or
+  external dismissal would otherwise leave UI out of sync.
+- Use `Window` for a single unique utility/document surface and `WindowGroup`
+  when multiple instances are valid or the scene should be opened by ID.
+- Use a volume for bounded 3D work; use an immersive space for unbounded
+  presence, full/progressive immersion, spatial media, or world context.
+
+## Scene Ownership Pattern
+
+- App scene file declares `Window`, `WindowGroup`, volumetric style,
+  `ImmersiveSpace`, launch behavior, restoration behavior, and default sizes.
+- Scene/root view owns environment actions such as `openWindow`,
+  `dismissWindow`, `openImmersiveSpace`, and `dismissImmersiveSpace`.
+- Feature views emit intents like `showPreview`, `enterExperience`, or
+  `dismissExperience`.
+- A coordinator/model tracks cross-surface state, selected content, and
+  immersive phase.
+- The immersive view owns immersive-only `RealityView` content and reads shared
+  state; it should not own the window's navigation stack.
 
 ## Code Examples
 
@@ -27,17 +49,48 @@ ImmersiveSpace presents content in an unbounded space on visionOS.
 ```swift
 import SwiftUI
 
+@Observable
+@MainActor
+final class ImmersiveSession {
+    enum Phase: Equatable {
+        case closed
+        case opening
+        case open
+        case failed
+    }
+
+    var phase: Phase = .closed
+}
+
 struct ImmersiveControls: View {
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) private var dismissImmersiveSpace
+    @State private var session = ImmersiveSession()
 
     var body: some View {
         HStack {
             Button("Open") {
-                Task { await openImmersiveSpace(id: "space") }
+                Task {
+                    session.phase = .opening
+                    switch await openImmersiveSpace(id: "space") {
+                    case .opened:
+                        session.phase = .open
+                    case .userCancelled:
+                        session.phase = .closed
+                    case .error:
+                        session.phase = .failed
+                    @unknown default:
+                        session.phase = .failed
+                    }
+                }
             }
+            .disabled(session.phase == .opening || session.phase == .open)
+
             Button("Close") {
-                Task { await dismissImmersiveSpace() }
+                Task {
+                    await dismissImmersiveSpace()
+                    session.phase = .closed
+                }
             }
         }
     }

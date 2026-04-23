@@ -36,8 +36,36 @@ Package a root layer and dependencies:
 usdzip -a Model.usda Model.usdz
 ```
 
+Package for RealityKit constraints:
+
+```bash
+usdzip --arkitAsset Model.usda Model.usdz
+```
+
+Check compliance while packaging explicit inputs:
+
+```bash
+usdzip -c Model.usdz Model.usda textures/*
+```
+
 List package contents:
 
 ```bash
 usdzip -l Model.usdz
 ```
+
+Dump package contents for inspection:
+
+```bash
+usdzip -d - Model.usdz
+```
+
+## visionOS Notes
+
+- Prefer `--arkitAsset` when building a standalone USDZ for RealityKit; it
+  gathers dependencies and may transform data to satisfy RealityKit packaging
+  requirements.
+- Run `usdchecker --arkit --strict Model.usdz` after packaging even when
+  `usdzip -c` succeeds.
+- Keep the root layer and asset paths deterministic. Runtime bundle loading is
+  sensitive to package names and case.

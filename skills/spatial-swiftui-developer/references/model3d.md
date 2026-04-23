@@ -10,6 +10,28 @@ Model3D is a RealityKit view that asynchronously loads and displays a 3D model i
 - Prefer phase-based initializers when you need explicit placeholder and error handling.
 - Use `Model3DAsset` when you need animation selection or playback controls.
 - Keep loading asynchronous and supply a lightweight placeholder during fetch.
+- Choose `Model3D` only when the model can remain a SwiftUI view. Switch to
+  `RealityView` for entity lookup, component writes, physics, attachments,
+  subscriptions, or custom scene graph ownership.
+- Keep asset state in a scene or feature model when multiple views or surfaces
+  need the same loaded model.
+- Use stable frame or 3D layout constraints so placeholders, errors, and loaded
+  models do not resize the surrounding interface unpredictably.
+
+## Model3D vs RealityView
+
+| Need | Prefer |
+| --- | --- |
+| Display a USDZ/reality asset with placeholder/error UI | `Model3D` |
+| Let SwiftUI lay out a model beside controls | `Model3D` |
+| Drive simple animation playback from `Model3DAsset` | `Model3D` |
+| Place SwiftUI controls inside a 3D scene | `RealityView` attachments |
+| Mutate components, run systems, or manage child entities | `RealityView` |
+| Share a custom RealityKit scene across immersive updates | `RealityView` with a named owner |
+
+Do not start with `RealityView` just because the asset is 3D. Start with
+`Model3D` when the task is presentation; move to `RealityView` when the task is
+runtime scene ownership.
 
 ## Code Examples
 
@@ -67,11 +89,31 @@ struct ContentView: View {
 #### Model3DAsset load
 
 ```swift
+@Observable
+final class RobotModel {
+  var asset: Model3DAsset?
+  var loadError: Error?
+
+  func load() async {
+    do {
+      asset = try await Model3DAsset(named: "sparky")
+    } catch {
+      loadError = error
+    }
+  }
+}
+
 struct RobotView: View {
-  @State private var asset: Model3DAsset?
+  @State private var model = RobotModel()
+
   var body: some View {
-    if asset == nil {
-      ProgressView().task { asset = try? await Model3DAsset(named: "sparky") }
+    if let asset = model.asset {
+      Model3D(asset: asset)
+    } else if model.loadError != nil {
+      ContentUnavailableView("Model unavailable", systemImage: "cube")
+    } else {
+      ProgressView()
+        .task { await model.load() }
     }
   }
 }

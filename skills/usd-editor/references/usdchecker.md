@@ -28,10 +28,22 @@ usdchecker [OPTIONS] [inputFile]
 
 ## Examples
 
+Parse-check a changed USDA layer before deeper validation:
+
+```bash
+usdcat --loadOnly Scene.usda
+```
+
 Validate a USDZ for RealityKit:
 
 ```bash
 usdchecker --arkit MyAsset.usdz
+```
+
+Treat warnings as failures for a shipping package:
+
+```bash
+usdchecker --arkit --strict MyAsset.usdz
 ```
 
 Write a strict report to a file:
@@ -40,7 +52,19 @@ Write a strict report to a file:
 usdchecker --strict -o report.txt Scene.usda
 ```
 
+Validate all variants for a named variant set:
+
+```bash
+usdchecker --arkit --variantSets lod MyAsset.usdz
+```
+
 ## Notes
 
 - `usdchecker` only checks the first sample of time-sampled attributes.
 - On Apple platforms, use `--arkit` for RealityKit constraints.
+- Do not use `--noAssetChecks` for final validation. It is only useful while
+  isolating asset-reference diagnostics.
+- Avoid `--rootPackageOnly` for final USDZ checks if nested packages or
+  dependencies matter to runtime loading.
+- For package creation, pair `usdzip --arkitAsset ...` or `usdzip -c ...` with
+  a final `usdchecker --arkit --strict <asset.usdz>`.

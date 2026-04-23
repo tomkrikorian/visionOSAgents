@@ -23,6 +23,7 @@ description: Build, debug, and optimize RealityKit scenes for visionOS 26, inclu
 | Reference | When to Use |
 |-----------|-------------|
 | [`references/component-index.md`](references/component-index.md) | When you need the RealityKit category map and guidance on which component reference to open next. |
+| [`references/systemandcomponentcreation.md`](references/systemandcomponentcreation.md) | When you need a complete custom ECS registration, query, and update-order pattern. |
 | [`references/modelcomponent.md`](references/modelcomponent.md) | When rendering meshes and materials. |
 | [`references/inputtargetcomponent.md`](references/inputtargetcomponent.md) | When making entities interactive. |
 | [`references/anchoringcomponent.md`](references/anchoringcomponent.md) | When anchoring content to planes, hands, images, or world targets. |
@@ -47,6 +48,8 @@ description: Build, debug, and optimize RealityKit scenes for visionOS 26, inclu
 - Always load assets asynchronously; avoid blocking the main actor.
 - On visionOS, `ARView` is not available. Use `RealityView`.
 - Keep `RealityView` update logic and ECS mutation out of SwiftUI body code.
+- Register custom components and systems once during app startup before scenes
+  or assets that depend on them are loaded.
 - Prefer `ManipulationComponent.configureEntity(...)` when built-in interaction
   fits the need.
 - Prefer a custom `System` when behavior spans multiple entities or needs

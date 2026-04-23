@@ -20,6 +20,20 @@ Then branch your UI:
 - `.default`: richer layout, more data density.
 - `.simplified`: fewer elements, larger typography, stronger contrast.
 
+Keep the two branches structurally compatible when possible. Large hierarchy
+changes can make the system transition feel noisy as proximity changes.
+
+```swift
+var body: some View {
+    switch levelOfDetail {
+    case .simplified:
+        CompactMetricView(entry: entry)
+    default:
+        DetailedMetricView(entry: entry)
+    }
+}
+```
+
 ## Suggested heuristics
 
 When `levelOfDetail == .simplified`:
@@ -28,9 +42,12 @@ When `levelOfDetail == .simplified`:
 - Prefer 1–2 key metrics over a dashboard.
 - Replace small icons/labels with bold, single-purpose visuals.
 - Avoid multi-column grids unless you can ensure readability.
+- Keep controls obvious and sparse; distance mode is usually the wrong place
+  for secondary actions.
+- Validate text length with real localized content, not just placeholder
+  English strings.
 
 ## Primary sources (Apple)
 
 - Updating your widgets for visionOS (proximity section): https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
 - `LevelOfDetail` docs: https://developer.apple.com/documentation/widgetkit/levelofdetail
-

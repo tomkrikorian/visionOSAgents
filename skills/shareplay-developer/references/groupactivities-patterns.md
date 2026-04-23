@@ -5,6 +5,10 @@
 - Scope: Only files that directly use GroupActivities APIs (GroupActivity, GroupSession, GroupStateObserver, GroupSessionMessenger/Journal, SpatialTemplate, Participant).
 - Non-GroupActivities UI, assets, and JSON files are omitted.
 - See the original samples' LICENSE.txt files for licensing terms.
+- Some excerpts preserve the original sample code's Combine-era
+  `ObservableObject` patterns. Treat them as source-sample context only; for
+  new visionOS SwiftUI code, follow `coding-standards-enforcer` and use
+  `@Observable` unless the user explicitly asks for a compatibility path.
 
 ## Table of Contents
 - [Skill patterns (GroupActivities)](#skill-patterns-groupactivities)
