@@ -40,6 +40,10 @@ struct ToggleFavoriteIntent: AppIntent {
 - For toggles, remember the UI may update optimistically before `perform()`
   finishes; make failed writes visible in the next timeline entry rather than
   storing transient view state.
+- For interactive `Button(intent:)` controls on visionOS, choose an explicit
+  `.buttonBorderShape(...)` just like in the host app. Icon-only widget actions
+  usually fit `.circle`; text actions usually fit `.capsule` or
+  `.roundedRectangle(radius:)` depending on the surrounding surface.
 
 ## Review Questions
 
