@@ -1,6 +1,5 @@
 # SceneUnderstandingComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/sceneunderstandingcomponent)
 
 ## Overview
 

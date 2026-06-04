@@ -1,6 +1,5 @@
 # PortalComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/portalcomponent)
 
 ## Overview
 

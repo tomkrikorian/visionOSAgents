@@ -1,6 +1,5 @@
 # DirectionalLightComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/directionallightcomponent)
 
 ## Overview
 

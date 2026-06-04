@@ -1,6 +1,5 @@
 # ModelComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/modelcomponent)
 
 ## Overview
 

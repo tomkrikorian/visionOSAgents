@@ -25,6 +25,7 @@ description: Design and implement visionOS 26 SwiftUI scenes that integrate Real
 | [`realityview.md`](references/realityview.md) | When setting up `RealityView`, attachments, or RealityKit integration patterns. |
 | [`interaction.md`](references/interaction.md) | When implementing gestures or manipulation patterns for spatial input. |
 | [`buttons-and-controls.md`](references/buttons-and-controls.md) | When implementing visible SwiftUI buttons, links styled as buttons, toolbars, forms, or control surfaces. |
+| [`swiftui-scene-lifecycle.md`](references/swiftui-scene-lifecycle.md) | When checking official `Window`, `WindowGroup`, `ImmersiveSpace`, open/dismiss, restoration, and launch contracts. |
 | [`windowing-immersion.md`](references/windowing-immersion.md) | When managing windows, volumetric surfaces, or immersive space transitions. |
 | [`spatial-layout.md`](references/spatial-layout.md) | When using SwiftUI spatial layout APIs, sizing, or debug tools. |
 | [`charts-3d.md`](references/charts-3d.md) | When implementing `Chart3D` or other spatial data-visualization patterns. |

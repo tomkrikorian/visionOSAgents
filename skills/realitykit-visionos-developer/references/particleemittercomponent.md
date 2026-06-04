@@ -1,6 +1,5 @@
 # ParticleEmitterComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/particleemittercomponent)
 
 ## Overview
 

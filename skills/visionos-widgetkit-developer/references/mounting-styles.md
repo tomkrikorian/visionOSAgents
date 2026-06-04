@@ -29,9 +29,3 @@ Or restrict it:
 - If your widget includes imagery intended to align like a “window,” consider recessed-only.
 - Avoid small “chrome” elements at the edges; recessed mode can make borders feel cramped.
 - Test both styles early: it’s easy to design an elevated widget that looks broken recessed.
-
-## Primary sources (Apple)
-
-- Updating your widgets for visionOS (mounting styles section): https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
-- `WidgetMountingStyle`: https://developer.apple.com/documentation/widgetkit/widgetmountingstyle
-

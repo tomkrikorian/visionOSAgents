@@ -41,10 +41,3 @@
   redraws.
 - If timeline generation uses async work, keep the slow path bounded and return
   a reasonable fallback entry rather than timing out the extension.
-
-## Primary sources (Apple)
-
-- Developing a WidgetKit strategy: https://developer.apple.com/documentation/widgetkit/developing-a-widgetkit-strategy
-- Updating your widgets for visionOS: https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
-- Keeping a widget up to date: https://developer.apple.com/documentation/widgetkit/keeping-a-widget-up-to-date
-- `WidgetCenter.reloadTimelines(ofKind:)`: https://developer.apple.com/documentation/widgetkit/widgetcenter/reloadtimelines(ofkind:)

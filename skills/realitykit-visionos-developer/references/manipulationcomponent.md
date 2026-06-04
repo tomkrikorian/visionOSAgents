@@ -1,6 +1,5 @@
 # ManipulationComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/manipulationcomponent)
 
 ## Overview
 
@@ -102,4 +101,7 @@ entity.components.set(manipulation)
 - `InputTargetComponent` - Required for input handling
 - `CollisionComponent` - Required for hit testing
 - `HoverEffectComponent` - Visual feedback on hover
-- `GestureComponent` - For custom gesture handling
+- SwiftUI targeted gestures - For entity-specific gesture handling from a view
+  modifier
+- `GestureComponent` - For entity-owned UI gesture handling that does not need
+  full manipulation behavior

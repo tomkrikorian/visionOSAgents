@@ -34,7 +34,5 @@ need the review order before diving into a narrower topic.
   standards violation; use `@State`, `@Bindable`, or typed environment instead.
 - Treat force unwraps, `try!`, and `@unchecked Sendable` as exceptions that
   require a strong justification.
-- For visionOS SwiftUI surfaces, audit visible `Button`, button-like
-  `NavigationLink`, `ShareLink`, and widget AppIntent button usage for an
-  intentional `.buttonBorderShape(...)`; see
+- For visionOS button-shape policy, load
   [buttons-and-controls.md](../../spatial-swiftui-developer/references/buttons-and-controls.md).

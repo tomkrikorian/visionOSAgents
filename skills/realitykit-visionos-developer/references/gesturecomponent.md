@@ -1,65 +1,57 @@
 # GestureComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/gesturecomponent)
+Use this file when attaching a SwiftUI gesture directly to a RealityKit entity
+through Apple's `RealityKit.GestureComponent`.
 
 ## Overview
 
-Attaches custom gesture handling to an entity. This component allows you to implement custom gesture recognition and handling beyond the built-in manipulation gestures provided by `ManipulationComponent`. Use this when you need specialized gesture behaviors or want to handle gestures in a custom way.
+`GestureComponent` is a RealityKit `Component` that attaches a UI gesture to an
+entity.
 
-## When to Use
+Use it when the interaction is entity-scoped and the built-in
+`ManipulationComponent` behavior is not the right fit. For full drag, rotate,
+scale, hover, and direct-manipulation behavior, try `ManipulationComponent`
+first.
 
-- Implementing custom gesture recognition
-- Creating specialized interaction behaviors
-- Handling gestures not supported by ManipulationComponent
-- Building custom input handling
-- Creating unique interaction patterns
-
-## How to Use
-
-### Basic Setup
+## Basic Setup
 
 ```swift
 import RealityKit
+import SwiftUI
 
-// Create gesture component with custom gesture handler
-let gestureComponent = GestureComponent(gestureHandler)
-entity.components.set(gestureComponent)
+let gesture = TapGesture().onEnded {
+    // Update entity-owned or model-owned state.
+}
+
+entity.components.set(GestureComponent(gesture))
 ```
 
-### With Input Target
+## Required Interaction Setup
+
+Entity gestures still need a hittable target:
 
 ```swift
-// Entity needs InputTargetComponent for gesture handling
 entity.components.set(InputTargetComponent())
 entity.components.set(CollisionComponent(shapes: [.generateBox(size: [0.1, 0.1, 0.1])]))
-
-// Add custom gesture component
-let gestureComponent = GestureComponent(customGestureHandler)
-entity.components.set(gestureComponent)
+entity.components.set(GestureComponent(TapGesture().onEnded {
+    // Handle the tap.
+}))
 ```
 
-## Key Properties
+## Decision Rules
 
-- [Gesture handler configuration managed by the component]
+- Use `GestureComponent` when the gesture should travel with the RealityKit
+  entity as component state.
+- For the broader choice between SwiftUI gestures, targeted gestures, and
+  manipulation APIs, load
+  [`interaction.md`](../../spatial-swiftui-developer/references/interaction.md)
+  or [`component-selection.md`](component-selection.md).
 
-## Important Notes
+## Guardrails
 
-- Requires `InputTargetComponent` and `CollisionComponent` for input detection
-- Allows custom gesture implementation beyond built-in gestures
-- Use when `ManipulationComponent` doesn't meet your needs
-- Provides flexibility for specialized interaction patterns
-
-## Best Practices
-
-- Combine with `InputTargetComponent` and `CollisionComponent`
-- Use for gestures not supported by `ManipulationComponent`
-- Implement efficient gesture recognition
-- Test gesture handling thoroughly
-- Consider user experience when designing custom gestures
-
-## Related Components
-
-- `InputTargetComponent` - Required for input handling
-- `CollisionComponent` - Required for hit testing
-- `ManipulationComponent` - Alternative for built-in gestures
-- `GestureComponent` - For custom gesture handling
+- Keep gesture side effects on the main actor when mutating UI or observable
+  model state.
+- Keep continuous or multi-entity behavior in a `System` instead of stuffing it
+  into gesture closures.
+- Do not confuse Apple's `RealityKit.GestureComponent` with app-defined wrapper
+  types that may use the same name.

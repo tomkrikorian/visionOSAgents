@@ -8,8 +8,10 @@ Use this recipe when you want participants to join the same immersive space (spa
    - Enable Group Activities capability.
    - Ensure `com.apple.developer.group-session = true` is present.
 2. Define a `GroupActivity` for the experience.
-3. Observe sessions and configure `SystemCoordinator` before `join()`.
-4. If the experience should keep the system immersive environment visible, set `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene. Don’t treat that modifier as the API that spatially coordinates participants.
+3. Observe sessions and configure spatial coordination using
+   [`spatial-coordination.md`](spatial-coordination.md).
+4. If the experience should keep the system immersive environment visible, set
+   `.immersiveEnvironmentBehavior(.coexist)` on the `ImmersiveSpace` scene.
 
 ## GroupActivity
 
@@ -106,7 +108,6 @@ ImmersiveSpace(id: "ImmersiveSpace") {
 
 ## Notes
 
-- Configure `SystemCoordinator.Configuration` before `join()` so the system can apply your immersive-space support and spatial template preferences as the session starts.
-- `.sideBySide` is a safe default for “shared viewpoint” collaboration; you can choose another template later.
-- Participant co-location comes from the `SystemCoordinator` configuration, not from `.immersiveEnvironmentBehavior(.coexist)` itself.
+- This is a launch-only recipe. For the spatial-coordination contract, use
+  [`spatial-coordination.md`](spatial-coordination.md).
 - This recipe intentionally does not send any messages or create a journal; add those once you need actual shared state or file/data transfer.

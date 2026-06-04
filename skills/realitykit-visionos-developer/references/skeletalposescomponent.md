@@ -1,6 +1,5 @@
 # SkeletalPosesComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/skeletalposescomponent)
 
 ## Overview
 

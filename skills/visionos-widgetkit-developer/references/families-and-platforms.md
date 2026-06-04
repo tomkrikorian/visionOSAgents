@@ -26,8 +26,3 @@ StandBy and watch complications do not apply on visionOS.
   rarely a good extra-large portrait layout with only scale changes.
 - Keep family-specific view branches small and data-compatible so the timeline
   entry type remains shared.
-
-## Primary sources (Apple)
-
-- Updating your widgets for visionOS: https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
-- `WidgetFamily.systemExtraLargePortrait`: https://developer.apple.com/documentation/widgetkit/widgetfamily/systemextralargeportrait

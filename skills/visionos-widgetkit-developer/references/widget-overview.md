@@ -43,9 +43,3 @@ constraints than a flat 2D widget surface:
 - Confirm host-app mutations either update shared state then call
   `WidgetCenter.shared.reloadTimelines(ofKind:)`, or are represented by future
   timeline entries.
-
-## Primary sources (Apple)
-
-- Updating your widgets for visionOS: https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
-- WidgetKit updates (Vision Pro widgets): https://developer.apple.com/documentation/updates/widgetkit
-- `LevelOfDetail`: https://developer.apple.com/documentation/widgetkit/levelofdetail

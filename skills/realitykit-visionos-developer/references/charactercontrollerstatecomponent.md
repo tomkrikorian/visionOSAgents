@@ -1,6 +1,5 @@
 # CharacterControllerStateComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/charactercontrollerstatecomponent)
 
 ## Overview
 

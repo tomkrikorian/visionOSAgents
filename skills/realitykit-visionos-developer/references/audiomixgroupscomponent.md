@@ -1,6 +1,5 @@
 # AudioMixGroupsComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/audiomixgroupscomponent)
 
 ## Overview
 

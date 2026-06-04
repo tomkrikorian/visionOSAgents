@@ -13,8 +13,9 @@ API standards.
 
 1. Classify the work first:
    - Swift 6.2 build-setting / language-mode problem
-   - isolation / actor / `Sendable` problem
-   - view-model / observation / ownership problem
+   - Swift `MainActor` / actor isolation / `Sendable` problem
+   - Observation `@Observable` / SwiftUI `@State` / `@Bindable` ownership
+     problem
    - modern API / style / safety cleanup
 2. Load only the reference files that match that category.
 3. Review the changed code in this order:
@@ -29,7 +30,7 @@ API standards.
 |-----------|-------------|
 | [`references/standards-review-map.md`](references/standards-review-map.md) | When you need the review order, routing, and repo-level standards map. |
 | [`references/concurrency-guidelines.md`](references/concurrency-guidelines.md) | When the work touches actors, `@MainActor`, `Sendable`, `Task`, `async let`, task groups, or strict concurrency diagnostics. |
-| [`references/observation-modeling.md`](references/observation-modeling.md) | When the work touches `@Observable`, view models, `@State`, `@Binding`, environment injection, or Combine-to-Observation migration. |
+| [`references/observation-modeling.md`](references/observation-modeling.md) | When the work touches Observation `@Observable`, `@ObservationIgnored`, SwiftUI `@State`, `@Bindable`, `@Binding`, or typed environment data flow. |
 | [`references/modern-swift-apis.md`](references/modern-swift-apis.md) | When the work is about API modernization, Foundation replacements, formatting, string matching, force unwraps, or Swift-native style. |
 
 ## Workflow
@@ -58,8 +59,9 @@ API standards.
   `@StateObject`, or `@ObservedObject` unless the user explicitly states a
   compatibility constraint or the existing architecture cannot yet leave
   Combine-based observation.
-- Do not put `@StateObject` or `@ObservedObject` around an `@Observable` type;
-  use `@State`, `@Bindable`, or typed `@Environment` according to ownership.
+- For Observation ownership, load
+  [`observation-modeling.md`](references/observation-modeling.md) instead of
+  duplicating its `@Observable`, `@State`, and `@Bindable` rules here.
 - Do not "fix" concurrency warnings by introducing unnecessary `Task.detached`,
   `DispatchQueue.main.async`, or `@unchecked Sendable`.
 - Do not assume Swift 6.2 default actor isolation from memory; inspect project

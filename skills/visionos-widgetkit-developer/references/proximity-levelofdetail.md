@@ -46,8 +46,3 @@ When `levelOfDetail == .simplified`:
   for secondary actions.
 - Validate text length with real localized content, not just placeholder
   English strings.
-
-## Primary sources (Apple)
-
-- Updating your widgets for visionOS (proximity section): https://developer.apple.com/documentation/widgetkit/updating-your-widgets-for-visionos
-- `LevelOfDetail` docs: https://developer.apple.com/documentation/widgetkit/levelofdetail

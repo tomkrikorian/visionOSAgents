@@ -9,9 +9,3 @@ This is typically relevant for:
 - building an internal authoring tool
 - validating/packaging immersive video deliverables
 - remote preview and iteration workflows
-
-## Primary sources (Apple)
-
-- ImmersiveMediaSupport framework: https://developer.apple.com/documentation/immersivemediasupport
-- Authoring Apple Immersive Video sample: https://developer.apple.com/documentation/immersivemediasupport/authoring-apple-immersive-video
-

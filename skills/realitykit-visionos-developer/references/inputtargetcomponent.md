@@ -1,6 +1,5 @@
 # InputTargetComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/inputtargetcomponent)
 
 ## Overview
 
@@ -80,11 +79,14 @@ childEntity.components.set(inputComponent)
 - Use `allowedInputTypes` to restrict input to specific interaction methods
 - Use `isEnabled` to temporarily disable input without removing the component
 - Combine with `ManipulationComponent` for built-in drag/rotate/scale interactions
-- Use `GestureComponent` for custom gesture handling
+- Use targeted SwiftUI gestures or `GestureComponent` for entity-specific tap
+  or gesture handling
 
 ## Related Components
 
 - `CollisionComponent` - Required for hit testing
 - `ManipulationComponent` - Built-in spatial interactions
-- `GestureComponent` - Custom gesture handling
+- SwiftUI targeted gestures - Entity-specific gesture handling from a view
+  modifier
+- `GestureComponent` - Entity-owned UI gesture handling
 - `HoverEffectComponent` - Visual feedback on hover

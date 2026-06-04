@@ -1,6 +1,5 @@
 # CollisionComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/collisioncomponent)
 
 ## Overview
 

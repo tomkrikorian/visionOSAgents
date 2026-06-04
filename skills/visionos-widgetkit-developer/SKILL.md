@@ -22,6 +22,7 @@ Treat visionOS widgets as spatial objects first, not as small 2D surfaces.
 | [`widget-overview.md`](references/widget-overview.md) | Overview, decision points, and a quick checklist for Vision Pro widgets. |
 | [`families-and-platforms.md`](references/families-and-platforms.md) | When choosing native visionOS families, compatible iOS families, or extra-large widget support. |
 | [`mounting-styles.md`](references/mounting-styles.md) | When deciding elevated vs recessed support and avoiding layout breakage. |
+| [`visionos-rendering-styles.md`](references/visionos-rendering-styles.md) | When checking official visionOS widget rendering modes, backgrounds, families, textures, and routing to shared button-shape policy. |
 | [`textures-and-rendering.md`](references/textures-and-rendering.md) | When choosing glass vs paper, and ensuring legibility in different render modes. |
 | [`proximity-levelofdetail.md`](references/proximity-levelofdetail.md) | When implementing near/far layouts using `LevelOfDetail`. |
 | [`interactive-widgets.md`](references/interactive-widgets.md) | When adding `Button`, `Toggle`, or `AppIntent`-driven interactions to a widget. |

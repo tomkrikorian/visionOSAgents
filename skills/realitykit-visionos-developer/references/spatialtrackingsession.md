@@ -63,8 +63,3 @@ types will receive updates automatically.
 | Provider-specific data (hand joints, meshes) | No | Yes |
 | Authorization flow | Implicit | Explicit (`requestAuthorization(for:)`) |
 | Setup complexity | Lower | Higher |
-
-## References
-
-- `/documentation/RealityKit/SpatialTrackingSession`
-- `/documentation/RealityKit/SpatialTrackingSession/Configuration-swift.struct`

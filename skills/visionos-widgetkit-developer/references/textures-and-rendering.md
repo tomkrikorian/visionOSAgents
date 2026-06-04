@@ -46,10 +46,3 @@ Practical checks:
   art board and needs a matte coating.
 - Avoid encoding essential state purely in material or background color because
   rendering modes can transform both.
-
-## Primary sources (Apple)
-
-- WidgetKit updates (Vision Pro + Liquid Glass notes): https://developer.apple.com/documentation/updates/widgetkit
-- `WidgetTexture`: https://developer.apple.com/documentation/widgetkit/widgettexture
-- Optimizing your widget for accented rendering mode and Liquid Glass: https://developer.apple.com/documentation/widgetkit/optimizing-your-widget-for-accented-rendering-mode-and-liquid-glass
-- `WidgetRenderingMode`: https://developer.apple.com/documentation/widgetkit/widgetrenderingmode

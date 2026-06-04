@@ -40,6 +40,12 @@ separate lifecycle, environment actions, and one-open-space-at-a-time behavior.
 - What happens when the immersive space fails to open, is dismissed externally,
   or is interrupted by another immersive experience?
 
+## API Contract Pointer
+
+This file owns surface choice. For exact SwiftUI scene APIs, open/dismiss
+actions, and restoration behavior, load
+[`swiftui-scene-lifecycle.md`](../../spatial-swiftui-developer/references/swiftui-scene-lifecycle.md).
+
 ## Common Surface Combinations
 
 - **Window + volume**: window owns navigation, selection, and commands; volume

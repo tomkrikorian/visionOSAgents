@@ -2,13 +2,19 @@
 
 ## Context
 
-SpatialTapGesture is a SwiftUI gesture that recognizes taps and reports their location. ManipulationComponent adds immersive interaction behaviors to RealityKit entities, while GestureComponent lets you attach custom gesture recognition to entities.
+`SpatialTapGesture` is a SwiftUI gesture that recognizes taps and reports
+their location. `ManipulationComponent` adds immersive interaction behaviors to
+RealityKit entities, while targeted SwiftUI gestures let you bind tap or other
+gesture handling to a specific entity.
 
 ## Best Practices
 
 - Use SpatialTapGesture when you need tap locations in a specific coordinate space.
 - Configure ManipulationComponent on entities that should be directly manipulated, and rely on its lifecycle events for feedback.
-- Add GestureComponent when you need targeted entity gestures with custom logic.
+- Use targeted SwiftUI gestures, such as `TapGesture().targetedToEntity(...)`,
+  when you need entity-specific tap handling.
+- For entity-owned `GestureComponent` setup, load
+  [`gesturecomponent.md`](../../realitykit-visionos-developer/references/gesturecomponent.md).
 - Keep gesture handling on the main actor and update RealityKit entities in RealityView closures.
 
 ## Code Examples

@@ -1,11 +1,29 @@
-# Observation And State Modeling
+# Observation And SwiftUI Data Flow
 
 Use this file when the issue is state ownership, view models, or Observation.
 
-## Observation Rules
+## Official API Model
+
+- Use the Observation `@Observable` macro for new observable reference models.
+  The official `Observable` protocol marks an observable type, but protocol
+  conformance alone does not synthesize observation behavior; the macro does.
+- Use `@ObservationIgnored` for accessible properties that should not be tracked,
+  such as caches, delegates, formatters, loggers, or service handles.
+- Use SwiftUI `@State` as the source of truth for state owned by a view, scene,
+  or app. For a view-owned observable reference model, store the model in
+  `@State private var model = Model()`.
+- Use SwiftUI `@Bindable` when a child view or local scope needs bindings to
+  mutable properties of an observable model, including models read from typed
+  environment values.
+- Use `@Binding` for parent-owned value state passed to a child. Do not use it
+  as a substitute for passing an observable model when the model itself owns the
+  behavior.
+
+## Isolation Rules
 
 - `@Observable` does not imply `@MainActor`.
-- Add `@MainActor` when the model owns UI-bound mutable state.
+- Add Swift `@MainActor` when the model owns UI-bound mutable state or exposes
+  methods that SwiftUI views call to mutate UI state.
 - Leave a model unannotated, or isolate it more narrowly, when it coordinates
   background work or non-UI services.
 
@@ -26,12 +44,16 @@ Use this file when the issue is state ownership, view models, or Observation.
 
 ## State Placement Defaults
 
-- `@State`: small local state owned by a view.
-- `@Binding`: parent-owned state passed into a child.
-- `@State` with an `@Observable` model: view-owned reference model lifetime.
-- `@Bindable`: child view needs editable bindings into an `@Observable` model.
+- `@State`: local value state or view-owned observable reference model lifetime.
+- `@Binding`: parent-owned value state passed into a child.
+- Plain stored property: read-only access to an observable model passed from a
+  parent.
+- `@Bindable`: child view or local scope needs editable bindings into an
+  `@Observable` model.
 - `@Environment(Type.self)`: shared services or app-scoped context following
   project conventions.
+- Local `@Bindable var model = model`: a typed environment observable needs
+  binding projection inside `body`.
 - `@SceneStorage`: scene restoration only when scene-local persistence is
   actually required.
 - `@AppStorage`: app-wide preferences.
@@ -41,33 +63,74 @@ Use this file when the issue is state ownership, view models, or Observation.
 ```swift
 @Observable
 @MainActor
-final class InspectorModel {
+final class EditorModel {
     var selectedID: UUID?
+    var title = ""
+
+    @ObservationIgnored
+    private let formatter = DateFormatter()
 }
 
-struct InspectorView: View {
-    @State private var model = InspectorModel()
+struct EditorView: View {
+    @State private var model = EditorModel()
 
     var body: some View {
-        InspectorContent(model: model)
+        EditorContent(model: model)
     }
 }
 
-struct InspectorContent: View {
-    @Bindable var model: InspectorModel
+struct EditorContent: View {
+    @Bindable var model: EditorModel
+
+    var body: some View {
+        TextField("Title", text: $model.title)
+    }
 }
 ```
 
 Remove `@MainActor` from the model only when it does not own UI-bound mutable
 state and its isolation is handled elsewhere.
 
+## Typed Environment Pattern
+
+```swift
+@Observable
+@MainActor
+final class PreferencesModel {
+    var displayName = ""
+}
+
+struct PreferencesView: View {
+    @Environment(PreferencesModel.self) private var preferences
+
+    var body: some View {
+        @Bindable var preferences = preferences
+        TextField("Name", text: $preferences.displayName)
+    }
+}
+```
+
+Use the local `@Bindable` variable only in the scope that needs `$` bindings.
+Read-only views can use the environment value or passed model directly.
+
 ## Review Questions
 
 - Does the model own UI behavior or only domain behavior?
 - Is the state scoped too high or too low?
 - Does the code mix observation, networking, and scene lifecycle in one type?
-- Is `ObservableObject` present for a real compatibility reason, or is it just
-  legacy inertia that should be removed?
-- Does an `@Observable` type accidentally use `@StateObject` or
-  `@ObservedObject` at the view boundary?
-- Would Observation remove boilerplate without changing behavior?
+- Does the observable model use plain stored properties unless a property is
+  deliberately marked `@ObservationIgnored`?
+- Does the owning view store a view-owned observable model in `@State` rather
+  than a legacy object wrapper?
+- Does a child view use `@Bindable` only when it needs `$model.property`
+  bindings?
+- Is `@MainActor` applied because the model is UI-bound, not because every
+  observable type was blanket-isolated?
+- Is `Sendable` used only for values that safely cross actor or task
+  boundaries?
+
+## Official Apple API Anchors
+
+- Observation: `Observable`, `@Observable`, `@ObservationIgnored`
+- SwiftUI: `State`, `Bindable`, `Binding`, `Environment`
+- Swift concurrency: `MainActor`, `MainActor.run`, `Sendable`, `@Sendable`

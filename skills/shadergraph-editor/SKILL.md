@@ -12,8 +12,10 @@ debugging exports or interoperability.
 
 1. Decide whether the task is node selection, runtime parameter control,
    export debugging, or sample selection.
-2. Load only the matching reference files.
-3. Route text-level USD structure edits to `usd-editor`.
+2. Identify whether the material is authored in Reality Composer Pro, loaded
+   from USD / `.reality`, or intentionally created from MaterialX data.
+3. Load only the matching reference files.
+4. Route text-level USD structure edits to `usd-editor`.
 
 ## Load References When
 
@@ -23,14 +25,20 @@ debugging exports or interoperability.
 | [`references/runtime-api.md`](references/runtime-api.md) | When loading `ShaderGraphMaterial`, working with promoted inputs, or updating parameters at runtime. |
 | [`references/export-debug.md`](references/export-debug.md) | When inspecting exported USD or MaterialX, or when a graph fails to load or render as expected. |
 | [`references/samples.md`](references/samples.md) | When selecting the closest repo sample before authoring a new effect from scratch. |
+| [`references/apple-material-boundaries.md`](references/apple-material-boundaries.md) | When deciding whether to author in Reality Composer Pro, load a `ShaderGraphMaterial`, or debug named material/resource failures. |
 
 ## Workflow
 
 1. Start from the closest existing sample when possible.
 2. Author or refine the graph in Reality Composer Pro.
 3. Promote the inputs that need runtime control.
-4. Load and update the material through the runtime API.
-5. Inspect exports only when the normal authoring path stops explaining the
+4. Load entire authored entities with RealityKit entity-loading APIs, or load a
+   standalone material with `ShaderGraphMaterial` only when the app needs the
+   material itself.
+5. Match material prim paths, file names, bundle names, and promoted parameter
+   names exactly.
+6. Load and update the material through the runtime API.
+7. Inspect exports only when the normal authoring path stops explaining the
    failure.
 
 ## When To Switch Skills
@@ -43,6 +51,13 @@ debugging exports or interoperability.
 ## Guardrails
 
 - Treat Reality Composer Pro as the default authoring surface.
+- Keep Shader Graph material structure in Reality Composer Pro unless the task
+  is explicitly USD / MaterialX export repair.
+- Use official RealityKit material APIs such as `ShaderGraphMaterial`,
+  `MaterialParameters.Value`, and `TextureResource`; do not introduce
+  undocumented material-resource types.
+- For USD-backed materials, `ShaderGraphMaterial` names are full material prim
+  paths such as `/Root/MyMaterial`, not informal display labels.
 - Do not treat exported `info:id` strings or raw graph layout as stable public
   API unless Apple documents them directly.
 

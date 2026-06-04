@@ -1,6 +1,5 @@
 # System and Component Creation
 
-**Reference:** [System Documentation](https://developer.apple.com/documentation/realitykit/system) | [Component Documentation](https://developer.apple.com/documentation/realitykit/component)
 
 ## Overview
 

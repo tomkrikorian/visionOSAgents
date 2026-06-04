@@ -1,6 +1,5 @@
 # EnvironmentLightingConfigurationComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/environmentlightingconfigurationcomponent)
 
 ## Overview
 

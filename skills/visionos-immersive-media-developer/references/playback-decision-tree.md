@@ -35,12 +35,6 @@ Use `.full` when you want complete immersion. Plan for:
 - Do not mix AVKit experience-controller transitions with
   `AVPlayerViewController` presentation APIs after accessing
   `experienceController`.
-- Treat `desiredImmersiveViewingMode` as a requested target. Confirm the
-  actual mode with `immersiveViewingMode` or `VideoPlayerEvents` before
-  rearranging UI or scene state.
-
-## Primary sources (Apple)
-
-- RealityKit `VideoPlayerComponent`: https://developer.apple.com/documentation/realitykit/videoplayercomponent
-- `VideoPlayerEvents`: https://developer.apple.com/documentation/realitykit/videoplayerevents
-- ImmersiveMediaSupport: https://developer.apple.com/documentation/immersivemediasupport
+- For setup details, load
+  [`videoplayercomponent-basics.md`](videoplayercomponent-basics.md). For event
+  reconciliation, load [`video-player-events.md`](video-player-events.md).

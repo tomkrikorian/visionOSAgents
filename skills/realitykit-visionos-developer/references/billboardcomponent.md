@@ -1,6 +1,5 @@
 # BillboardComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/billboardcomponent)
 
 ## Overview
 

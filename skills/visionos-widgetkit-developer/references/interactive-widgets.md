@@ -40,10 +40,9 @@ struct ToggleFavoriteIntent: AppIntent {
 - For toggles, remember the UI may update optimistically before `perform()`
   finishes; make failed writes visible in the next timeline entry rather than
   storing transient view state.
-- For interactive `Button(intent:)` controls on visionOS, choose an explicit
-  `.buttonBorderShape(...)` just like in the host app. Icon-only widget actions
-  usually fit `.circle`; text actions usually fit `.capsule` or
-  `.roundedRectangle(radius:)` depending on the surrounding surface.
+- For interactive `Button(intent:)` shape policy, use
+  [`buttons-and-controls.md`](../../spatial-swiftui-developer/references/buttons-and-controls.md)
+  instead of repeating the host-app button rules here.
 
 ## Review Questions
 
@@ -51,8 +50,3 @@ struct ToggleFavoriteIntent: AppIntent {
 - Can the intent run without assuming the host app is already alive?
 - Does the timeline provider read the same state that the intent mutates?
 - Is the action still glanceable from across the room?
-
-## Primary sources (Apple)
-
-- Adding interactivity to widgets and Live Activities: https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities
-- Linking to specific app scenes from your widget or Live Activity: https://developer.apple.com/documentation/widgetkit/linking-to-specific-app-scenes-from-your-widget-or-live-activity

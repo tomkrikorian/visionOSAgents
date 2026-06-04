@@ -26,7 +26,8 @@ Mode switches can imply different scene presentation:
 When transitioning between portal and progressive/full, coordinate:
 
 1. Set `desiredImmersiveViewingMode`.
-2. Wait for a mode-change event.
+2. Reconcile transition state through
+   [`video-player-events.md`](video-player-events.md).
 3. Dismiss/open the appropriate scene(s) in a user-friendly way.
 
 ## State Rules
@@ -39,8 +40,3 @@ When transitioning between portal and progressive/full, coordinate:
   mitigation occurs.
 - Always provide a local exit path that pauses or downgrades playback before
   dismissing an immersive scene.
-
-## Primary sources (Apple)
-
-- `VideoPlayerComponent.ImmersiveViewingMode`: https://developer.apple.com/documentation/realitykit/videoplayercomponent/immersiveviewingmode-swift.enum
-- VideoPlayerComponent overview: https://developer.apple.com/documentation/realitykit/videoplayercomponent

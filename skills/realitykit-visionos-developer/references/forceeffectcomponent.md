@@ -1,6 +1,5 @@
 # ForceEffectComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/forceeffectcomponent)
 
 ## Overview
 

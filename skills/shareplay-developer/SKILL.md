@@ -14,8 +14,9 @@ description: Build, integrate, and troubleshoot SharePlay GroupActivities featur
 3. Define one `GroupActivity` per experience and keep the payload minimal and
    `Codable`.
 4. Load the right reference only after you know the workflow.
-5. Configure `SystemCoordinator` before joining whenever spatial personas or
-   immersive spaces are involved.
+5. For spatial personas or immersive spaces, load
+   [`spatial-coordination.md`](references/spatial-coordination.md) before
+   joining.
 
 ## Load References When
 
@@ -25,6 +26,7 @@ description: Build, integrate, and troubleshoot SharePlay GroupActivities featur
 | [`activity-definition.md`](references/activity-definition.md) | When defining the `GroupActivity` payload, metadata, or transfer representation. |
 | [`group-session-lifecycle.md`](references/group-session-lifecycle.md) | When joining, leaving, observing, or presenting a `GroupSession`. |
 | [`messaging-journal.md`](references/messaging-journal.md) | When using `GroupSessionMessenger`, `GroupSessionJournal`, or late-joiner sync. |
+| [`shareplay-spatial-api.md`](references/shareplay-spatial-api.md) | When checking the official GroupActivities APIs for activation, association, session ownership, and spatial coordination. |
 | [`spatial-coordination.md`](references/spatial-coordination.md) | When configuring `SystemCoordinator`, spatial templates, or group immersive-space behavior. |
 | [`visionos-immersive-space.md`](references/visionos-immersive-space.md) | When implementing launch-only SharePlay for a visionOS immersive space. |
 | [`groupactivities-patterns.md`](references/groupactivities-patterns.md) | When you need broader GroupActivities patterns or sample-backed examples. |
@@ -50,12 +52,6 @@ description: Build, integrate, and troubleshoot SharePlay GroupActivities featur
 ## Guardrails
 
 - Keep `GroupActivity` data small and `Codable`.
-- Store strong references to `GroupSession`, `GroupSessionMessenger`, and
-  `GroupSessionJournal`.
-- Configure `SystemCoordinator` before `join()` when using spatial
-  coordination.
-- Do not treat `.immersiveEnvironmentBehavior(.coexist)` as the coordination
-  API.
 - Join only after the UI and local state are ready.
 
 ## Output Expectations

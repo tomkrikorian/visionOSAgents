@@ -1,6 +1,5 @@
 # IKComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/ikcomponent)
 
 ## Overview
 

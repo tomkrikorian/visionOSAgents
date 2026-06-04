@@ -1,6 +1,5 @@
 # AccessibilityComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/accessibilitycomponent)
 
 ## Overview
 

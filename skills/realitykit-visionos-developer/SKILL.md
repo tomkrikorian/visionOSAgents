@@ -22,6 +22,8 @@ description: Build, debug, and optimize RealityKit scenes for visionOS 26, inclu
 
 | Reference | When to Use |
 |-----------|-------------|
+| [`references/component-selection.md`](references/component-selection.md) | When deciding between documented RealityKit components, SwiftUI targeted gestures, `SpatialTrackingSession`, and custom ECS work. |
+| [`references/entity-loading-and-stored-entities.md`](references/entity-loading-and-stored-entities.md) | When loading named stored entities, explicit file URLs, package-bundled assets, USD/USDZ, `.reality`, or Reality Composer Pro output. |
 | [`references/component-index.md`](references/component-index.md) | When you need the RealityKit category map and guidance on which component reference to open next. |
 | [`references/systemandcomponentcreation.md`](references/systemandcomponentcreation.md) | When you need a complete custom ECS registration, query, and update-order pattern. |
 | [`references/modelcomponent.md`](references/modelcomponent.md) | When rendering meshes and materials. |

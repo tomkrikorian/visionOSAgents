@@ -299,5 +299,3 @@ Reference list of commonly used Shader Graph nodes for RealityKit, organized by 
 4. **RealityKit Math Extensions** - Additional mathematical operations optimized for RealityKit
 5. **RealityKit Scene Access** - Camera, view, and environment nodes
 6. **RealityKit Effects** - Hover state, blurred background, and stereoscopic rendering support
-
-All nodes are documented at: https://developer.apple.com/documentation/shadergraph/

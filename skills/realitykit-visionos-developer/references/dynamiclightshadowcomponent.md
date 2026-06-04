@@ -1,6 +1,5 @@
 # DynamicLightShadowComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/dynamiclightshadowcomponent)
 
 ## Overview
 

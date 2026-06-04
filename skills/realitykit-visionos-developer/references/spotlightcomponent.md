@@ -1,6 +1,5 @@
 # SpotLightComponent
 
-**Reference:** [Apple Documentation](https://developer.apple.com/documentation/realitykit/spotlightcomponent)
 
 ## Overview
 

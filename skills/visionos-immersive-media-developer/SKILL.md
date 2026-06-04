@@ -20,11 +20,12 @@ RealityKit playback surface.
 | Reference | When to Use |
 |---|---|
 | [`playback-decision-tree.md`](references/playback-decision-tree.md) | Decision tree: window vs portal vs progressive vs full immersive playback. |
+| [`avkit-visionos-playback.md`](references/avkit-visionos-playback.md) | When using AVKit `AVPlayerViewController` and `AVExperienceController` as the system playback surface. |
 | [`avexperiencecontroller.md`](references/avexperiencecontroller.md) | When AVKit `AVExperienceController` is the right surface for the product. |
 | [`videoplayercomponent-basics.md`](references/videoplayercomponent-basics.md) | When you need to set up `VideoPlayerComponent` + `AVPlayer` correctly. |
+| [`video-player-events.md`](references/video-player-events.md) | When RealityKit video playback must drive UI, scene transitions, rendering readiness, or comfort mitigation from `VideoPlayerEvents`. |
 | [`apmp-and-spatial-video.md`](references/apmp-and-spatial-video.md) | When the content is spatial video, APMP, or Apple Immersive Video. |
 | [`immersive-viewing-modes.md`](references/immersive-viewing-modes.md) | When implementing portal, progressive, or full modes and related scene transitions. |
-| [`events-and-transitions.md`](references/events-and-transitions.md) | When responding to `VideoPlayerEvents` and managing UI during transitions. |
 | [`comfort-mitigation.md`](references/comfort-mitigation.md) | When handling comfort violations and mitigation strategies on visionOS 26+. |
 | [`apple-immersive-video-authoring.md`](references/apple-immersive-video-authoring.md) | When you need Apple Immersive Video authoring or packaging references. |
 
