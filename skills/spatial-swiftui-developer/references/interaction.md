@@ -13,6 +13,8 @@ gesture handling to a specific entity.
 - Configure ManipulationComponent on entities that should be directly manipulated, and rely on its lifecycle events for feedback.
 - Use targeted SwiftUI gestures, such as `TapGesture().targetedToEntity(...)`,
   when you need entity-specific tap handling.
+- Pass `inputKinds:` to gesture initializers when only specific input
+  sources should drive a gesture (new in visionOS 27).
 - For entity-owned `GestureComponent` setup, load
   [`gesturecomponent.md`](../../realitykit-visionos-developer/references/gesturecomponent.md).
 - Keep gesture handling on the main actor and update RealityKit entities in RealityView closures.
@@ -41,7 +43,28 @@ struct SpatialTapExample: View {
 }
 ```
 
+### RotateGesture3D with input-kind filtering
 
+New in visionOS 27: `RotateGesture3D` takes an `inputKinds:` parameter that
+restricts which input sources can drive the gesture:
+
+```swift
+RotateGesture3D(
+  constrainedToAxis: .y,
+  inputKinds: [.directTouch, .indirectTouch]
+)
+.onChanged { value in
+  rotation = value.rotation  // Spatial.Rotation3D
+}
+```
+
+`GestureInputKinds` is an OptionSet with `.directTouch`, `.indirectTouch`,
+`.pencil`, `.pointer`, and `.all` (the default). Other standard gesture
+initializers gain matching `inputKinds:` parameters, such as the
+TapGesture-style `init(count:inputKinds:)`. When any input source should
+drive the gesture, omit `inputKinds:` or use
+`RotateGesture3D(constrainedToAxis:minimumAngleDelta:)`. Beta API: names and
+shapes may change before release.
 
 #### ManipulationComponent configure
 

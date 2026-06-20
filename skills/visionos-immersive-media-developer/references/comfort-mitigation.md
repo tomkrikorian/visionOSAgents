@@ -1,8 +1,8 @@
-# Comfort mitigation (visionOS 26+)
+# Comfort mitigation
 
 ## What the system can report
 
-On visionOS 26+, RealityKit reports video comfort mitigation actions via:
+RealityKit reports video comfort mitigation actions via:
 
 - `VideoPlayerEvents.VideoComfortMitigationDidOccur`
 

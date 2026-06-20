@@ -3,16 +3,13 @@
 
 ## Overview
 
-A component that defines regions where content can automatically dock or snap into place. Docking regions provide areas where entities can be automatically positioned, aligned, or organized, useful for creating organized layouts, snap-to-grid systems, or automatic content arrangement.
+A component that marks where the system docks video playback inside a custom immersive environment. When system video playback (AVKit) runs while your immersive space is open, the system can dock the player at the entity that carries this component instead of leaving it floating in front of the user. The entity's position and orientation define the docked screen placement; `width` sets the docked screen width in meters.
 
 ## When to Use
 
-- Creating snap-to-grid or docking systems
-- Defining regions where entities automatically position
-- Implementing automatic content organization
-- Creating docking areas for UI elements or objects
-- Building layout systems with automatic positioning
-- Implementing snap-to-region behaviors
+- Building a custom immersive environment with a dedicated video screen
+- Docking system video playback at a fixed spot in the environment
+- Cinema-style experiences where video belongs on a designed screen surface
 
 ## How to Use
 
@@ -21,47 +18,45 @@ A component that defines regions where content can automatically dock or snap in
 ```swift
 import RealityKit
 
-// Create docking region component
-let dockingRegion = DockingRegionComponent()
-entity.components.set(dockingRegion)
+// Place an entity where the docked video screen should appear
+let screenAnchor = Entity()
+screenAnchor.position = [0, 2, -8]
+
+var dockingRegion = DockingRegionComponent()
+dockingRegion.width = 10  // meters
+screenAnchor.components.set(dockingRegion)
 ```
 
-**Note:** This component's API may vary by RealityKit version. Consult official documentation for your target SDK version for specific configuration options.
-
-### Docking Behavior
+### Sizing
 
 ```swift
-// Entities near docking regions may automatically snap
-let region = DockingRegionComponent()
-regionEntity.components.set(region)
-
-// Entities moved near the region may dock automatically
-// (Implementation depends on specific API)
+// width is the only tunable; the system controls the rest of the
+// docked player's size and appearance
+var region = DockingRegionComponent()
+region.width = 4
 ```
 
 ## Key Properties
 
-- Properties may include region bounds, docking behavior, or snap configuration
-- Consult official documentation for specific API details
+- `width: Float` - Width of the docked video screen in meters
+- `init()` - No-argument initializer; set `width` afterwards
 
 ## Important Notes
 
-- May not be fully documented in all RealityKit versions
-- Used for automatic positioning and alignment of entities
-- Available on visionOS, iOS, and other Apple platforms
-- Check official documentation for your target SDK version
-- May work with manipulation or interaction systems
+- visionOS only - unavailable on iOS, macOS, and tvOS
+- Docks system video playback; it does not snap arbitrary entities into place - use `ManipulationComponent` or a custom system for object snapping
+- Position and orient the owning entity to place the docked screen; the component exposes no placement properties beyond `width`
+- Only one docking region should be active in an environment at a time
 
 ## Best Practices
 
-- Define docking regions at logical positions
-- Test docking behavior with various entity types
-- Consider user experience when implementing auto-docking
-- Use appropriate region sizes for docking areas
-- Test on target platforms for proper behavior
+- Place the region at a comfortable viewing distance and height
+- Scale `width` to the environment; oversized screens force head movement
+- Test with real video content inside the immersive space on device
+- Pair with dimmed or designed surroundings so the docked video reads as a screen
 
 ## Related Components
 
-- `ManipulationComponent` - Entities being manipulated may dock
-- `InputTargetComponent` - For interactive docking
-- `CollisionComponent` - Docking may use collision detection
+- `VideoPlayerComponent` - Entity-based video playback you place yourself
+- `WorldComponent` / `PortalComponent` - Building immersive environment content
+- `AnchoringComponent` - Anchoring environment content

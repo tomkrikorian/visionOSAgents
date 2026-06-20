@@ -2,7 +2,7 @@
 
 ## Context
 
-SwiftUI spatial layout APIs let you measure, align, and compose views in three dimensions for visionOS. `GeometryReader3D` reads a view's available size and coordinate space including depth, and returns a flexible preferred size and depth to its parent. `ZStack` composes child depths the way `VStack` composes child heights, and in visionOS 26 can use `spacing` to separate adjacent children along the depth axis. `SpatialContainer` is a layout container that aligns overlapping content in 3D space and sizes itself to the maximum dimension of its children. `spatialOverlay(alignment:content:)` adds secondary views within a view's 3D bounds, stacking multiple overlays depthwise using a `SpatialContainer`. `rotation3DLayout` rotates a view while updating its layout frame to account for the rotation, which can change the view's layout size.
+SwiftUI spatial layout APIs let you measure, align, and compose views in three dimensions for visionOS. `GeometryReader3D` reads a view's available size and coordinate space including depth, and returns a flexible preferred size and depth to its parent. `ZStack` composes child depths the way `VStack` composes child heights, and can use `spacing` to separate adjacent children along the depth axis. `SpatialContainer` is a layout container that aligns overlapping content in 3D space and sizes itself to the maximum dimension of its children. `spatialOverlay(alignment:content:)` adds secondary views within a view's 3D bounds, stacking multiple overlays depthwise using a `SpatialContainer`. `rotation3DLayout` rotates a view while updating its layout frame to account for the rotation, which can change the view's layout size.
 
 ## Best Practices
 

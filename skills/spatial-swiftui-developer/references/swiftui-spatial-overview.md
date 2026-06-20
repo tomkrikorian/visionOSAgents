@@ -25,4 +25,4 @@ If the answer depends on which surface owns the feature, switch to
 - [interaction.md](interaction.md) - Gestures and manipulation patterns for spatial input.
 - [windowing-immersion.md](windowing-immersion.md) - Window management and immersive space patterns.
 - [spatial-layout.md](spatial-layout.md) - SwiftUI spatial layout APIs and debug tools.
-- [charts-3d.md](charts-3d.md) - Chart3D and surface plot patterns.
+- Use `$swiftui-chart3d-developer` for Chart3D and surface plot patterns.

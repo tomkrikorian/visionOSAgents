@@ -45,8 +45,6 @@ entity.components.set(config)
 - Used to configure how environment lighting behaves in scenes
 - Can be used to modulate lighting when entities cross portals
 - Works with `ImageBasedLightComponent` and environment lighting
-- Available on visionOS, iOS, and other Apple platforms
-- Portal crossing features are newer (introduced in WWDC 2024)
 
 ## Best Practices
 

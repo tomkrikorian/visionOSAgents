@@ -1,7 +1,7 @@
 interface:
   display_name: "USD Editor"
-  short_description: "Edit and validate USD ASCII scene files"
+  short_description: "Edit and validate USD files with CLI tools"
   icon_small: "./assets/studio-meije-logo-small.png"
   icon_large: "./assets/studio-meije-logo.png"
   brand_color: "#F47A73"
-  default_prompt: "Use $usd-editor to help make a safe USDA edit and preserve composition, paths, and transforms."
+  default_prompt: "Use $usd-editor to make a safe USDA or command-line USD pipeline edit while preserving composition, paths, and transforms."

@@ -1,19 +1,24 @@
 ---
 name: usd-editor
-description: Guide for modifying USD ASCII (.usda) files, including prims, properties, composition arcs, variants, and transforms. Use when editing or reviewing .usda files by hand.
+description: Guide for modifying USD ASCII (.usda) files and command-line USD workflows, including prims, properties, composition arcs, variants, transforms, usdcat, usdchecker, usdrecord, usdtree, usdzip, and usdedit. Use when editing or reviewing .usda files by hand, validating USD/USDZ assets, or working in an asset pipeline outside runtime Swift USDKit.
 ---
 
 # USD Editor
 
 ## Quick Start
 
-Use this skill for minimal, text-level USD or USDA edits. Keep the change small
-and preserve existing composition unless the task explicitly says otherwise.
+Use this skill for minimal, text-level USD or USDA edits and command-line USD
+inspection, conversion, packaging, rendering, and validation. Keep the change
+small and preserve existing composition unless the task explicitly says
+otherwise.
 
 When authored Reality Composer Pro or USD content owns the scene, geometry,
 transform, animation, or material, keep that authored surface as the source of
 truth. Use Swift and RealityKit to load or adjust runtime state; do not recreate
 authored USD content in Swift unless the request is explicitly procedural.
+
+If Swift code needs to open, edit, observe, or export stages in-process with
+`USDStage`, `USDPrim`, or `USDLayer`, switch to `$usdkit-runtime-developer`.
 
 If the change is material- or shader-specific for RealityKit, prefer
 `shadergraph-editor`.
@@ -34,7 +39,7 @@ If the change is material- or shader-specific for RealityKit, prefer
 | [`usdtree`](references/usdtree.md) | When inspecting the prim hierarchy of a USD file. |
 | [`usdzip`](references/usdzip.md) | When creating or inspecting USDZ packages. |
 | [`usdedit`](references/usdedit.md) | When you need the official text-editing workflow for a USD-readable file. |
-| [`visionos-runtime-loading.md`](references/visionos-runtime-loading.md) | When the question is how the authored USD or USDZ actually loads and behaves in a visionOS app. |
+| [`visionos-runtime-loading.md`](references/visionos-runtime-loading.md) | When the question is how authored USD or USDZ actually loads and behaves in a visionOS app. |
 | [`apple-runtime-boundaries.md`](references/apple-runtime-boundaries.md) | When deciding whether to edit authored USD / Reality Composer Pro content, load it through RealityKit, or validate it for Apple platforms. |
 
 ## Workflow
@@ -71,4 +76,5 @@ Provide:
 - which reference files were used
 - the exact class of USD change made
 - the validation step used
-- routing to `shadergraph-editor` or runtime testing if needed
+- routing to `$usdkit-runtime-developer`, `shadergraph-editor`, or runtime
+  testing if needed

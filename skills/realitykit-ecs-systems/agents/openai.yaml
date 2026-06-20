@@ -1,0 +1,4 @@
+interface:
+  display_name: "RealityKit ECS Systems"
+  short_description: "Create RealityKit components and systems"
+  default_prompt: "Use $realitykit-ecs-systems to design custom RealityKit components, systems, queries, registration, and update loops on visionOS."

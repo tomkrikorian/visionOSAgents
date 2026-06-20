@@ -101,7 +101,6 @@ entity.components.set(stageLight)
 - Light intensity falls off with distance based on attenuation radius
 - Available on iOS, macOS, and visionOS (with limitations on visionOS)
 - In visionOS, Image-Based Lighting (IBL) is more consistently supported
-- WWDC 2024 introduced improved dynamic lights & shadows support for visionOS
 
 ## Best Practices
 

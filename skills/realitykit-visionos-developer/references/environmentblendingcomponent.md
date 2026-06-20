@@ -64,8 +64,7 @@ entity.components.set(blending)
 - Only **static** real-world objects can occlude entities (moving objects like people won't cause occlusion)
 - Entities with this component are treated as part of the background environment
 - Virtual content layering (virtual–virtual) still dominates - virtual objects draw in front of occluded content
-- Introduced in WWDC 2025 cycle
-- Available on visionOS and other Apple platforms (check minimum OS requirements)
+- visionOS only - unavailable on iOS, macOS, and tvOS
 
 ## Best Practices
 

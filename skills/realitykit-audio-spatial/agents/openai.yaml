@@ -1,0 +1,4 @@
+interface:
+  display_name: "RealityKit Audio Spatial"
+  short_description: "Build RealityKit spatial audio scenes"
+  default_prompt: "Use $realitykit-audio-spatial to implement RealityKit spatial audio, channel audio, audio libraries, mix groups, and acoustic simulation on visionOS."

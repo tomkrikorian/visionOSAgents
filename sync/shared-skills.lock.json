@@ -1,52 +1,96 @@
 {
   "version": 1,
   "lastSync": {
-    "at": "2026-06-04T19:04:11+00:00",
+    "at": "2026-06-19T23:47:26+00:00",
     "source": "plugin",
     "destination": "agents",
     "skills": [
+      "arkit-camera-access-providers",
+      "arkit-hand-tracking-provider",
+      "arkit-reference-tracking-providers",
+      "arkit-rendering-context-providers",
+      "arkit-spatial-tracking-providers",
       "arkit-visionos-developer",
       "coding-standards-enforcer",
+      "realitykit-animation-physics",
+      "realitykit-audio-spatial",
+      "realitykit-ecs-systems",
+      "realitykit-rendering-materials",
       "realitykit-visionos-developer",
       "shadergraph-editor",
       "shareplay-developer",
       "spatial-app-architecture",
       "spatial-swiftui-developer",
+      "swiftui-chart3d-developer",
       "usd-editor",
+      "usdkit-runtime-developer",
       "visionos-immersive-media-developer",
       "visionos-widgetkit-developer"
     ]
   },
   "skills": {
+    "arkit-camera-access-providers": {
+      "digest": "415660e82f9148032b0abbb4827b511b9942dfc020e85994af6debce696249a1"
+    },
+    "arkit-hand-tracking-provider": {
+      "digest": "7cd41a2679b49e50c4d29e3c3184cf670e398efeb988088e67ffe82014b497f8"
+    },
+    "arkit-reference-tracking-providers": {
+      "digest": "dfb03cacc45a000a10372591abace6d002c5d9c3075cabf88c4895505b1c0480"
+    },
+    "arkit-rendering-context-providers": {
+      "digest": "996184e7d78c2d10609834737033e3677e9d4d51bd81cd62aebfd243645ec498"
+    },
+    "arkit-spatial-tracking-providers": {
+      "digest": "a9fe2147a3ffebc08ca5db6f710985a8d2367155af5093baf462502ec71e9b85"
+    },
     "arkit-visionos-developer": {
-      "digest": "a686a2f92947cef540c4bf3aeee5f22bf60c2abdabf46ff29a6fea189458660d"
+      "digest": "46bab777fd0b4864768bcdbe1455a1fd1edf95109a16e80ea646bf9fdcab29ca"
     },
     "coding-standards-enforcer": {
-      "digest": "c1342017d7989e53a467f511d5ba9e836c813f4101c35aa96d5cc0d6eb20576c"
+      "digest": "8c6aeebc93cb9beb64e9694ed37d9e767f319284da56bc8e0e780017c2fe8acb"
+    },
+    "realitykit-animation-physics": {
+      "digest": "59fdb2479dee507f90ac9e464075d5c4dd86db875e44d1c787bcdfc4baac0c6e"
+    },
+    "realitykit-audio-spatial": {
+      "digest": "2928916b6ab191137c5bc20aa007e03d5f1a35c037eaa17fd8dbe273ab1ada1c"
+    },
+    "realitykit-ecs-systems": {
+      "digest": "0d4544ee1162435e7c280307b95672401fc815bc17f25b7cd6f8de0711cc6d59"
+    },
+    "realitykit-rendering-materials": {
+      "digest": "f7ea2072fc1b05d6a088ede1771abc3bbd81f43a2c58ea4d267ce858df3b93fa"
     },
     "realitykit-visionos-developer": {
-      "digest": "812b2655853d2c5f8ef54b77de88ad37a3df56abab78d67043a86a9e5bc6a2e4"
+      "digest": "dc7ef7d4661156dbb0ee9de1fd0f913a46f2ca103a3aeaf0cd1efcdb61279810"
     },
     "shadergraph-editor": {
-      "digest": "d4f074410cbba57d235576b1366d9a2196fc547f3bf4f114722959f5d8b13afd"
+      "digest": "cb741e654ca22283ae9c6315e70f23c87b05d13db9ec566ea6ec52f1b056fade"
     },
     "shareplay-developer": {
-      "digest": "d13d384ff23887143d0fba5b498cff478a373baea87b0365f26e0a89b9b8a41c"
+      "digest": "c06c654878378dd1a8c2a136f8e6b16d84914321e90e2020289dd348da60becc"
     },
     "spatial-app-architecture": {
       "digest": "75ab19f5062a6e4bbeb7a5d0375252ca7b12f89286d956150c8da28206cfa979"
     },
     "spatial-swiftui-developer": {
-      "digest": "1690c7573641f2b7ea878d9d685608bb7a2c741cccde6c32932e74c928dee466"
+      "digest": "fc9322d3bce0227538a50c6b62d0f60e787c40fa3c6f04e3e81f10c222a90196"
+    },
+    "swiftui-chart3d-developer": {
+      "digest": "ff5d41a63c93b7813404a13fb0631e2eb3489892a247bea1605634a1b9a3571d"
     },
     "usd-editor": {
-      "digest": "bd3080f48dd9d1c336776c38d993977e520094b0287ec994693f9d6533c8b6a7"
+      "digest": "984b93e6a061255f7d6f3d6db60bfa31bba003bdd8e0515e079a96bc09a69513"
+    },
+    "usdkit-runtime-developer": {
+      "digest": "e0d210186af2ffa0b45c04b5621420d127f2bcfae5ffd75145a3aebacfbd79ba"
     },
     "visionos-immersive-media-developer": {
-      "digest": "c66c4ea2f8e557a336f910b482e1634a26b5041b57a9f2cc4abc98b3081c882e"
+      "digest": "3d3a9ba0b8db94bc60f102f3ec1b2d4b5d3ecff42a56f33e87d2ee02fa2a82c8"
     },
     "visionos-widgetkit-developer": {
-      "digest": "9ff4d8f4744813f47bb8421d2b5e47af8829fe8b2021af693fa231c18defbcd1"
+      "digest": "67e42bb934e537a4ea47bc47c94e45132e916cd5de9f42e8a2b857800d544281"
     }
   }
 }

@@ -1,0 +1,7 @@
+interface:
+  display_name: "ARKit Rendering Context Providers"
+  short_description: "Use light, stereo, and fidelity providers"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $arkit-rendering-context-providers to implement environment lighting, stereo properties, or visual fidelity providers on visionOS."

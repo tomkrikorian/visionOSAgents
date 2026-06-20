@@ -20,6 +20,10 @@ need the review order before diving into a narrower topic.
   view-model ownership, state placement, and Combine migration.
 - Use [modern-swift-apis.md](modern-swift-apis.md) for Swift-native APIs,
   Foundation modernization, formatting, filtering, and force-unwrap policy.
+- For visionOS control polish — explicit `buttonBorderShape` on every visible
+  button and a matching hover-effect `contentShape` on `.plain`-style
+  surfaces — switch to the `spatial-swiftui-developer` skill and apply its
+  `buttons-and-controls.md` policy during review.
 
 ## Repo-Level Expectations
 

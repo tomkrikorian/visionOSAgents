@@ -48,12 +48,57 @@ the custom background or component name. Do not leave the shape accidental, and
 do not use `.plain` as a workaround for a missing `buttonBorderShape(_:)` on a
 bordered visionOS button.
 
+## Hover Effect Shape
+
+The gaze hover highlight has its own shape, separate from the visual
+background. Get it from the right lever:
+
+**Buttons (any style, including `.plain` and `.borderless`):** the button's
+built-in hover effect takes its shape from `.buttonBorderShape(...)`, not from
+`contentShape`. Adding `.contentShape(.hoverEffect, ...)` or an extra
+`.hoverEffect()` outside a `Button` does NOT reshape the button's own
+highlight — it leaves the system default (an oversized rounded rectangle) and
+the mismatch reads as broken polish. The card recipe is:
+
+```swift
+Button(action: select) {
+    cardContent
+        .padding(16)
+}
+.buttonStyle(.borderless)
+.buttonBorderShape(.roundedRectangle(radius: 20))
+.background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+```
+
+Keep the border-shape radius and the background radius in lockstep; when one
+changes, change both.
+
+**Non-button hover surfaces** (custom views that opt in with
+`.hoverEffect()`): pin the highlight to the visual shape with
+`.contentShape(.hoverEffect, ...)` placed before `.hoverEffect()`:
+
+```swift
+customSurface
+    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+    .contentShape(.hoverEffect, .rect(cornerRadius: 20))
+    .hoverEffect()
+```
+
+Match the shape kind exactly in both cases: `.roundedRectangle(radius:)` /
+`.rect(cornerRadius:)` against a `RoundedRectangle` background, `.capsule`
+against a capsule, `.circle` against a circular control.
+
 ## Implementation Checklist
 
 - Pick the button style and border shape together.
 - For `.buttonStyle(.bordered)` and `.buttonStyle(.borderedProminent)`, add
   `.buttonBorderShape(...)` whenever the desired shape is not the system
   default.
+- For card-like buttons with custom backgrounds, set
+  `.buttonBorderShape(.roundedRectangle(radius:))` matching the background
+  radius — that is what shapes the button's hover highlight.
+- For non-button hover surfaces, pair `.hoverEffect()` with a
+  `.contentShape(.hoverEffect, ...)` that matches the background shape.
 - Check toolbar items, account/profile actions, destructive actions, share
   actions, onboarding controls, and settings forms.
 - Include `NavigationLink` and `ShareLink` in the same audit as `Button`.
@@ -66,7 +111,7 @@ bordered visionOS button.
 Use a code search like this during review, then inspect each visible call site:
 
 ```bash
-rg "Button\\b|NavigationLink|ShareLink|buttonBorderShape" .
+rg "Button\\b|NavigationLink|ShareLink|buttonBorderShape|hoverEffect|contentShape" .
 ```
 
 Controls that are invisible, preview-only, or not presented as a button can be

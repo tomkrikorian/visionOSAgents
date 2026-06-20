@@ -16,8 +16,10 @@ families, backgrounds, and button controls.
 
 - Read `widgetRenderingMode` from the environment when the view needs to adapt
   full-color versus accented rendering.
-- Use `containerBackground(...)` correctly so the system can remove or adapt
+- Use `containerBackground(for: .widget)` so the system can remove or adapt
   backgrounds in contexts that require it.
+- Read `showsWidgetContainerBackground` from the environment when content must
+  adapt to a removed background.
 - Do not encode essential state only in subtle background color, gradients, or
   material choices; rendering modes can transform or remove those layers.
 - Mark decorative image layers deliberately for accented or full-color

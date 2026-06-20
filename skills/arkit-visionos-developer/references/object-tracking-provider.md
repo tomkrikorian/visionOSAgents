@@ -13,6 +13,8 @@ For shared session setup, authorization, and lifecycle rules, see [session-basic
 - Check `ObjectTrackingProvider.isSupported` before creating the provider.
 - Request `requiredAuthorizations` before running the session and handle denied states.
 - Use the tracking configuration to balance performance and fidelity for your use case.
+- New in visionOS 27: opt into per-object high-frame-rate tracking with `ReferenceObject.Configuration` and its `highFrameRateTrackingEnabled` flag, passed to `ReferenceObject(from:configuration:)` or `ReferenceObject(named:from:configuration:)`. Beta API: names and shapes may change before release.
+- The `ObjectTrackingProvider.TrackingConfiguration` properties `stationaryObjectTrackingRate` and `movingObjectTrackingRate` are deprecated on visionOS 27 in favor of `ReferenceObject.Configuration.highFrameRateTrackingEnabled`.
 - Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
@@ -62,4 +64,14 @@ final class ObjectTrackingModel {
 
     private func removeObjectAnchor(_ id: ObjectAnchor.ID) {}
 }
+```
+
+```swift
+// New in visionOS 27.
+var configuration = ReferenceObject.Configuration()
+configuration.highFrameRateTrackingEnabled = true
+let referenceObject = try await ReferenceObject(
+    named: "Globe",
+    configuration: configuration
+)
 ```

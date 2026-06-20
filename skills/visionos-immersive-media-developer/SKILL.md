@@ -1,6 +1,6 @@
 ---
 name: visionos-immersive-media-developer
-description: Implement immersive and spatial video experiences on Apple Vision Pro (visionOS 26), including AVKit AVExperienceController, RealityKit VideoPlayerComponent setup, Apple Projected Media Profile (APMP), portal/progressive/full immersive viewing modes, transitions and events, comfort mitigation, and Apple Immersive Video authoring workflows.
+description: Implement immersive and spatial video experiences on Apple Vision Pro (visionOS 27), including AVKit AVExperienceController, RealityKit VideoPlayerComponent setup, Apple Projected Media Profile (APMP), portal/progressive/full immersive viewing modes, transitions and events, comfort mitigation, and Apple Immersive Video authoring workflows.
 ---
 
 # visionOS Immersive Media Developer
@@ -26,7 +26,7 @@ RealityKit playback surface.
 | [`video-player-events.md`](references/video-player-events.md) | When RealityKit video playback must drive UI, scene transitions, rendering readiness, or comfort mitigation from `VideoPlayerEvents`. |
 | [`apmp-and-spatial-video.md`](references/apmp-and-spatial-video.md) | When the content is spatial video, APMP, or Apple Immersive Video. |
 | [`immersive-viewing-modes.md`](references/immersive-viewing-modes.md) | When implementing portal, progressive, or full modes and related scene transitions. |
-| [`comfort-mitigation.md`](references/comfort-mitigation.md) | When handling comfort violations and mitigation strategies on visionOS 26+. |
+| [`comfort-mitigation.md`](references/comfort-mitigation.md) | When handling comfort violations and mitigation strategies. |
 | [`apple-immersive-video-authoring.md`](references/apple-immersive-video-authoring.md) | When you need Apple Immersive Video authoring or packaging references. |
 
 ## Workflow

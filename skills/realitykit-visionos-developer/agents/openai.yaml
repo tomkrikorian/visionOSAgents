@@ -1,7 +1,7 @@
 interface:
   display_name: "RealityKit visionOS Developer"
-  short_description: "Build and debug RealityKit scenes on visionOS"
+  short_description: "Route and build core RealityKit scenes"
   icon_small: "./assets/studio-meije-logo-small.png"
   icon_large: "./assets/studio-meije-logo.png"
   brand_color: "#F47A73"
-  default_prompt: "Use $realitykit-visionos-developer to help implement or debug RealityKit entities, components, systems, and attachments on visionOS."
+  default_prompt: "Use $realitykit-visionos-developer to route RealityKit work and implement core entity loading, component selection, input, attachments, anchoring, portals, sync, or USDStage behavior on visionOS."

@@ -130,7 +130,6 @@ func setupHeadTracking(target: Entity) {
 - IK blends with forward kinematics (FK) based on `globalFkWeight`
 - Constraints define targets and limits for joint movement
 - IK is computed each frame based on current constraints
-- Available on iOS, macOS, and visionOS (introduced in WWDC 2024)
 - Works with `SkeletalPosesComponent` for joint manipulation
 - Can be combined with `AnimationLibraryComponent` for blended animation
 

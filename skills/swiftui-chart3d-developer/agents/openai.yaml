@@ -1,0 +1,7 @@
+interface:
+  display_name: "SwiftUI Chart3D Developer"
+  short_description: "Build Swift Charts 3D visualizations"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $swiftui-chart3d-developer to implement Chart3D, SurfacePlot, 3D marks, and Chart3DPose in SwiftUI."

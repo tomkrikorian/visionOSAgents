@@ -29,6 +29,24 @@ treatments:
 @Environment(\.widgetRenderingMode) private var widgetRenderingMode
 ```
 
+Accented mode needs no special opt-in code, but mark removable backgrounds
+with `containerBackground(for: .widget)` so the system can strip or replace
+them cleanly:
+
+```swift
+.containerBackground(Color.blue.gradient, for: .widget)
+```
+
+The closure overload `containerBackground(for:alignment:content:)` requires a
+`View`; pass `ShapeStyle` values such as gradients to the style overload shown
+above.
+
+Detect whether the container background is currently shown:
+
+```swift
+@Environment(\.showsWidgetContainerBackground) private var showsBackground
+```
+
 Practical checks:
 
 - Verify primary text remains legible in high-contrast themes.
@@ -44,5 +62,7 @@ Practical checks:
 - Choose `.glass` when the widget should feel ambient and lightweight.
 - Choose `.paper` when the content behaves more like a poster, document, or
   art board and needs a matte coating.
+- Extra-large families (`.systemExtraLargePortrait`) pair well with `.paper`
+  for a poster-like presentation.
 - Avoid encoding essential state purely in material or background color because
   rendering modes can transform both.

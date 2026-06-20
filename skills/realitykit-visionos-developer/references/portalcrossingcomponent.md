@@ -52,8 +52,6 @@ player.components.set(PortalCrossingComponent())
 - Works in conjunction with `PortalComponent` that has `crossingMode` enabled
 - Entities need this component to participate in portal crossing behavior
 - Crossing behavior is tied to the portal's plane definition
-- Available on visionOS, iOS, and other Apple platforms
-- Portal crossing features are newer (introduced in WWDC 2024)
 
 ## Best Practices
 

@@ -39,7 +39,7 @@ entity.components.set(videoComponent)
 // Configure for immersive viewing
 var videoComponent = VideoPlayerComponent(avPlayer: player)
 videoComponent.desiredImmersiveViewingMode = .full
-videoComponent.desiredViewingMode = .spatial
+videoComponent.desiredViewingMode = .stereo
 entity.components.set(videoComponent)
 ```
 
@@ -56,15 +56,14 @@ entity.components.set(videoComponent)
 ## Key Properties
 
 - `avPlayer: AVPlayer` - The AVPlayer instance for video playback
-- `desiredViewingMode: VideoPlayerComponent.ViewingMode` - Desired viewing mode (read-only after setting)
+- `desiredViewingMode: VideoPlaybackController.ViewingMode` - Desired viewing mode; read the active one via `viewingMode`
 - `desiredImmersiveViewingMode: VideoPlayerComponent.ImmersiveViewingMode` - Desired immersive viewing mode
-- `desiredSpatialVideoMode: VideoPlayerComponent.SpatialVideoMode` - Desired spatial video mode
+- `desiredSpatialVideoMode: VideoPlayerComponent.SpatialVideoMode` - Desired spatial video mode (`.screen` or `.spatial`)
 
 ### Viewing Modes
 
 - `.mono` - Standard mono video
-- `.stereo` - Stereo video
-- `.spatial` - Spatial video
+- `.stereo` - Stereo video (visionOS only)
 
 ### Immersive Viewing Modes
 
@@ -78,8 +77,7 @@ entity.components.set(videoComponent)
 - Default mesh height is 1 meter - scale uniformly to maintain aspect ratio
 - Clipping or size issues may occur if video is larger than the window scene
 - Supports comfort mitigations - automatic adjustments for high motion content
-- Available on visionOS and other Apple platforms
-- Introduced in WWDC 2025
+- Immersive viewing modes (`.portal`, `.progressive`, `.full`) are visionOS only
 - Works with AVPlayer and AVPlayerItem for video playback
 
 ## Best Practices

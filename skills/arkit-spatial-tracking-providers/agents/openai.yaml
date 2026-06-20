@@ -1,0 +1,7 @@
+interface:
+  display_name: "ARKit Spatial Tracking Providers"
+  short_description: "Use world, plane, mesh, and room tracking"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $arkit-spatial-tracking-providers to implement world, plane, mesh, room, or shared-coordinate ARKit providers on visionOS."

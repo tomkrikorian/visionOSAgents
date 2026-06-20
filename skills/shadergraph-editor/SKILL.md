@@ -1,6 +1,6 @@
 ---
 name: shadergraph-editor
-description: Author, load, and troubleshoot Reality Composer Pro Shader Graph materials for RealityKit on visionOS. Use when building Shader Graph materials, exposing promoted inputs for runtime control, or debugging exported USD and MaterialX interop.
+description: Author, load, and troubleshoot Reality Composer Pro Shader Graph materials for RealityKit on visionOS. Use when building Shader Graph materials, exposing promoted inputs for runtime control, debugging exported USD and MaterialX interop, or building shader graphs programmatically in Swift on visionOS 27.
 ---
 
 # ShaderGraph Editor
@@ -13,7 +13,8 @@ debugging exports or interoperability.
 1. Decide whether the task is node selection, runtime parameter control,
    export debugging, or sample selection.
 2. Identify whether the material is authored in Reality Composer Pro, loaded
-   from USD / `.reality`, or intentionally created from MaterialX data.
+   from USD / `.reality`, intentionally created from MaterialX data, or built
+   programmatically with the visionOS 27 `ShaderGraph` API.
 3. Load only the matching reference files.
 4. Route text-level USD structure edits to `usd-editor`.
 
@@ -23,6 +24,7 @@ debugging exports or interoperability.
 |-----------|-------------|
 | [`references/shadergraph-node-reference.md`](references/shadergraph-node-reference.md) | When choosing RealityKit Shader Graph nodes by category. |
 | [`references/runtime-api.md`](references/runtime-api.md) | When loading `ShaderGraphMaterial`, working with promoted inputs, or updating parameters at runtime. |
+| [`references/programmatic-shader-graphs.md`](references/programmatic-shader-graphs.md) | When building shader graphs in Swift with the `ShaderGraph` API (new in visionOS 27), `ShaderGraphMaterial.Program`, `PortalMaterial.Program`, `LightingModel`, or PBR subsurface scattering. |
 | [`references/export-debug.md`](references/export-debug.md) | When inspecting exported USD or MaterialX, or when a graph fails to load or render as expected. |
 | [`references/samples.md`](references/samples.md) | When selecting the closest repo sample before authoring a new effect from scratch. |
 | [`references/apple-material-boundaries.md`](references/apple-material-boundaries.md) | When deciding whether to author in Reality Composer Pro, load a `ShaderGraphMaterial`, or debug named material/resource failures. |

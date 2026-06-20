@@ -1,0 +1,7 @@
+interface:
+  display_name: "ARKit Reference Tracking Providers"
+  short_description: "Track images, objects, barcodes, accessories"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $arkit-reference-tracking-providers to implement image, object, barcode, or accessory tracking providers on visionOS."

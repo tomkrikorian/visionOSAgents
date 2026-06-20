@@ -1,6 +1,6 @@
 ---
 name: shareplay-developer
-description: Build, integrate, and troubleshoot SharePlay GroupActivities features for visionOS 26, including GroupActivity definitions, activation flows, GroupSession lifecycle, messaging and journals, ShareLink and SharePlay UI surfaces, and spatial coordination.
+description: Build, integrate, and troubleshoot SharePlay GroupActivities features for visionOS 27, including GroupActivity definitions, activation flows, GroupSession lifecycle, messaging and journals, ShareLink and SharePlay UI surfaces, and spatial coordination.
 ---
 
 # SharePlay Developer

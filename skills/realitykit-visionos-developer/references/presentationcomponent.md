@@ -84,10 +84,9 @@ entity.components.set(presentation)
 
 ## Important Notes
 
-- Introduced in recent RealityKit releases (WWDC 2025)
 - Allows 3D entities to show SwiftUI content in spatially-aware presentation modes
 - Works in spatial contexts and immersive spaces
-- Available on visionOS and other Apple platforms
+- visionOS only - unavailable on iOS, macOS, and tvOS
 - Bridges SwiftUI UI into RealityKit spatial experiences
 
 ## Best Practices

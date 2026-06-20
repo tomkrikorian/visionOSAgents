@@ -75,3 +75,7 @@ try material.setParameter(handle: glowHandle, value: .float(2.0))
 On visionOS, `ShaderGraphMaterial` is the first-class custom material path. Do
 not add `CustomMaterial`-style flows from iOS or macOS code unless the project
 already has a tested platform-specific reason.
+
+New in visionOS 27: a `ShaderGraphMaterial` can also be built from a graph
+constructed in Swift via `ShaderGraphMaterial.Program`; see
+[`programmatic-shader-graphs.md`](programmatic-shader-graphs.md).

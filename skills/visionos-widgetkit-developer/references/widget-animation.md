@@ -7,7 +7,9 @@ constraint using timeline entries, crossfade behavior, and careful budgeting.
 These findings are based on community testing with complex generative-art
 widgets (12+ animated Canvas-based widgets in a single extension). They
 cover undocumented WidgetKit behavior discovered through trial and error on
-Apple Vision Pro hardware.
+Apple Vision Pro hardware. All budgets in this file (300 timeline entries,
+~12 widget configurations, ~2 fps effective delivery) were measured on
+visionOS 26; re-validate them on visionOS 27 before relying on them.
 
 ---
 

@@ -17,7 +17,7 @@ ImmersiveSpace presents content in an unbounded space on visionOS.
 - Use `defaultLaunchBehavior(.presented / .automatic / .suppressed)` to control launch presentation.
 - Use `restorationBehavior(.disabled)` when a scene should not restore on relaunch.
 - Use `immersiveEnvironmentBehavior(.coexist)` when an immersive space should coexist with the active system immersive environment.
-- Use `breakthroughEffect(_:)` for visionOS 26 RealityView attachments that should render with the system breakthrough effect.
+- Use `breakthroughEffect(_:)` for RealityView attachments that should render with the system breakthrough effect.
 - Open and dismiss immersive spaces using the environment actions; only one immersive space can be open at a time.
 - Keep scene declarations in the app/scene layer. Put open/dismiss buttons in
   views, but route the decision through a scene coordinator when multiple

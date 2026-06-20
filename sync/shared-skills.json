@@ -1,14 +1,25 @@
 {
   "version": 1,
   "sharedSkills": [
+    "arkit-camera-access-providers",
+    "arkit-hand-tracking-provider",
+    "arkit-reference-tracking-providers",
+    "arkit-rendering-context-providers",
+    "arkit-spatial-tracking-providers",
     "arkit-visionos-developer",
     "coding-standards-enforcer",
+    "realitykit-animation-physics",
+    "realitykit-audio-spatial",
+    "realitykit-ecs-systems",
+    "realitykit-rendering-materials",
     "realitykit-visionos-developer",
     "shadergraph-editor",
     "shareplay-developer",
     "spatial-app-architecture",
     "spatial-swiftui-developer",
+    "swiftui-chart3d-developer",
     "usd-editor",
+    "usdkit-runtime-developer",
     "visionos-immersive-media-developer",
     "visionos-widgetkit-developer"
   ]

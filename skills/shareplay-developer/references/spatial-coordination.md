@@ -26,7 +26,7 @@ immersive space.
 5. Observe `remoteParticipantStates` when content must appear relative to a
    remote participant's seat or pose.
 
-On visionOS 26, observe `SystemCoordinator.groupImmersionStyle` to keep local
+Observe `SystemCoordinator.groupImmersionStyle` to keep local
 UI aligned with the group's immersion style. Treat `nil` as "no participant is
 currently showing the immersive space"; offer or perform dismissal without
 interrupting unrelated local work.

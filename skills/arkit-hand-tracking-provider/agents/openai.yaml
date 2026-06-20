@@ -1,0 +1,7 @@
+interface:
+  display_name: "ARKit Hand Tracking Provider"
+  short_description: "Use HandTrackingProvider on visionOS"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $arkit-hand-tracking-provider to implement or debug HandTrackingProvider and hand-joint updates on visionOS."

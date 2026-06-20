@@ -1,0 +1,7 @@
+interface:
+  display_name: "USDKit Runtime Developer"
+  short_description: "Edit USD stages from Swift runtime code"
+  icon_small: "./assets/studio-meije-logo-small.png"
+  icon_large: "./assets/studio-meije-logo.png"
+  brand_color: "#F47A73"
+  default_prompt: "Use $usdkit-runtime-developer to implement USDStage, USDLayer, USDPrim, or live USDKit runtime editing in Swift."

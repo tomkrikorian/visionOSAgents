@@ -91,8 +91,6 @@ portalEntity.components.set(portal)
 - Without crossing enabled, entities are simply masked (visible only when entirely in front of portal)
 - With crossing enabled, objects can transition across the portal surface
 - Portal geometry should use `PortalMaterial` for proper rendering
-- Available on visionOS, iOS, and other Apple platforms
-- Portal crossing features are newer (introduced in WWDC 2024)
 
 ## Best Practices
 

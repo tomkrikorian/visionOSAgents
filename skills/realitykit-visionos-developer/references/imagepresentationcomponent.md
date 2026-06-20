@@ -77,8 +77,7 @@ entity.components.set(component)
 - Spatial scenes are generated from images and provide motion parallax
 - If you choose a spatial scene mode before generation, the component shows a progress UI
 - Available viewing modes depend on the image type and generation status
-- Introduced in recent RealityKit updates (WWDC 2025)
-- Available on visionOS and other Apple platforms
+- visionOS only - unavailable on iOS, macOS, and tvOS
 
 ## Best Practices
 

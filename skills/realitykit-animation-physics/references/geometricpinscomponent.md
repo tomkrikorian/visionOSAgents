@@ -21,7 +21,7 @@ A component that defines geometric attachment points (pins) for entities. Pins d
 ```swift
 import RealityKit
 
-// Set a pin on an entity (from WWDC 2024 example)
+// Set a pin on an entity
 let hookPin = spaceship.pins.set(named: "Hook", position: hookOffset)
 let trailerPin = trailer.pins.set(named: "Trailer", position: .zero)
 
@@ -63,10 +63,9 @@ let pin = entity.pins.set(
 
 - Pins define positions and orientations relative to the entity
 - Used with `PhysicsJointsComponent` for joint connections
-- Introduced in WWDC 2024 ("Discover RealityKit APIs")
-- Available on visionOS, iOS, and other Apple platforms
-- API may be accessed via `Entity.pins` rather than a separate component
-- Check official documentation for your target SDK version
+- Access pins through `Entity.pins`; the component itself stores `pins: Set<GeometricPin>`
+- `Entity.pins` also supports subscript lookup by name and `remove(named:)`
+- Pins also drive `AttachedTransformComponent`
 
 ## Best Practices
 

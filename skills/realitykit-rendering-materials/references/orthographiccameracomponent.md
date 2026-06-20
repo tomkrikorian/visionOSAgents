@@ -66,7 +66,6 @@ cameraEntity.orientation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
 - Orthographic scale controls how "zoomed in" or "zoomed out" the view is
 - No field of view parameter - scale replaces FOV in orthographic projection
 - Useful for technical or diagrammatic views where measurements must be accurate
-- Available on iOS 13.0+, iPadOS 13.0+, macOS 10.15+, Mac Catalyst 13.0+, visionOS 1.0+
 - On visionOS, the system camera is typically used - custom cameras may have limited use
 
 ## Best Practices

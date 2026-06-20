@@ -14,6 +14,7 @@ For shared session setup, authorization, and lifecycle rules, see [session-basic
 - Track only the accessories needed for the experience to reduce noise.
 - Apple documents accessory tracking in a volumetric-window workflow, so do not require immersive space unless the rest of the experience needs it.
 - Use `anchorUpdates` to add, update, and remove entities, and use `predictAnchor(for:at:)` when you need a future pose.
+- New in visionOS 27: call `updateAccessories(_:)` on a running provider to swap or extend the tracked accessory set without re-running the session. The call throws an `AccessoryTrackingProvider.Error` with code `updateAccessoriesFailed` on failure. Beta API: names and shapes may change before release.
 - Shared session and lifecycle rules live in [session-basics.md](session-basics.md). Keep this file focused on provider-specific behavior.
 
 ## Code Examples
@@ -56,5 +57,15 @@ final class AccessoryTrackingModel {
     private func handleAccessoryAnchor(_ anchor: AccessoryAnchor) {}
 
     private func removeAccessoryAnchor(_ id: AccessoryAnchor.ID) {}
+
+    // New in visionOS 27.
+    func replaceAccessories(_ accessories: [Accessory]) async {
+        guard let provider else { return }
+        do {
+            try await provider.updateAccessories(accessories)
+        } catch {
+            print("Accessory update failed: \(error)")
+        }
+    }
 }
 ```

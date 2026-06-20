@@ -64,8 +64,6 @@ if let sceneUnderstanding = entity.components[SceneUnderstandingComponent.self] 
 - Requires `SpatialTrackingSession.Configuration` with scene understanding flags
 - Scene understanding flags include `.collision` and `.physics`
 - Works with `EnvironmentBlendingComponent` for occlusion by real geometry
-- Available on visionOS and other Apple platforms
-- Introduced in WWDC 2025
 - Provides mesh representation of the real environment
 
 ## Best Practices

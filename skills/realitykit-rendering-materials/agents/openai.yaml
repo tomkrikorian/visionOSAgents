@@ -1,0 +1,4 @@
+interface:
+  display_name: "RealityKit Rendering Materials"
+  short_description: "Tune RealityKit rendering and lighting"
+  default_prompt: "Use $realitykit-rendering-materials to choose RealityKit rendering, lighting, material, and post-processing components on visionOS."

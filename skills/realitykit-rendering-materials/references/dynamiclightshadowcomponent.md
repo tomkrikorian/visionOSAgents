@@ -54,8 +54,6 @@ backgroundEntity.components.set(DynamicLightShadowComponent(castsShadow: false))
 - `PointLightComponent` does **not** cast shadows, so this component has no effect with point lights
 - By default, entities cast shadows when lit by spotlights or directional lights
 - Set `castsShadow: false` to disable shadow casting for specific entities
-- Introduced in WWDC 2024 as part of RealityKit's dynamic lights & shadows APIs
-- Available on visionOS, iOS, and other Apple platforms (check minimum OS requirements)
 - Shadows can be performance-intensive - use selectively to optimize rendering
 
 ## Best Practices

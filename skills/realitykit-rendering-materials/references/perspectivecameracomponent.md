@@ -80,7 +80,6 @@ scene.addChild(cameraEntity)
 - In non-AR contexts, you can add your own perspective camera
 - Objects closer than `near` or farther than `far` are clipped (not visible)
 - Field of view affects how "zoomed in" or "zoomed out" the view appears
-- Available on iOS 13.0+, iPadOS 13.0+, macOS 10.15+, Mac Catalyst 13.0+, visionOS 1.0+
 - On visionOS, the system camera is typically used - custom cameras may have limited use
 
 ## Best Practices

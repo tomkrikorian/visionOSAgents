@@ -124,7 +124,6 @@ entity.components.set(ForceEffectComponent(effects: effects))
 - Spatial falloff defines the volume of influence - bodies outside are unaffected
 - Use bitmasks to filter which entities are affected by the force
 - Custom force effects can use position, distance, velocity, and other physics body parameters
-- Available on visionOS, iOS, and other Apple platforms (introduced in WWDC 2024)
 
 ## Best Practices
 

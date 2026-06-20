@@ -1,0 +1,4 @@
+interface:
+  display_name: "RealityKit Animation Physics"
+  short_description: "Build RealityKit animation and physics"
+  default_prompt: "Use $realitykit-animation-physics to implement RealityKit animation, character, collision, physics, cloth, particles, and behavior systems on visionOS."
